@@ -1,16 +1,14 @@
 #pragma once
-#include "pch.h"
-#include "IGraphics.h"
 #include "Graphics.h"
 
-IGraphics* CreateInstance(HWND hWnd)
+IGraphics* CreateGraphics(HWND hWnd)
 {
 	return new Graphics(hWnd);
 }
 
-void DestroyInstance(IGraphics* instance)
+void DestroyGraphics(IGraphics* instance)
 {
-	delete instance;
+	//delete instance;
 }
 
 IGraphics::~IGraphics()

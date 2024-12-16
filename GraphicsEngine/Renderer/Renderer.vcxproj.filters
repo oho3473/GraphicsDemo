@@ -319,5 +319,8 @@
     <ClCompile Include="TransparencyPass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

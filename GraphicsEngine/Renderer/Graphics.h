@@ -1,7 +1,9 @@
 #pragma once
 #include "IGraphics.h" 
+
 #include <unordered_map>
 #include <memory>
+
 
 #pragma region DX
 class ViewPort;
@@ -44,13 +46,14 @@ public:
 	virtual void EraseObject(uint32_t EntityID) override;
 	virtual void UpdateModel(uint32_t EntityID) override;
 	virtual bool AddRenderModel(std::shared_ptr<RenderData> data) override;
+
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
 	std::vector<std::weak_ptr<DepthStencilView>> m_DSVs;
-
+	
 	std::vector<std::shared_ptr<RenderData>> m_RenderVector;	//프레임워크쪽에서 준 데이터들
 	std::vector<std::shared_ptr<RenderData>> m_AfterCulling; //컬링해서 그려낼 최종 친구들
-
+	
 	std::unordered_map<uint32_t, LightData> m_Lights;
 
 private:
@@ -70,9 +73,9 @@ private:
 	RECT m_wndSize;
 
 	//camera
-	Matrix m_View;
-	Matrix m_Proj;
-	Matrix m_ViewProj;
+	DirectX::SimpleMath::Matrix m_View;
+	DirectX::SimpleMath::Matrix m_Proj;
+	DirectX::SimpleMath::Matrix m_ViewProj;
 	DirectX::BoundingFrustum m_Frustum;
 
 	// Pipeline
@@ -82,6 +85,6 @@ private:
 
 private:
 	void Culling();
-	std::vector<std::shared_ptr<RenderData>>::iterator FindEntity(uint32_t id);
+	//std::vector<std::shared_ptr<RenderData>>::iterator FindEntity(uint32_t id);
 };
 

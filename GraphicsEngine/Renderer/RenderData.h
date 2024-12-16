@@ -1,17 +1,14 @@
 #pragma once
 
-#include "SimpleMath.h"
-#include <string>
-
-
-
 #ifdef RENDERDATA_EXPORTS
 #define RENDERDATA_API __declspec(dllexport)
 #else
 #define RENDERDATA_API __declspec(dllimport)
 #endif
 
-using namespace DirectX::SimpleMath;
+#include "SimpleMath.h"
+#include <string>
+
 
 struct __declspec(dllexport) RenderData
 {
@@ -28,9 +25,9 @@ public:
 	bool isSkinned = false;
 	bool isVisible = true;
 
-	Matrix local; //캐릭터 자체 로컬
-	Matrix world; //게임 세상의 위치
-	Vector3 rotation;
+	DirectX::SimpleMath::Matrix local; //캐릭터 자체 로컬
+	DirectX::SimpleMath::Matrix world; //게임 세상의 위치
+	DirectX::SimpleMath::Vector3 rotation;
 
 	//overdraw
 	bool isOverDraw = false;	//벽뒤에 플레이어랑 총 짤리는거 방지 flag
@@ -48,13 +45,13 @@ public:
 	std::wstring textureName;
 
 	//라이트맵 데이터
-	Vector2 offset;
-	Vector2 tiling;
+	DirectX::SimpleMath::Vector2 offset;
+	DirectX::SimpleMath::Vector2 tiling;
 	int lightmapindex;
 	float scale;
 
 	// 아웃라인 관련 변수
-	Color MaskingColor = Color{ 0, 0, 0, 0 };
+	DirectX::SimpleMath::Color MaskingColor = DirectX::SimpleMath::Color{ 0, 0, 0, 0 };
 	// 인터랙티브 COLOR
 	DirectX::XMFLOAT4 color;
 };
