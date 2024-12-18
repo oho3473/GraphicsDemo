@@ -15,8 +15,11 @@
     <Filter Include="Data">
       <UniqueIdentifier>{8e12f795-3794-4e4d-b0b8-112cb65e6f8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="etc">
+    <Filter Include="Data\etc">
       <UniqueIdentifier>{7e0e3fc2-0b0e-4ba7-9d2b-b636f871763e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{6e823485-b2d4-4466-b80d-d85efb1176ec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{3aa8a320-cec3-4109-840d-f526c1fffc62}</UniqueIdentifier>
@@ -27,10 +30,10 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>etc</Filter>
+      <Filter>Data\etc</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>etc</Filter>
+      <Filter>Data\etc</Filter>
     </ClInclude>
     <ClInclude Include="RenderData.h">
       <Filter>Data</Filter>
@@ -179,16 +182,19 @@
     <ClInclude Include="LightManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="OutputMain.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IGraphics.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>etc</Filter>
+      <Filter>Data\etc</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>etc</Filter>
+      <Filter>Data\etc</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>소스 파일</Filter>
@@ -321,6 +327,9 @@
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputMain.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

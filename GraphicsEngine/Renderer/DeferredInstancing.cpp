@@ -115,8 +115,8 @@ void DeferredInstancing::Render()
 			continue;
 		}
 
-
 		std::shared_ptr<ModelData> curModel = m_ResourceManager.lock()->Get<ModelData>(object->FBX).lock();
+		object->ModelID = curModel->UID;
 
 		if (curModel != nullptr)
 		{

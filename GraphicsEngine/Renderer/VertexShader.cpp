@@ -19,7 +19,7 @@ VertexShader::VertexShader(std::shared_ptr<Device>device, std::wstring filename,
 #ifdef _DEBUG
 	shaderFlag |= D3DCOMPILE_DEBUG;
 	shaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
-	basePath = L"..\\..\\..\\VPGraphics\\";
+	basePath = L"..\\Renderer\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
 #endif
@@ -79,7 +79,7 @@ VertexShader::VertexShader(const std::shared_ptr<Device>& device,
 #ifdef _DEBUG
 	shaderFlag |= D3DCOMPILE_DEBUG;
 	shaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
-	basePath = L"..\\..\\..\\VPGraphics\\";
+	basePath = L"..\\Renderer\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
 #endif

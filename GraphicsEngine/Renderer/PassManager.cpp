@@ -21,6 +21,7 @@
 #include "DecalPass.h"
 #include "DeferredLightPass.h"
 #include "EffectPass.h"
+#include "OutputMain.h"
 #pragma endregion Pass
 
 #include "StaticData.h"
@@ -134,6 +135,7 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 	m_punch = std::make_shared<EffectPass>(m_Device.lock(), m_ResourceManager.lock());
 
+	m_main = std::make_shared<OutputMain>(m_Device.lock(), m_ResourceManager.lock());
 
 }
 
@@ -198,6 +200,8 @@ void PassManager::Render(float deltaTime)
 		pass->Render();
 	}
 
+
+	m_main->Render();
 	//m_ParticlePass->Render(deltaTime);
 	//m_UIPass->Render();
 
@@ -231,6 +235,8 @@ void PassManager::OnResize()
 	}
 
 	//m_DebugPass->OnResize();
+	m_main->OnResize();
+
 }
 
 void PassManager::SetVP(bool isVP)

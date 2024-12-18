@@ -5,6 +5,10 @@
 #include "Device.h"
 #include "Vertex.h"
 #include "Defines.h"
+
+#include <iostream>
+#include <string>
+
 //PixelShader::PixelShader(std::wstring filename) : Shader(filename)
 //{
 //
@@ -53,7 +57,7 @@ PixelShader::PixelShader(const std::shared_ptr<Device>& device, const std::wstri
 #ifdef _DEBUG
 	shaderFlag |= D3DCOMPILE_DEBUG;
 	shaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
-	basePath = L"..\\..\\..\\VPGraphics\\";
+	basePath = L"..\\Renderer\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
 #endif

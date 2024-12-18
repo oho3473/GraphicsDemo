@@ -46,6 +46,10 @@ public:
 	virtual void EraseObject(uint32_t EntityID) override;
 	virtual void UpdateModel(uint32_t EntityID) override;
 	virtual bool AddRenderModel(std::shared_ptr<RenderData> data) override;
+	virtual void SetCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, const DirectX::SimpleMath::Matrix& orthoProj) override;
+	virtual void AddLight(uint32_t EntityID, LightType kind, LightData data) override;
+	virtual void EraseLight(uint32_t EntityID, LightType kind) override;
+	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
@@ -85,6 +89,6 @@ private:
 
 private:
 	void Culling();
-	//std::vector<std::shared_ptr<RenderData>>::iterator FindEntity(uint32_t id);
+	std::vector<std::shared_ptr<RenderData>>::iterator FindEntity(uint32_t id);
 };
 

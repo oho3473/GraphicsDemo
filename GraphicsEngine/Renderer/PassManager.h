@@ -21,6 +21,7 @@ class OverDrawPass;
 class DecalPass;
 class DeferredLightPass;
 class EffectPass;
+class OutputMain;
 #pragma region Pass
 
 #pragma region Manager
@@ -62,6 +63,7 @@ private:
 	std::shared_ptr<DecalPass> m_Decal;
 	std::shared_ptr<DeferredLightPass> m_DeferredLight;
 	std::shared_ptr<EffectPass> m_punch;
+	std::shared_ptr<OutputMain> m_main;
 
 private:
 	std::weak_ptr<Device> m_Device;

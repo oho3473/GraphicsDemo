@@ -7,6 +7,8 @@
 #include "DecalManager.h"
 #include "PassManager.h"
 
+#include "ModelData.h"
+#include "Mesh.h"
 
 
 
@@ -30,52 +32,146 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize()
 {
-	return false;
+	//srv 생성을 위한 com 초기화
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+	GetClientRect(m_hWnd, &m_wndSize);
+
+	m_Device->Initialize(m_hWnd);
+	m_ResourceManager->Initialize(m_Device);
+	m_Loader->Initialize(m_ResourceManager, m_Device);
+	m_LightManager->Initialize(m_ResourceManager);
+	m_Animator->Initialize(m_ResourceManager);
+	m_PassManager->Initialize(m_Device, m_ResourceManager, m_LightManager, m_DecalManager);
+
+	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
+
+	OnResize(m_hWnd, false);
+
+	return true;
 }
 
 void Graphics::CulingUpdate()
 {
+	for (auto& data : m_RenderVector)
+	{
+		m_AfterCulling.push_back(data);
+	}
+
+	//Culling();
 
 }
 
 void Graphics::AnimationUpdate(double dt)
 {
+	m_Animator->Update(m_AfterCulling);
 
 }
 
 void Graphics::Update(double dt)
 {
+	m_PassManager->Update(m_AfterCulling);
+	m_LightManager->Update(m_Lights);
 
 }
 
 void Graphics::EndUpdate(double dt)
 {
+	m_AfterCulling.clear();
 
 }
 
 bool Graphics::Finalize()
 {
+	if (!m_AfterCulling.empty())
+	{
+		m_AfterCulling.clear();
+	}
+
+	if (!m_RenderVector.empty())
+	{
+		m_RenderVector.clear();
+	}
+
+	m_CurViewPort.reset();
+	m_Device.reset();
+
+	m_Loader.reset();
+	m_Animator.reset();
+	m_PassManager.reset();
+
+	m_ResourceManager.reset();
+	m_LightManager.reset();
+
 	return true;
+
 }
 
 void Graphics::BeginRender()
 {
+	FLOAT Black[4] = { 0.f,0.f,0.f,1.f };
+	const DirectX::SimpleMath::Color white = { 1.f, 1.f, 1.f, 1.f };
+	const DirectX::SimpleMath::Color red = { 1.f, 0.f, 0.f, 1.f };
+	const DirectX::SimpleMath::Color green = { 0.f, 1.f, 0.f, 1.f };
+	const DirectX::SimpleMath::Color blue = { 0.f, 0.f, 1.f, 1.f };
+	const DirectX::SimpleMath::Color gray = { 0.05f, 0.05f, 0.05f, 1.f };
 
+	for (int i = 0; i < m_RTVs.size(); i++)
+	{
+		if (i == 0)
+		{
+			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[0].lock()->Get(), blue);
+		}
+		else
+		{
+			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), red);
+		}
+	}
 }
 
 void Graphics::Render(float deltaTime)
 {
+	m_PassManager->Render(deltaTime);
 
 }
 
 void Graphics::EndRender()
 {
+	m_Device->EndRender();
 
 }
 
 void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 {
+	m_hWnd = hwnd;
+	GetClientRect(m_hWnd, &m_wndSize);
 
+	m_RTVs.clear();
+	m_DSVs.clear();
+
+	m_ResourceManager->OnResize(m_wndSize, isFullScreen);
+	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
+
+
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"RTV_Main"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"GBuffer"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Albedo"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Normal"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Position"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Depth"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Metalic_Roughness"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"LightMap"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"AO"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Emissive"));
+
+	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Main"));
+	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Deferred"));
+
+	m_PassManager->OnResize();
+
+
+	m_Device->Context()->OMSetRenderTargets(1, m_RTVs[0].lock()->GetAddress(), m_DSVs[0].lock()->Get());
+	m_Device->Context()->RSSetViewports(1, m_CurViewPort->Get());
 }
 
 void Graphics::DebugRenderONOFF(bool isRender)
@@ -85,7 +181,11 @@ void Graphics::DebugRenderONOFF(bool isRender)
 
 void Graphics::EraseObject(uint32_t EntityID)
 {
-
+	auto find = FindEntity(EntityID);
+	if (find != m_RenderVector.end())
+	{
+		m_RenderVector.erase(find);
+	}
 }
 
 void Graphics::UpdateModel(uint32_t EntityID)
@@ -95,15 +195,222 @@ void Graphics::UpdateModel(uint32_t EntityID)
 
 bool Graphics::AddRenderModel(std::shared_ptr<RenderData> data)
 {
+	auto find = FindEntity(data->EntityID);
+	if (find != m_RenderVector.end())
+	{
+
+
+		(*find) = data;
+	}
+	else
+	{
+		if (data->isSkinned)
+		{
+			std::wstring id = std::to_wstring(data->EntityID);
+
+			if (m_ResourceManager->Get<ConstantBuffer<MatrixPallete>>(id).lock() == nullptr)
+			{
+				m_ResourceManager->Create<ConstantBuffer<MatrixPallete>>(id, ConstantBufferType::Default);
+			}
+		}
+
+		m_RenderVector.push_back(data);
+	}
+
 	return true;
+}
+
+void Graphics::SetCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, const DirectX::SimpleMath::Matrix& orthoProj)
+{
+	m_View = view;
+	m_Proj = proj;
+	m_ViewProj = view * proj;
+
+	DirectX::SimpleMath::Matrix  cb_worldviewproj;
+	DirectX::SimpleMath::Matrix cb_view;
+	DirectX::SimpleMath::Matrix cb_proj;
+	DirectX::SimpleMath::Matrix cb_viewInverse;
+	DirectX::SimpleMath::Matrix cb_projInverse;
+	cb_worldviewproj = m_ViewProj;
+
+	//상수 버퍼는 계산 순서때문에 전치한다
+	cb_worldviewproj = m_ViewProj.Transpose();
+	cb_view = m_View.Transpose();
+	cb_proj = m_Proj.Transpose();
+
+	DirectX::SimpleMath::Matrix viewInverse = view.Invert();
+	cb_viewInverse = viewInverse.Transpose();
+	DirectX::SimpleMath::Matrix projInverse = proj.Invert();
+	cb_projInverse = projInverse.Transpose();
+
+
+	///testCulling 쓸때는 주석 필요
+	{
+		//절두체
+		DirectX::BoundingFrustum::CreateFromMatrix(m_Frustum, m_Proj);
+
+		//회전이 왜 반대로 먹음..? -> view 자체가 카메라의 기준의 세상을 표현한 행렬
+		//우리가 frustum을 구성하려면 카메라 자체의 위치와 회전 값이 필요함
+		//view == camera invert , 우린 camera 자체가 필요함 즉 view invert를 써야함
+
+
+		m_Frustum.Orientation = DirectX::SimpleMath::Quaternion::CreateFromRotationMatrix(viewInverse);
+
+		//카메라위치
+		m_Frustum.Origin = { viewInverse._41,viewInverse._42,viewInverse._43 };
+	}
+
+	std::weak_ptr<ConstantBuffer<CameraData>> Camera = m_ResourceManager->Get<ConstantBuffer<CameraData>>(L"Camera");
+	Camera.lock()->m_struct.view = cb_view;
+	Camera.lock()->m_struct.proj = cb_proj;
+	Camera.lock()->m_struct.viewInverse = cb_viewInverse;
+	Camera.lock()->m_struct.projInverse = cb_projInverse;
+	Camera.lock()->m_struct.worldviewproj = cb_worldviewproj;
+	Camera.lock()->m_struct.orthoProj = orthoProj;
+	Camera.lock()->Update();
+}
+
+void Graphics::AddLight(uint32_t EntityID, LightType kind, LightData data)
+{
+	if (m_Lights.find(EntityID) == m_Lights.end())
+	{
+		m_Lights.insert(std::pair<uint32_t, LightData>(EntityID, data));
+	}
+}
+
+void Graphics::EraseLight(uint32_t EntityID, LightType kind)
+{
+	if (m_Lights.find(EntityID) != m_Lights.end())
+	{
+		m_Lights.erase(EntityID);
+		EraseObject(EntityID);
+		m_LightManager->EraseData(EntityID, kind);
+	}
+}
+
+void Graphics::UpdateLightData(uint32_t EntityID, LightType kind, LightData data)
+{
+	if (m_Lights.find(EntityID) != m_Lights.end())
+	{
+		m_Lights[EntityID] = data;
+	}
 }
 
 void Graphics::Culling()
 {
+	for (auto& object : m_RenderVector)
+	{
+		std::wstring& fbx = object->FBX;
+		std::shared_ptr<ModelData> curFBX = m_ResourceManager->Get<ModelData>(fbx).lock();
 
+		if(!object->isVisible)
+			continue;
+
+		if (curFBX != nullptr)
+		{
+			if (object->isOverDraw)
+			{
+				m_AfterCulling.push_back(object);
+				continue;
+			}
+
+			object->ModelID = curFBX->UID;
+
+			{
+				DirectX::SimpleMath::Vector3 s;
+				DirectX::SimpleMath::Quaternion r;
+				DirectX::SimpleMath::Vector3 t;
+				object->world.Decompose(s, r, t);
+
+				DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateFromQuaternion(r);
+				DirectX::SimpleMath::Matrix scale = DirectX::SimpleMath::Matrix::CreateScale(s);
+
+				bool visible = false;
+				if (!object->isSkinned)
+				{
+					for (auto& mesh : curFBX->m_Meshes)
+					{
+						//S
+						DirectX::SimpleMath::Vector3 afterMax = mesh->MaxBounding * s + t;
+						DirectX::SimpleMath::Vector3 afterMin = mesh->MinBounding * s + t;
+
+						DirectX::SimpleMath::Vector3 distance = afterMax - afterMin;
+						DirectX::SimpleMath::Vector3 half = distance / 2;
+
+						DirectX::BoundingOrientedBox obbInfo;
+
+						obbInfo.Center = t;
+						obbInfo.Extents = DirectX::XMFLOAT3(fabs(half.x), fabs(half.y), fabs(half.z));
+						obbInfo.Orientation = r;
+
+						DirectX::ContainmentType contains = m_Frustum.Contains(obbInfo);
+						if (contains)
+						{
+							visible |= contains;
+							//break
+						}
+					}
+				}
+				else
+				{
+					DirectX::SimpleMath::Vector3 max{ -1,-1,-1 };
+
+					for (auto& mesh : curFBX->m_Meshes)
+					{
+						DirectX::SimpleMath::Vector3 afterMax = mesh->MaxBounding * s;
+
+						DirectX::SimpleMath::Vector3 afterMin = mesh->MinBounding * s;
+
+						if (afterMax.x > max.x)
+						{
+							max.x = afterMax.x;
+						}
+
+						if (afterMax.y > max.y)
+						{
+							max.y = afterMax.y;
+						}
+
+						if (afterMax.z > max.z)
+						{
+							max.z = afterMax.z;
+						}
+					}
+					DirectX::BoundingOrientedBox obbInfo;
+
+					obbInfo.Center = t;
+					obbInfo.Extents = DirectX::XMFLOAT3(fabs(max.x), fabs(max.y), fabs(max.z));
+					obbInfo.Orientation = r;
+
+					DirectX::ContainmentType contains = m_Frustum.Contains(obbInfo);
+					if (contains)
+					{
+						visible |= contains;
+						//m_AfterCulling.push_back(object);
+						//break;	//바운딩박스보려고 임시 해제
+					}
+				}
+
+				if (visible && object->isVisible)
+				{
+					m_AfterCulling.push_back(object);
+				}
+				//break;
+			}
+		}
+	}
 }
 
-//std::vector<std::shared_ptr<RenderData>>::iterator Graphics::FindEntity(uint32_t id)
-//{
-//	return ;
-//}
+std::vector<std::shared_ptr<RenderData>>::iterator Graphics::FindEntity(uint32_t id)
+{
+	for (auto start = m_RenderVector.begin(); start != m_RenderVector.end(); start++)
+	{
+		auto entity = *start;
+		if (entity->EntityID == id)
+		{
+			return start;
+		}
+	}
+
+	return m_RenderVector.end();
+}
