@@ -49,6 +49,9 @@ public:
 	virtual void AddLight(uint32_t EntityID, LightType kind, LightData data) abstract;
 	virtual void EraseLight(uint32_t EntityID, LightType kind) abstract;
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) abstract;
+
+	virtual const double GetDuration(std::wstring name, int index) abstract;
+
 };
 
 extern "C" {

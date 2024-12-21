@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -61,22 +63,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
-	test->FBX = L"Flair.fbx";
-	test->world = DirectX::SimpleMath::Matrix::Identity * 3;
-	test->offset = {0,0};
+	test->FBX = L"pbrtest.fbx";
+	test->world = DirectX::SimpleMath::Matrix::Identity;
+	test->offset = { 0,0 };
 	test->lightmapindex = 0;
 	test->scale = 1;
-	test->tiling = {0,0};
+	test->tiling = { 0,0 };
 	test->punchEffect = false;
-	test->isSkinned = true;
+	test->isSkinned = false;
 	test->isPlay = false;
 	test->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	
-	
+	test->preAni = 0;
+	test->curAni = 0;
+	test->duration = 0;
+
+	double animationtime = 0;
+	if (test->isSkinned && test->isPlay)
+	{
+		animationtime = graphicsEngine->GetDuration(test->FBX, 0);
+
+	}
+
+
 	LightData dir;
 	dir.direction = DirectX::XMFLOAT3(0, 0, 1);
+	dir.type = static_cast<float>(LightType::Direction);
+
 	graphicsEngine->AddRenderModel(test);
-	graphicsEngine->AddLight(1001,LightType::Direction, dir);
+	graphicsEngine->AddLight(1001, LightType::Direction, dir);
 
 	InputManager::GetInstance()->Initialize(hWnd);
 	ShowWindow(hWnd, nCmdShow);
@@ -87,9 +101,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
+	float rotation = 0.0f;
 
 	// 기본 메시지 루프입니다:
-	while (GetMessage(&msg, nullptr, 0, 0))
+	while (true)
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
@@ -101,6 +116,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+
+
+		//물체 y축 회전
+		test->world._11 = cos(rotation);		test->world._13 = sin(rotation);
+		test->world._31 = -sin(rotation);		test->world._33 = cos(rotation);
+
+		rotation += 0.01f;
+
+		if (test->isSkinned && test->isPlay)
+		{
+			test->duration += 0.001f;
+			if (animationtime <= test->duration)
+			{
+				test->duration -= animationtime;
+			}
+		}
+
 
 		InputManager::GetInstance()->Update();
 		cameraManager->Update(0.01f);

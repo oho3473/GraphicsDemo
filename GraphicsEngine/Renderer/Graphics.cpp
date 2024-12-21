@@ -9,6 +9,7 @@
 
 #include "ModelData.h"
 #include "Mesh.h"
+#include "Animation.h"
 
 
 
@@ -114,7 +115,7 @@ void Graphics::BeginRender()
 	const DirectX::SimpleMath::Color red = { 1.f, 0.f, 0.f, 1.f };
 	const DirectX::SimpleMath::Color green = { 0.f, 1.f, 0.f, 1.f };
 	const DirectX::SimpleMath::Color blue = { 0.f, 0.f, 1.f, 1.f };
-	const DirectX::SimpleMath::Color gray = { 0.05f, 0.05f, 0.05f, 1.f };
+	const DirectX::SimpleMath::Color gray = { 0.15f, 0.15f, 0.15f, 1.f };
 
 	for (int i = 0; i < m_RTVs.size(); i++)
 	{
@@ -124,7 +125,7 @@ void Graphics::BeginRender()
 		}
 		else
 		{
-			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), red);
+			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), gray);
 		}
 	}
 }
@@ -294,6 +295,22 @@ void Graphics::UpdateLightData(uint32_t EntityID, LightType kind, LightData data
 	{
 		m_Lights[EntityID] = data;
 	}
+}
+
+const double Graphics::GetDuration(std::wstring name, int index)
+{
+	std::shared_ptr<ModelData> curAni = m_ResourceManager->Get<ModelData>(name).lock();
+	if (curAni != nullptr)
+	{
+		if (!curAni->m_Animations.empty() && 0 <= index && index < curAni->m_Animations.size())
+		{
+			//전체 tick / 초당 틱 == 애니메이션 재생시간
+			return curAni->m_Animations[index]->m_Duration / curAni->m_Animations[index]->m_TickFrame;
+		}
+	}
+
+
+	return 0;
 }
 
 void Graphics::Culling()

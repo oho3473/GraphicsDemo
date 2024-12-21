@@ -124,7 +124,6 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 		{nullptr, nullptr}    // 배열의 끝을 나타내기 위해 nullptr로 끝낸다.
 	};
 
-	Create<VertexShader>(L"test", L"test", "main");
 	Create<VertexShader>(L"Base", L"MeshVS", "main");
 	Create<VertexShader>(L"Skinning", L"MeshVS", "main", macro);
 	Create<VertexShader>(L"Quad", L"QuadVS", "main");

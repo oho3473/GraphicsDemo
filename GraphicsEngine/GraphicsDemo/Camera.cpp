@@ -62,7 +62,7 @@ void Camera::Update(double dt)
 
 	if (m_input->IsKeyDown('W') || m_input->IsKeyPress('W'))
 	{
-		Walk(m_moveSpeed* dtf);
+		Walk(m_moveSpeed * dtf);
 	}
 
 	if (m_input->IsKeyDown('A') || m_input->IsKeyPress('A'))
@@ -88,11 +88,16 @@ void Camera::Update(double dt)
 
 	/*
 	마우스 회전
-	float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(m_input->GetDeltMouseX()));
-	RotateY(dx);
-	float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(m_input->GetDeltMouseY()));
-	Pitch(dy);
 	*/
+
+	if (m_input->IsKeyPress(VK_RBUTTON))
+	{
+
+		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(m_input->GetDeltMouseX()));
+		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(m_input->GetDeltMouseY()));
+		RotateY(dx);
+		Pitch(dy);
+	}
 
 	if (m_input->IsKeyDown('Z') || m_input->IsKeyPress('Z'))
 	{

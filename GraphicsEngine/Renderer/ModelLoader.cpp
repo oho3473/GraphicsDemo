@@ -868,15 +868,17 @@ void ModelLoader::ProcessVertexBuffer(std::vector<BaseVertex>& buffer, aiMesh* c
 	_RotX90._31 = 0; _RotX90._32 = -1; _RotX90._33 = 0;
 
 	DirectX::SimpleMath::Vector3 v = { vertex.pos.x,vertex.pos.y,vertex.pos.z };
+	/*
 	v = XMVector3Transform(v, _RotX90);
 	vertex.pos = { v.x,v.y,v.z,1 };
+	*/
 
 	vertex.normal.x = curMesh->mNormals[index].x;
 	vertex.normal.y = curMesh->mNormals[index].y;
 	vertex.normal.z = curMesh->mNormals[index].z;
 
 	v = { vertex.normal.x,vertex.normal.y,vertex.normal.z };
-	v = XMVector3Transform(v, _RotX90);
+	//v = XMVector3Transform(v, _RotX90);
 	vertex.normal = { v.x,v.y,v.z,0 };
 
 	vertex.tangent.x = curMesh->mTangents[index].x;
@@ -884,7 +886,7 @@ void ModelLoader::ProcessVertexBuffer(std::vector<BaseVertex>& buffer, aiMesh* c
 	vertex.tangent.z = curMesh->mTangents[index].z;
 
 	v = { vertex.tangent.x,vertex.tangent.y,vertex.tangent.z };
-	v = XMVector3Transform(v, _RotX90);
+	//v = XMVector3Transform(v, _RotX90);
 	vertex.tangent = { v.x,v.y,v.z,0 };
 
 	vertex.bitangent.x = curMesh->mBitangents[index].x;
@@ -892,7 +894,7 @@ void ModelLoader::ProcessVertexBuffer(std::vector<BaseVertex>& buffer, aiMesh* c
 	vertex.bitangent.z = curMesh->mBitangents[index].z;
 
 	v = { vertex.bitangent.x,vertex.bitangent.y,vertex.bitangent.z };
-	v = XMVector3Transform(v, _RotX90);
+	//v = XMVector3Transform(v, _RotX90);
 	vertex.bitangent = { v.x,v.y,v.z,0 };
 
 	//texture uv channel

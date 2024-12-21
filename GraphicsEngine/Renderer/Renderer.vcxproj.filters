@@ -332,4 +332,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Common.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+  </ItemGroup>
 </Project>

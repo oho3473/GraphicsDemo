@@ -2,6 +2,7 @@
 #include "Sampler.h"
 #include "ResourceManager.h"
 #include "StaticData.h"
+#include "Slot.h"
 
 OutputMain::OutputMain(std::shared_ptr<Device> device, std::shared_ptr<ResourceManager> manager)
 {
@@ -34,7 +35,7 @@ void OutputMain::Render()
 	Device->BindVS(m_QuadVS.lock());
 	Device->Context()->PSSetShader(m_ps.lock()->GetPS(), nullptr, 0);
 
-	Device->Context()->PSSetShaderResources(0, 1, m_gbuffer.lock()->GetAddress());
+	Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_gbuffer.lock()->GetAddress());
 	m_Device.lock()->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	Device->Context()->RSSetState(resourcemanager->Get<RenderState>(L"Solid").lock()->Get());
