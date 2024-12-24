@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource.h"
 #include <string>
+#include <initguid.h> 
 #include <d3d11shader.h>
 #include <wrl/client.h>
 

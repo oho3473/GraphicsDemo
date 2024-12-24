@@ -60,6 +60,7 @@ PixelShader::PixelShader(const std::shared_ptr<Device>& device, const std::wstri
 	basePath = L"..\\Renderer\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
+	basePath = L"..\\Renderer\\";
 #endif
 
 	const std::string& shaderModel = "ps_5_0";
