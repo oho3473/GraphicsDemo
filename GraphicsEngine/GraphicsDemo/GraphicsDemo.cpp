@@ -128,7 +128,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		test->world._11 = cos(rotation);		test->world._13 = sin(rotation);
 		test->world._31 = -sin(rotation);		test->world._33 = cos(rotation);
 
-		rotation += 0.0005f;
+		rotation += 0.5f * timeManager->DeltaTime();
 
 		if (test->isSkinned && test->isPlay)
 		{
