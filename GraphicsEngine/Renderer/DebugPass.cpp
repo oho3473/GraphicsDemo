@@ -25,8 +25,8 @@ DebugPass::DebugPass(const std::shared_ptr<Device>& device, std::shared_ptr<Reso
 	m_DebugPS = m_ResourceManager.lock()->Get<PixelShader>(L"Base");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base");
 
-	m_View = VPMath::Matrix::Identity;
-	m_Proj = VPMath::Matrix::Identity;
+	m_View = DirectX::SimpleMath::Matrix::Identity;
+	m_Proj = DirectX::SimpleMath::Matrix::Identity;
 }
 
 DebugPass::~DebugPass()
@@ -46,8 +46,8 @@ void DebugPass::Initialize(const std::shared_ptr<Device>& device,
 	m_DebugPS = m_ResourceManager.lock()->Get<PixelShader>(L"Base");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base");
 
-	m_View = VPMath::Matrix::Identity;
-	m_Proj = VPMath::Matrix::Identity;
+	m_View = DirectX::SimpleMath::Matrix::Identity;
+	m_Proj = DirectX::SimpleMath::Matrix::Identity;
 }
 
 void DebugPass::Render()

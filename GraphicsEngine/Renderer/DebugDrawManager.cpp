@@ -7,7 +7,8 @@
 #include "DepthStencilState.h"
 #include "RenderState.h"
 
-using namespace VPMath;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 void DebugDrawManager::Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resourceManager)
 {
@@ -30,7 +31,7 @@ void DebugDrawManager::Initialize(const std::shared_ptr<Device>& device, const s
 		&m_BatchInputLayout));
 }
 
-void DebugDrawManager::Execute(const std::shared_ptr<Device>& device, const VPMath::Matrix view, const VPMath::Matrix proj, bool isRender/*=true*/)
+void DebugDrawManager::Execute(const std::shared_ptr<Device>& device, const DirectX::SimpleMath::Matrix view, const DirectX::SimpleMath::Matrix proj, bool isRender/*=true*/)
 {
 
 	if (isRender)
@@ -81,13 +82,13 @@ void DebugDrawManager::Execute(const std::shared_ptr<Device>& device, const VPMa
 
 void DebugDrawManager::Draw(const debug::SphereInfo& info)
 {
-	VPMath::Vector3 origin = info.Sphere.Center;
+	DirectX::SimpleMath::Vector3 origin = info.Sphere.Center;
 
 	const float radius = info.Sphere.Radius;
 
-	VPMath::Vector3 xaxis = VPMath::Vector3::UnitX * radius;
-	VPMath::Vector3 yaxis = VPMath::Vector3::UnitY * radius;
-	VPMath::Vector3 zaxis = VPMath::Vector3::UnitZ * radius;
+	DirectX::SimpleMath::Vector3 xaxis = DirectX::SimpleMath::Vector3::UnitX * radius;
+	DirectX::SimpleMath::Vector3 yaxis = DirectX::SimpleMath::Vector3::UnitY * radius;
+	DirectX::SimpleMath::Vector3 zaxis = DirectX::SimpleMath::Vector3::UnitZ * radius;
 
 	debug::RingInfo ringInfo;
 	ringInfo.Origin = origin;
@@ -108,16 +109,16 @@ void DebugDrawManager::Draw(const debug::SphereInfo& info)
 
 void DebugDrawManager::Draw(const debug::AABBInfo& info)
 {
-	Matrix matWorld =
-		Matrix::CreateScale(info.AABB.Extents) *
-		Matrix::CreateTranslation(info.AABB.Center);
+	DirectX::SimpleMath::Matrix matWorld =
+		DirectX::SimpleMath::Matrix::CreateScale(info.AABB.Extents) *
+		DirectX::SimpleMath::Matrix::CreateTranslation(info.AABB.Center);
 
 	DrawCube(matWorld, info.Color);
 }
 
 void DebugDrawManager::Draw(const debug::OBBInfo& info)
 {
-	Quaternion rotationQuaternion = Quaternion{};
+	DirectX::SimpleMath::Quaternion rotationQuaternion = DirectX::SimpleMath::Quaternion{};
 
 	if (info.OBB.Orientation.x != 0
 		|| info.OBB.Orientation.y != 0
@@ -132,24 +133,24 @@ void DebugDrawManager::Draw(const debug::OBBInfo& info)
 		float xRad = XMConvertToRadians(info.xAxisAngle);
 		float yRad = XMConvertToRadians(info.yAxisAngle);
 		float zxRad = XMConvertToRadians(info.zAxisAngle);
-		rotationQuaternion = Quaternion::CreateFromYawPitchRoll(yRad, xRad, zxRad);
+		rotationQuaternion = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(yRad, xRad, zxRad);
 	}
 
 	XMFLOAT4 orientation = info.OBB.Orientation;
 
 	XMStoreFloat4(&orientation, rotationQuaternion);
 
-	Matrix matWorld =
-		Matrix::CreateScale(info.OBB.Extents) *
-		Matrix::CreateFromQuaternion(orientation) *
-		Matrix::CreateTranslation(info.OBB.Center);
+	DirectX::SimpleMath::Matrix matWorld =
+		DirectX::SimpleMath::Matrix::CreateScale(info.OBB.Extents) *
+		DirectX::SimpleMath::Matrix::CreateFromQuaternion(orientation) *
+		DirectX::SimpleMath::Matrix::CreateTranslation(info.OBB.Center);
 
 	DrawCube(matWorld, info.Color);
 }
 
 void DebugDrawManager::Draw(const debug::FrustumInfo& info)
 {
-	Vector3 corners[BoundingFrustum::CORNER_COUNT];
+	DirectX::SimpleMath::Vector3 corners[BoundingFrustum::CORNER_COUNT];
 	info.Frustum.GetCorners(corners);
 
 	VertexPositionColor verts[24] = {};
@@ -197,11 +198,11 @@ void DebugDrawManager::Draw(const debug::GridInfo& info)
 	{
 		float percent = float(i) / float(xdivs);
 		percent = (percent * 2.f) - 1.f;
-		Vector3 scale = info.XAsix * percent * info.GridSize * 0.5f;
+		Vector3 scale = info.XAxis * percent * info.GridSize * 0.5f;
 		scale += info.Origin;
 
-		VertexPositionColor v1(scale - info.YAsix * info.GridSize * 0.5f, info.Color);
-		VertexPositionColor v2(scale + info.YAsix * info.GridSize * 0.5f, info.Color);
+		VertexPositionColor v1(scale - info.YAxis * info.GridSize * 0.5f, info.Color);
+		VertexPositionColor v2(scale + info.YAxis * info.GridSize * 0.5f, info.Color);
 		m_Batch->DrawLine(v1, v2);
 	}
 
@@ -209,11 +210,11 @@ void DebugDrawManager::Draw(const debug::GridInfo& info)
 	{
 		float percent = float(i) / float(ydivs);
 		percent = (percent * 2.f) - 1.f;
-		Vector3 scale = info.YAsix * percent * info.GridSize * 0.5f;
+		Vector3 scale = info.YAxis * percent * info.GridSize * 0.5f;
 		scale += info.Origin;
 
-		VertexPositionColor v1(scale - info.XAsix * info.GridSize * 0.5f, info.Color);
-		VertexPositionColor v2(scale + info.XAsix * info.GridSize * 0.5f, info.Color);
+		VertexPositionColor v1(scale - info.XAxis * info.GridSize * 0.5f, info.Color);
+		VertexPositionColor v2(scale + info.XAxis * info.GridSize * 0.5f, info.Color);
 		m_Batch->DrawLine(v1, v2);
 	}
 }
@@ -319,7 +320,7 @@ void DebugDrawManager::DrawRing(const debug::RingInfo& info)
 	m_Batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, verts, c_ringSegments + 1);
 }
 
-void DebugDrawManager::DrawCube(const VPMath::Matrix& worldTransform, const VPMath::Color& color)
+void DebugDrawManager::DrawCube(const DirectX::SimpleMath::Matrix& worldTransform, const DirectX::SimpleMath::Color& color)
 {
 	static const XMVECTORF32 s_verts[8] =
 	{

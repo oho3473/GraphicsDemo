@@ -7,13 +7,12 @@
 #include <directxtk/VertexTypes.h>
 #include <wrl/client.h>
 
-#include "vpGraphics.h"
+#include "RenderData.h"
 
 class RenderState;
 class DepthStencilState;
 class BlendState;
 class ResourceManager;
-using namespace DirectX;
 
 class Camera;
 class Device;
@@ -23,7 +22,7 @@ class DebugDrawManager
 public:
 	void Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resourceManager);
 
-	void Execute(const std::shared_ptr<Device>& device, const VPMath::Matrix view,const VPMath::Matrix proj, bool isRender = true);
+	void Execute(const std::shared_ptr<Device>& device, const DirectX::SimpleMath::Matrix view,const DirectX::SimpleMath::Matrix proj, bool isRender = true);
 
 	void AddTask(const debug::SphereInfo& info) { m_SphereInfos.push(info); }
 	void AddTask(const debug::AABBInfo& info) { m_BoxInfos.push(info); }
@@ -46,16 +45,16 @@ private:
 	void Draw(const debug::QuadInfo& info);
 
 	void DrawRing(const debug::RingInfo& info);
-	void DrawCube(const VPMath::Matrix& worldTransform, const VPMath::Color& color);
-	void DrawLine(const VPMath::Vector3& start, const VPMath::Vector3& end, const VPMath::Vector4& color);
+	void DrawCube(const DirectX::SimpleMath::Matrix& worldTransform, const DirectX::SimpleMath::Color& color);
+	
 
 private:
 	std::shared_ptr<BlendState> m_AlphaBlendBS;
 	std::shared_ptr<DepthStencilState> m_DefaultDSS;
 	std::shared_ptr<RenderState> m_CullNoneRS;
 
-	std::unique_ptr<BasicEffect> m_BatchEffect;
-	std::unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+	std::unique_ptr<DirectX::BasicEffect> m_BatchEffect;
+	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_Batch;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_BatchInputLayout;
 
 	// Task Container

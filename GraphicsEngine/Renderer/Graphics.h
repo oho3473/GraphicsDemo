@@ -22,6 +22,7 @@ class PassManager;
 
 class LightManager;
 class DecalManager;
+class DebugDrawManager;
 
 class ModelData;
 
@@ -52,6 +53,15 @@ public:
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 	virtual const double GetDuration(std::wstring name, int index) override;
 
+	virtual void DrawSphere(const debug::SphereInfo& info)override;
+	virtual void DrawAABB(const debug::AABBInfo& info)override;
+	virtual void DrawOBB(const debug::OBBInfo& info)override;
+	virtual void DrawFrustum(const debug::FrustumInfo& info)override;
+	virtual void DrawGrid(const debug::GridInfo& info)override;
+	virtual void DrawRing(const debug::RingInfo& info)override;
+	virtual void DrawQuad(const debug::QuadInfo& info)override;
+	virtual void DrawRay(const debug::RayInfo& info)override;
+
 
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
@@ -73,6 +83,7 @@ private:
 	std::shared_ptr<LightManager> m_LightManager;
 
 	std::shared_ptr <DecalManager> m_DecalManager;
+	std::shared_ptr <DebugDrawManager> m_DebugDrawManager;
 
 private:
 	HWND m_hWnd;

@@ -2,7 +2,7 @@
 #include "RenderData.h"
 
 #include "TransparencyPass.h"
-//#include "DebugPass.h"
+#include "DebugPass.h"
 #include "DeferredPass.h"
 
 
@@ -35,7 +35,7 @@ public:
 	PassManager();
 	~PassManager();
 
-	void Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resource,const std::shared_ptr<LightManager>& lightmanager,
+	void Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resource, const std::shared_ptr<DebugDrawManager>& debug, const std::shared_ptr<LightManager>& lightmanager,
 		const std::shared_ptr<DecalManager> decalmanager);
 	void Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling);
 
@@ -56,6 +56,7 @@ private:
 
 	std::shared_ptr<DeferredPass> m_DeferredPass;
 	std::shared_ptr<TransparencyPass> m_TransparencyPass;
+	std::shared_ptr<DebugPass> m_DebugPass;
 	std::shared_ptr<VPOutLinePass> m_VPOutLinePass;
 	std::shared_ptr<RimLight> m_RimLight;
 	std::shared_ptr<DeferredInstancing> m_Instancing;
@@ -68,7 +69,7 @@ private:
 private:
 	std::weak_ptr<Device> m_Device;
 	std::weak_ptr<ResourceManager> m_ResourceManager;
-	//std::weak_ptr<DebugDrawManager> m_DebugDrawManager;
+	std::weak_ptr<DebugDrawManager> m_DebugDrawManager;
 	//std::shared_ptr<ParticleManager> m_ParticleManager;
 	//TimeManager* m_TimeManager = nullptr;
 	//std::shared_ptr<UIManager> m_UIManager;

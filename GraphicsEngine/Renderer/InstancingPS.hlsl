@@ -92,7 +92,7 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Albedo.a = useNEOL.z * gOpacity.Sample(samLinear, input.tex.xy).r + (1 - useNEOL.z);
     
     output.Metalic_Roughness.r = AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).r + (1 - AMRO.y) * 0.04f;
-    output.Metalic_Roughness.g = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).r + (1 - AMRO.z);
+    output.Metalic_Roughness.g = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
     
     output.Emissive = gEmissive.Sample(samLinear, input.tex.xy) * useNEOL.y;
     

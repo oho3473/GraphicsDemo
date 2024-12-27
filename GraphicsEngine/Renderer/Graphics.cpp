@@ -1,16 +1,17 @@
 #include "Graphics.h"
 #include "Device.h"
+
 #include "ResourceManager.h"
 #include "ModelLoader.h"
 #include "LightManager.h"
 #include "Animator.h"
 #include "DecalManager.h"
 #include "PassManager.h"
+#include "DebugDrawManager.h"
 
 #include "ModelData.h"
 #include "Mesh.h"
 #include "Animation.h"
-
 
 
 Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
@@ -21,6 +22,7 @@ Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
 , m_LightManager(std::make_shared<LightManager>())
 , m_Animator(std::make_shared <Animator>())
 , m_DecalManager(std::make_shared <DecalManager>())
+, m_DebugDrawManager(std::make_shared <DebugDrawManager>())
 , m_PassManager(std::make_shared <PassManager>()), IGraphics()
 {
 
@@ -43,7 +45,8 @@ bool Graphics::Initialize()
 	m_Loader->Initialize(m_ResourceManager, m_Device);
 	m_LightManager->Initialize(m_ResourceManager);
 	m_Animator->Initialize(m_ResourceManager);
-	m_PassManager->Initialize(m_Device, m_ResourceManager, m_LightManager, m_DecalManager);
+	m_DebugDrawManager->Initialize(m_Device, m_ResourceManager);
+	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager, m_DecalManager);
 
 	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
 
@@ -177,7 +180,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 
 void Graphics::DebugRenderONOFF(bool isRender)
 {
-
+	m_PassManager->SetDebugDraw(true);
 }
 
 void Graphics::EraseObject(uint32_t EntityID)
@@ -311,6 +314,47 @@ const double Graphics::GetDuration(std::wstring name, int index)
 
 
 	return 0;
+}
+
+void Graphics::DrawSphere(const debug::SphereInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawAABB(const debug::AABBInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawOBB(const debug::OBBInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawFrustum(const debug::FrustumInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+
+}
+
+void Graphics::DrawGrid(const debug::GridInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawRing(const debug::RingInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawQuad(const debug::QuadInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
+}
+
+void Graphics::DrawRay(const debug::RayInfo& info)
+{
+	m_DebugDrawManager->AddTask(info);
 }
 
 void Graphics::Culling()

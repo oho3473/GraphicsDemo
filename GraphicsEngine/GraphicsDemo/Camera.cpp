@@ -30,7 +30,7 @@ void Camera::Initialize(double ratio)
 	m_input = InputManager::GetInstance();
 
 	m_FOV = 0.25f * 3.14f;
-	m_nearZ = 1.f;
+	m_nearZ = 0.1f;
 	m_farZ = 1000;
 
 	m_nearWindowHeight = 2 * m_nearZ * tanf(0.5f * m_FOV);

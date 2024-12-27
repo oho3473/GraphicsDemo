@@ -185,6 +185,12 @@
     <ClInclude Include="OutputMain.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="DebugPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDrawManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IGraphics.cpp">
@@ -329,6 +335,12 @@
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="OutputMain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

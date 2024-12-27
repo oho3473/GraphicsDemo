@@ -13,17 +13,17 @@
 class Bone
 {
 public:
-	Bone() : name(), offsetMatrix(), offsetMatrixInverse(), NodeMatrix(), Boneindex(), vertexid(), weight(), node()
+	Bone() : name(), offsetMatrix(), offsetMatrixInverse(),Boneindex(), node()
 	{}
 
 	std::wstring name;
 	DirectX::SimpleMath::Matrix offsetMatrix;
 	DirectX::SimpleMath::Matrix offsetMatrixInverse;
-	DirectX::SimpleMath::Matrix NodeMatrix;
-	float weight;
+	//DirectX::SimpleMath::Matrix NodeMatrix;
+	//float weight;
 	int Boneindex;
-	int vertexid;
-	int ParentsId;
+	//int vertexid;
+	//int ParentsId;
 	std::vector<float> weights;
 	std::vector<int> vertexids;
 	std::weak_ptr<Node> node;

@@ -52,6 +52,14 @@ public:
 
 	virtual const double GetDuration(std::wstring name, int index) abstract;
 
+	virtual void DrawSphere(const debug::SphereInfo& info)abstract;
+	virtual void DrawAABB(const debug::AABBInfo& info)abstract;
+	virtual void DrawOBB(const debug::OBBInfo& info)abstract;
+	virtual void DrawFrustum(const debug::FrustumInfo& info)abstract;
+	virtual void DrawGrid(const debug::GridInfo& info)abstract;
+	virtual void DrawRing(const debug::RingInfo& info)abstract;
+	virtual void DrawQuad(const debug::QuadInfo& info)abstract;
+	virtual void DrawRay(const debug::RayInfo& info)abstract;
 };
 
 extern "C" {

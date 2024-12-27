@@ -64,18 +64,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	IGraphics* graphicsEngine = CreateGraphics(hWnd);
 	graphicsEngine->Initialize();
+	graphicsEngine->DebugRenderONOFF(true);
 
+
+	///모델
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
-	test->FBX = L"pbrtest.fbx";
+	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
 	test->offset = { 0,0 };
 	test->lightmapindex = 0;
 	test->scale = 1;
 	test->tiling = { 0,0 };
 	test->punchEffect = false;
-	test->isSkinned = false;
-	test->isPlay = false;
+	test->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+	test->isPlay = false;		//모델이 애니메이션을 실행하는가?
 	test->color = DirectX::XMFLOAT4{ 0,0,0,0 };
 	test->preAni = 0;
 	test->curAni = 0;
@@ -88,6 +91,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	}
 
+	//모델 회전을 위한 변수
+	double rotation = 0.0f;
 
 	LightData dir;
 	dir.direction = DirectX::XMFLOAT3(0, 0, 1);
@@ -105,7 +110,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
-	float rotation = 0.0f;
+	
+
+	///디버그 드로우
+	debug::GridInfo grid;
+	grid.Color = { 1,1,1,1 };
+	grid.GridSize = 10;
+	grid.XAxis = { 1,0,0 };
+	grid.YAxis = { 0,0,1 };
+	grid.Origin = { 0,0,0 };
+	grid.XDivs = 100;
+	grid.YDivs = 100;
+
+	debug::RayInfo XAxis;
+	XAxis.Color = { 1,0,0,1 };
+	XAxis.Direction= { 10,0,0 };
+	XAxis.Normalize = false;
+
+	debug::RayInfo YAxis;
+	YAxis.Color = { 0,1,0,1 };
+	YAxis.Direction = { 0,10,0 };
+	YAxis.Normalize = false;
+
+	debug::RayInfo ZAxis;
+	ZAxis.Color = { 0,0,1,1 };
+	ZAxis.Direction = { 0,0,10 };
+	ZAxis.Normalize = false;
+
 
 	// 기본 메시지 루프입니다:
 	while (true)
@@ -135,7 +166,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			test->duration += 0.001f;
 			if (animationtime <= test->duration)
 			{
-				test->duration -= animationtime;
+				test->duration -= static_cast<float>(animationtime);
 			}
 		}
 
@@ -153,9 +184,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		graphicsEngine->Update(timeManager->DeltaTime());
 		graphicsEngine->EndUpdate(timeManager->DeltaTime());
 
+		
+		
+		graphicsEngine->DrawGrid(grid);
+		graphicsEngine->DrawRay(XAxis);
+		graphicsEngine->DrawRay(YAxis);
+		graphicsEngine->DrawRay(ZAxis);
 
 		graphicsEngine->BeginRender();
-		graphicsEngine->Render(0);
+		graphicsEngine->Render(timeManager->DeltaTime());
 		graphicsEngine->EndRender();
 	}
 

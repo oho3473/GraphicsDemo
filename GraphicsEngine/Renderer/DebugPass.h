@@ -19,6 +19,6 @@ public:
 
 private:
 	std::weak_ptr<DebugDrawManager> m_DebugDrawManager;
-	VPMath::Matrix m_View;
-	VPMath::Matrix m_Proj;
+	DirectX::SimpleMath::Matrix m_View;
+	DirectX::SimpleMath::Matrix m_Proj;
 };
