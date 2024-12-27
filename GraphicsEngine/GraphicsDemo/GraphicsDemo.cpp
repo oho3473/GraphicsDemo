@@ -5,7 +5,7 @@
 #include "GraphicsDemo.h"
 #include "IGraphics.h"
 #include "CameraManager.h"
-
+#include "TimeManager.h"
 #include <iostream>
 
 
@@ -58,6 +58,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CameraManager* cameraManager = new CameraManager(ratio);
 	cameraManager->Initialize();
 
+	TimeManager* timeManager = new TimeManager();
+	timeManager->Initialize();
+
+
 	IGraphics* graphicsEngine = CreateGraphics(hWnd);
 	graphicsEngine->Initialize();
 
@@ -106,6 +110,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// 기본 메시지 루프입니다:
 	while (true)
 	{
+
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
@@ -117,12 +122,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
+		timeManager->Update(1);
 
 		//물체 y축 회전
 		test->world._11 = cos(rotation);		test->world._13 = sin(rotation);
 		test->world._31 = -sin(rotation);		test->world._33 = cos(rotation);
 
-		rotation += 0.005f;
+		rotation += 0.0005f;
 
 		if (test->isSkinned && test->isPlay)
 		{
@@ -135,7 +141,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 		InputManager::GetInstance()->Update();
-		cameraManager->Update(0.01f);
+		cameraManager->Update(timeManager->DeltaTime());
 		DirectX::SimpleMath::Matrix view = cameraManager->View();
 		//view._41 = -10;
 		DirectX::SimpleMath::Matrix proj = cameraManager->Proj();
@@ -143,9 +149,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		graphicsEngine->SetCamera(view, proj, ortho);
 
 		graphicsEngine->CulingUpdate();
-		graphicsEngine->AnimationUpdate(0);
-		graphicsEngine->Update(0);
-		graphicsEngine->EndUpdate(0);
+		graphicsEngine->AnimationUpdate(timeManager->DeltaTime());
+		graphicsEngine->Update(timeManager->DeltaTime());
+		graphicsEngine->EndUpdate(timeManager->DeltaTime());
 
 
 		graphicsEngine->BeginRender();

@@ -144,12 +144,14 @@
     <ClInclude Include="ISingleton.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="GraphicsDemo.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GraphicsDemo.rc" />
