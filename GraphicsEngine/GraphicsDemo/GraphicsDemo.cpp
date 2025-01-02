@@ -72,6 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	test->EntityID = 1;
 	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
+	test->world._42 = 1;
 	test->offset = { 0,0 };
 	test->lightmapindex = 0;
 	test->scale = 1;
@@ -115,7 +116,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	///디버그 드로우
 	debug::GridInfo grid;
 	grid.Color = { 1,1,1,1 };
-	grid.GridSize = 10;
+	grid.GridSize = 100;
 	grid.XAxis = { 1,0,0 };
 	grid.YAxis = { 0,0,1 };
 	grid.Origin = { 0,0,0 };
@@ -137,6 +138,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	ZAxis.Direction = { 0,0,10 };
 	ZAxis.Normalize = false;
 
+	ui::TextInfo text;
+	text.Color = { 0,1,0,1 };
+	text.PosXPercent = 10;
+	text.PosYPercent = 3;
+	text.Text = L"카메라 이동 : WASD\n카메라 회전 : 마우스 우클릭 이동";
+	text.Scale = 0.3f;
+	graphicsEngine->CreateTextObject(11, text);
+	
 
 	// 기본 메시지 루프입니다:
 	while (true)
@@ -287,14 +296,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				default:
 					return DefWindowProc(hWnd, message, wParam, lParam);
 			}
-		}
-		break;
-		case WM_PAINT:
-		{
-			PAINTSTRUCT ps;
-			HDC hdc = BeginPaint(hWnd, &ps);
-			// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-			EndPaint(hWnd, &ps);
 		}
 		break;
 		case WM_DESTROY:
