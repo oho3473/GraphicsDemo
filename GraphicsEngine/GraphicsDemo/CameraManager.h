@@ -24,6 +24,8 @@ public:
 	DirectX::XMFLOAT4X4 View();
 	DirectX::XMFLOAT4X4 Proj();
 	void OnResize(double ratio);
+	DirectX::SimpleMath::Vector3 GetCamerPos() const;
+
 
 private:
 	Camera* m_curCamera;

@@ -191,6 +191,15 @@
     <ClInclude Include="DebugDrawManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="UIPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TextObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IGraphics.cpp">
@@ -341,6 +350,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DebugDrawManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TextObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,9 +20,12 @@ class ShaderResourceView;
 class PassManager;
 #pragma endregion
 
+#pragma region Manager
 class LightManager;
 class DecalManager;
 class DebugDrawManager;
+class UIManager;
+#pragma endregion
 
 class ModelData;
 
@@ -61,8 +64,9 @@ public:
 	virtual void DrawRing(const debug::RingInfo& info)override;
 	virtual void DrawQuad(const debug::QuadInfo& info)override;
 	virtual void DrawRay(const debug::RayInfo& info)override;
-
-
+	virtual void CreateTextObject(uint32_t entityID, const ui::TextInfo& info)override;
+	virtual	void UpdateTextObject(uint32_t entityID, const ui::TextInfo& info)override;
+	virtual void DeleteTextObject(uint32_t entityId)override;
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
 	std::vector<std::weak_ptr<DepthStencilView>> m_DSVs;
@@ -84,6 +88,7 @@ private:
 
 	std::shared_ptr <DecalManager> m_DecalManager;
 	std::shared_ptr <DebugDrawManager> m_DebugDrawManager;
+	std::shared_ptr <UIManager> m_UIManager;
 
 private:
 	HWND m_hWnd;

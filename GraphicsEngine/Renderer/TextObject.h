@@ -1,6 +1,6 @@
 #pragma once
-#include "vpGraphics.h"
-
+#include "RenderData.h"
+#include <memory>
 class ResourceManager;
 class Device;
 

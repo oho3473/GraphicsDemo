@@ -7,7 +7,7 @@
 #include "CameraManager.h"
 #include "TimeManager.h"
 #include <iostream>
-
+#include <format>
 
 
 #define MAX_LOADSTRING 100
@@ -31,8 +31,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	// TODO: 여기에 코드를 입력합니다.
-
 	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_GRAPHICSDEMO, szWindowClass, MAX_LOADSTRING);
@@ -55,6 +53,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float Height = static_cast<float>(tempsize.bottom - tempsize.top);
 	float ratio = Width / Height;
 
+#pragma region Initialize
 	CameraManager* cameraManager = new CameraManager(ratio);
 	cameraManager->Initialize();
 
@@ -65,8 +64,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	IGraphics* graphicsEngine = CreateGraphics(hWnd);
 	graphicsEngine->Initialize();
 	graphicsEngine->DebugRenderONOFF(true);
+#pragma endregion
 
-
+#pragma region Model
 	///모델
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
@@ -94,25 +94,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	//모델 회전을 위한 변수
 	double rotation = 0.0f;
+	graphicsEngine->AddRenderModel(test);
+#pragma endregion 
 
+#pragma region Light
 	LightData dir;
 	dir.direction = DirectX::XMFLOAT3(0, 0, 1);
 	dir.type = static_cast<float>(LightType::Direction);
 
-	graphicsEngine->AddRenderModel(test);
 	graphicsEngine->AddLight(1001, LightType::Direction, dir);
+#pragma endregion 
 
-	InputManager::GetInstance()->Initialize(hWnd);
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
-
-	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GRAPHICSDEMO));
-
-
-	MSG msg;
-
-	
-
+#pragma region Debug
 	///디버그 드로우
 	debug::GridInfo grid;
 	grid.Color = { 1,1,1,1 };
@@ -129,7 +122,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	XAxis.Normalize = false;
 
 	debug::RayInfo YAxis;
-	YAxis.Color = { 0,1,0,1 };
+	YAxis.Color = { 0,1,1,1 };
 	YAxis.Direction = { 0,10,0 };
 	YAxis.Normalize = false;
 
@@ -137,7 +130,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	ZAxis.Color = { 0,0,1,1 };
 	ZAxis.Direction = { 0,0,10 };
 	ZAxis.Normalize = false;
+#pragma endregion
 
+#pragma region Text
 	ui::TextInfo text;
 	text.Color = { 0,1,0,1 };
 	text.PosXPercent = 10;
@@ -147,7 +142,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	graphicsEngine->CreateTextObject(11, text);
 	
 
-	// 기본 메시지 루프입니다:
+	ui::TextInfo camerapos;
+	camerapos.Color = { 1,0,0,1 };
+	camerapos.PosXPercent = 9;
+	camerapos.PosYPercent = 10;
+	camerapos.Text = std::format(L"카메라 위치 : {}, {}, {}",0,0,0);
+	camerapos.Scale = 0.3f;
+	graphicsEngine->CreateTextObject(12, camerapos);
+
+	ui::TextInfo fps;
+	fps.Color = { 1,1,0,1 };
+	fps.PosXPercent = 4;
+	fps.PosYPercent = 15;
+	fps.Text = std::format(L"FPS : {}", 0);
+	fps.Scale = 0.3f;
+	graphicsEngine->CreateTextObject(13, fps);
+#pragma endregion
+
+	InputManager::GetInstance()->Initialize(hWnd);
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
+
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GRAPHICSDEMO));
+
+
+	MSG msg;
 	while (true)
 	{
 
@@ -162,7 +181,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		timeManager->Update(1);
+		timeManager->Update(timeManager->DeltaTime());
+		double FPS = timeManager->FPS();
+		fps.Text = std::format(L"FPS : {:.1f}", FPS);
+		graphicsEngine->UpdateTextObject(13, fps);
 
 		//물체 y축 회전
 		test->world._11 = cos(rotation);		test->world._13 = sin(rotation);
@@ -178,14 +200,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				test->duration -= static_cast<float>(animationtime);
 			}
 		}
-
+		
 
 		InputManager::GetInstance()->Update();
 		cameraManager->Update(timeManager->DeltaTime());
 		DirectX::SimpleMath::Matrix view = cameraManager->View();
-		//view._41 = -10;
 		DirectX::SimpleMath::Matrix proj = cameraManager->Proj();
 		DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::Identity;
+
+		DirectX::SimpleMath::Vector3 pos = cameraManager->GetCamerPos();
+		camerapos.Text = std::format(L"카메라 위치 : {:.1f}, {:.1f}, {:.1f}", (double)pos.x, (double)pos.y, (double)pos.z);
+		graphicsEngine->UpdateTextObject(12, camerapos);
+
+
 		graphicsEngine->SetCamera(view, proj, ortho);
 
 		graphicsEngine->CulingUpdate();
@@ -205,8 +232,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		graphicsEngine->EndRender();
 	}
 
+#pragma region Destroy
 	graphicsEngine->Finalize();
 	DestroyGraphics(graphicsEngine);
+#pragma endregion 
 
 	return (int)msg.wParam;
 }

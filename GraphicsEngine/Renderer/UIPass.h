@@ -12,9 +12,9 @@ class UIPass
 private:
 	struct ImageTransformCB
 	{
-		VPMath::Matrix World;
-		VPMath::Matrix View;
-		VPMath::Matrix Projection;
+		DirectX::SimpleMath::Matrix World;
+		DirectX::SimpleMath::Matrix View;
+		DirectX::SimpleMath::Matrix Projection;
 	};
 
 public:

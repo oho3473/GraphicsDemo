@@ -8,6 +8,7 @@
 #include "DecalManager.h"
 #include "PassManager.h"
 #include "DebugDrawManager.h"
+#include "UIManager.h"
 
 #include "ModelData.h"
 #include "Mesh.h"
@@ -23,6 +24,7 @@ Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
 , m_Animator(std::make_shared <Animator>())
 , m_DecalManager(std::make_shared <DecalManager>())
 , m_DebugDrawManager(std::make_shared <DebugDrawManager>())
+, m_UIManager(std::make_shared <UIManager>())
 , m_PassManager(std::make_shared <PassManager>()), IGraphics()
 {
 
@@ -46,7 +48,8 @@ bool Graphics::Initialize()
 	m_LightManager->Initialize(m_ResourceManager);
 	m_Animator->Initialize(m_ResourceManager);
 	m_DebugDrawManager->Initialize(m_Device, m_ResourceManager);
-	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager, m_DecalManager);
+	m_UIManager->Initialize(m_Device, m_ResourceManager);
+	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager, m_DecalManager,m_UIManager);
 
 	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
 
@@ -106,6 +109,7 @@ bool Graphics::Finalize()
 
 	m_ResourceManager.reset();
 	m_LightManager.reset();
+	m_UIManager.reset();
 
 	return true;
 
@@ -475,3 +479,20 @@ std::vector<std::shared_ptr<RenderData>>::iterator Graphics::FindEntity(uint32_t
 
 	return m_RenderVector.end();
 }
+
+
+void Graphics::CreateTextObject(uint32_t entityID, const ui::TextInfo& info)
+{
+	m_UIManager->CreateTextObject(entityID, info);
+}
+
+void Graphics::UpdateTextObject(uint32_t entityID, const ui::TextInfo& info)
+{
+	m_UIManager->UpdateTextObject(entityID, info);
+}
+
+void Graphics::DeleteTextObject(uint32_t entityId)
+{
+	m_UIManager->DeleteTextObject(entityId);
+}
+

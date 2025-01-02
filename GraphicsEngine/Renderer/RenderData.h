@@ -140,3 +140,60 @@ namespace debug
 		DirectX::SimpleMath::Color Color = { 1.f, 1.f, 1.f, 1.f };
 	};
 }
+
+namespace ui
+{
+	enum class RenderModeType
+	{
+		WorldSpace,				// 3D 월드 좌표계에서 렌더링
+		ScreenSpaceOverlay,		// 2D 화면 좌표계에서 렌더링
+		ScreenSpaceCamera,		// 특정 카메라에 연결하여 렌더링..		// 유니티를 참고함
+	};
+
+	enum class BillboardType
+	{
+		None,
+		Full,
+		AxisY
+	};
+
+	struct ImageInfo
+	{
+		std::string ImagePath = {};
+		DirectX::SimpleMath::Color Color = { 1.f, 1.f, 1.f, 1.f };	// 이미지 색상. rgba
+		RenderModeType RenderMode = RenderModeType::ScreenSpaceOverlay;
+		BillboardType Billboard = BillboardType::None;
+		float LeftPercent;   // 왼쪽에서 사라지는 비율 (0.0f ~ 1.0f)
+		float RightPercent;  // 오른쪽에서 사라지는 비율 (0.0f ~ 1.0f)
+		float TopPercent;    // 위쪽에서 사라지는 비율 (0.0f ~ 1.0f)
+		float BottomPercent; // 아래쪽에서 사라지는 비율 (0.0f ~ 1.0f)
+
+		// 2D
+		float PosXPercent = 0.f;
+		float PosYPercent = 0.f;
+		float Scale = 1.f;
+		uint32_t Layer = 0;		// 이미지 깊이값
+
+		// 3D
+		DirectX::SimpleMath::Matrix World = DirectX::SimpleMath::Matrix::Identity;
+
+	};
+
+	struct TextInfo
+	{
+		std::wstring Text = {};
+		std::wstring FontPath = {};
+		DirectX::SimpleMath::Color Color;
+		float PosXPercent = 0.f;
+		float PosYPercent = 0.f;
+		float Scale = 1.f;
+		float Angle = 0.f;
+		float Layer = 0;
+
+		// effect
+		bool isBold = false;
+		bool isItalic = false;
+		bool isStrikeout = false;
+		bool isUnderlined = false;
+	};
+}

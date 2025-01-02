@@ -60,6 +60,10 @@ public:
 	virtual void DrawRing(const debug::RingInfo& info)abstract;
 	virtual void DrawQuad(const debug::QuadInfo& info)abstract;
 	virtual void DrawRay(const debug::RayInfo& info)abstract;
+
+	virtual void CreateTextObject(uint32_t entityID, const ui::TextInfo& info)abstract;
+	virtual	void UpdateTextObject(uint32_t entityID, const ui::TextInfo& info)abstract;
+	virtual void DeleteTextObject(uint32_t entityId)abstract;
 };
 
 extern "C" {

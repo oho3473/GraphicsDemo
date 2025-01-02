@@ -91,3 +91,8 @@ void CameraManager::OnResize(double ratio)
 	m_ratio = ratio;
 	m_curCamera->OnResize(m_ratio);
 }
+
+DirectX::SimpleMath::Vector3 CameraManager::GetCamerPos() const
+{
+	return m_curCamera->GetPosition();
+}
