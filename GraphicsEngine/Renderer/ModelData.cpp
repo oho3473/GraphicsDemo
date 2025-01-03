@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ModelData.h"
 
-ModelData::ModelData() : m_name(L"need name"), m_RootNode(), RS()
+ModelData::ModelData() : m_name(L"need name"), m_RootNode(), RS(),UID(-1)
 {
 
 }
@@ -10,6 +10,7 @@ ModelData::ModelData(std::shared_ptr<ModelData> other)
 {
 	if (other != nullptr)
 	{
+		this->UID = other->UID;
 		this->m_RootNode = other->m_RootNode;
 		this->m_Meshes = other->m_Meshes;
 		this->m_Materials = other->m_Materials;

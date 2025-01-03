@@ -15,7 +15,7 @@ LightArray::LightArray() : DirIndex(0), PointIndex(0), SpotIndex(0), pad(0)
 {
 }
 
-MaterialData::MaterialData() : albedo(1, 1, 1, 1), metalness(0), roughness(0), ao(0), useNEOL(0, 0, 0, 0), useAMRO(0, 0, 0, 0)
+MaterialData::MaterialData() : albedo(1, 1, 1, 1), metalness(0), roughness(0), ao(0), useNEOL(0, 0, 0, 0), useAMRO(0, 0, 0, 0),lightmaptiling(0,0),lightmapdata(0,0,0,0),pad(0),pad2(0,0)
 {
 
 }

@@ -24,6 +24,39 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{3aa8a320-cec3-4109-840d-f526c1fffc62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\source">
+      <UniqueIdentifier>{814dd732-b656-482c-9e5b-d29f09d21bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\header">
+      <UniqueIdentifier>{2cefc195-ee33-4dc0-a91b-e4e942955edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{289cbe94-b568-4209-a016-06c7d6fa3f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\source">
+      <UniqueIdentifier>{d40892ef-48a1-447d-a45e-3c5e936e748f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass">
+      <UniqueIdentifier>{03827597-3f26-46bb-9119-5fa8ca35bc3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModelLoader">
+      <UniqueIdentifier>{76bbc9a6-be10-4700-9015-e0edee75a835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{a5e24fd0-59c6-4e5f-ae5b-0b0269338bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass\source">
+      <UniqueIdentifier>{1cf04a56-b7fd-40cb-9825-ed258f8913dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass\header">
+      <UniqueIdentifier>{508a91fc-e945-4e55-a2cd-3f5ea4d4f62c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModelLoader\ModelData">
+      <UniqueIdentifier>{cb53e3eb-f28a-43e7-99ee-1d0e990c29dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface\source">
+      <UniqueIdentifier>{4956715f-eaef-4041-abfc-50db66219284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IGraphics.h">
@@ -35,331 +68,331 @@
     <ClInclude Include="pch.h">
       <Filter>Data\etc</Filter>
     </ClInclude>
-    <ClInclude Include="RenderData.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Device.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelData.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTargetView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderResourceView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Slot.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferData.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Sampler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewPort.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Desc.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="PassManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="Defines.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="VertexData.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="ShaderResourceView.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredLightPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Shader.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredInstancing.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Sampler.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredGeometryPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="RenderState.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="TransparencyPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="VPOutLinePass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Device.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="RimLight.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DecalPass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DecalManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="OverDrawPass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectPass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticData.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
     <ClInclude Include="BlendState.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="LightManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Buffer.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="OutputMain.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
-    <ClInclude Include="DebugPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="RenderTargetView.h">
+      <Filter>Resource\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilView.h">
+      <Filter>Resource\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Resource\header</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PassManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="DebugDrawManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="UIPass.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="DecalManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>ModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferData.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderData.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPort.h">
+      <Filter>Resource\header</Filter>
     </ClInclude>
     <ClInclude Include="TextObject.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Resource\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Slot.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticData.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DecalPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredGeometryPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredInstancing.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredLightPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputMain.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="OverDrawPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="RimLight.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="TransparencyPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="VPOutLinePass.h">
+      <Filter>RenderPass\header</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelData.h">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexData.h">
+      <Filter>Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IGraphics.cpp">
-      <Filter>Interface</Filter>
-    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>Data\etc</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Data\etc</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="BlendState.cpp">
+      <Filter>Resource\source</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencilState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencilView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Device.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PixelShader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTargetView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderResourceView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexShader.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Resource\source</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resource\source</Filter>
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Resource\source</Filter>
     </ClCompile>
-    <ClCompile Include="ViewPort.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource\source</Filter>
     </ClCompile>
-    <ClCompile Include="PassManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Util.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredLightPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredInstancing.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredGeometryPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="VPOutLinePass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RimLight.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DecalPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DecalManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="OverDrawPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="BlendState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="LightManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TransparencyPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputMain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDrawManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="UIPass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="UIManager.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="ShaderResourceView.cpp">
+      <Filter>Resource\source</Filter>
     </ClCompile>
     <ClCompile Include="TextObject.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="PassManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawManager.cpp">
+      <Filter>Manager\source</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewPort.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>ModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetView.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilState.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilView.cpp">
+      <Filter>Resource\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredGeometryPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredInstancing.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredLightPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputMain.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="OverDrawPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="RimLight.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="TransparencyPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="VPOutLinePass.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelData.cpp">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferData.cpp">
+      <Filter>Interface\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Interface\source</Filter>
+    </ClCompile>
+    <ClCompile Include="IGraphics.cpp">
+      <Filter>Interface\source</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderData.cpp">
+      <Filter>Interface\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

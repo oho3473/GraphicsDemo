@@ -187,8 +187,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		graphicsEngine->UpdateTextObject(13, fps);
 
 		//물체 y축 회전
-		test->world._11 = cos(rotation);		test->world._13 = sin(rotation);
-		test->world._31 = -sin(rotation);		test->world._33 = cos(rotation);
+		test->world._11 = cosf(rotation);		test->world._13 = sinf(rotation);
+		test->world._31 = -sinf(rotation);		test->world._33 = cosf(rotation);
 
 		rotation += 0.5f * timeManager->DeltaTime();
 
