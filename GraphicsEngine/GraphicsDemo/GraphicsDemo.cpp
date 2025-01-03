@@ -3,12 +3,12 @@
 
 #include "framework.h"
 #include "GraphicsDemo.h"
-#include "IGraphics.h"
 #include "CameraManager.h"
 #include "TimeManager.h"
 #include <iostream>
 #include <format>
 
+#include "..\Renderer\IGraphics.h"
 
 #define MAX_LOADSTRING 100
 
@@ -158,7 +158,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	fps.Scale = 0.3f;
 	graphicsEngine->CreateTextObject(13, fps);
 #pragma endregion
-
+	
 	InputManager::GetInstance()->Initialize(hWnd);
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);

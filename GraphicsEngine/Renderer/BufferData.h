@@ -16,7 +16,7 @@ struct __declspec(dllexport) TransformData
 	DirectX::SimpleMath::Matrix localInverse;
 };
 
-struct __declspec(dllexport) CameraData
+struct CameraData
 {
 	DirectX::SimpleMath::Matrix worldviewproj;
 	DirectX::SimpleMath::Matrix view;
@@ -51,7 +51,7 @@ struct __declspec(dllexport) LightData
 	float range;
 
 	DirectX::XMFLOAT3 attenuation;
-	float type;
+	float type; 
 
 	DirectX::XMFLOAT3 pos;
 	float spot;

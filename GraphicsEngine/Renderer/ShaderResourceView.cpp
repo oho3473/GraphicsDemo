@@ -319,7 +319,7 @@ ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, st
 
 		}
 
-		int numTextures = filelist.size();
+		int numTextures = static_cast<int>(filelist.size());
 		D3D11_TEXTURE2D_DESC textureArrayDesc = {};
 		textureArrayDesc.Width = m_Width; // 텍스처의 너비
 		textureArrayDesc.Height = m_Height; // 텍스처의 높이

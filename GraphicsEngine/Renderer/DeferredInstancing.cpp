@@ -167,7 +167,7 @@ void DeferredInstancing::Render()
 			temp.worldInverse = object->world.Invert();
 			temp.lightmap_offset = object->offset;
 			temp.lightmap_tiling = object->tiling;
-			temp.lightmap_index.x = object->lightmapindex;
+			temp.lightmap_index.x = static_cast<float>(object->lightmapindex);
 			//라이트맵 사용하냐?
 			if (object->tiling.x <= 0 || object->tiling.y <= 0)
 			{

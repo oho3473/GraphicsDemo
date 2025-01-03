@@ -207,7 +207,7 @@ void ModelLoader::SaveBoneDataTexture(std::shared_ptr<ModelData> newData)
 	{
 		D3D11_TEXTURE2D_DESC texDesc = {};
 		texDesc.Width = 16; // 4 rows for each bone matrix
-		texDesc.Height = Animation->m_Channels.size() * 2/*totals.size*/; // 각 인스턴스마다 본 데이터를 포함
+		texDesc.Height = static_cast<UINT>(Animation->m_Channels.size() * 2);/*totals.size;*/ // 각 인스턴스마다 본 데이터를 포함
 		texDesc.MipLevels = 1;
 		texDesc.ArraySize = 1;
 		texDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -1004,7 +1004,7 @@ void ModelLoader::ProcessBoneMapping(std::vector<SkinningVertex>& buffer, aiMesh
 
 	std::shared_ptr<SkinnedMesh> curSkin = std::dynamic_pointer_cast<SkinnedMesh>(curMesh);
 
-	UINT meshBoneCount = curSkin->m_BoneData.size();
+	UINT meshBoneCount = static_cast<UINT>(curSkin->m_BoneData.size());
 
 
 	for (UINT i = 0; i < meshBoneCount; ++i)

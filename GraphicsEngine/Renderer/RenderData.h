@@ -101,9 +101,9 @@ namespace debug
 		DirectX::SimpleMath::Vector3 XAxis;
 		DirectX::SimpleMath::Vector3 YAxis;
 		DirectX::SimpleMath::Vector3 Origin;	//Áß½ÉÁ¡
-		size_t XDivs;	//x¸îÄ­
-		size_t YDivs;	//y¸îÄ­
-		float GridSize;	//1Ä­ÀÇ ±æÀÌ
+		size_t XDivs = 1;	//x¸îÄ­
+		size_t YDivs = 1;	//y¸îÄ­
+		float GridSize = 1.f;	//1Ä­ÀÇ ±æÀÌ
 		DirectX::SimpleMath::Color Color = { 1.f, 1.f, 1.f, 1.f };
 	};
 

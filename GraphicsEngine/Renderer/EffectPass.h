@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 #include "SimpleMath.h"
 
-class RenderData;
+struct RenderData;
 
 template<typename T>
 class ConstantBuffer;

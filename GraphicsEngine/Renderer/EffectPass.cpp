@@ -57,7 +57,7 @@ void EffectPass::Render(float deltaTime)
 	std::vector<ID3D11RenderTargetView*> RTVs;
 	RTVs.push_back(m_GBuffer.lock()->Get());
 	//RTVs.push_back(m_NormalRTV.lock()->Get());
-	Device->Context()->OMSetRenderTargets(RTVs.size(), RTVs.data(), m_DepthStencilView.lock()->Get());
+	Device->Context()->OMSetRenderTargets(static_cast<UINT>(RTVs.size()), RTVs.data(), m_DepthStencilView.lock()->Get());
 
 	//set primitive
 	m_Device.lock()->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

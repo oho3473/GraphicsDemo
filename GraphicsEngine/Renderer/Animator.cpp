@@ -92,7 +92,7 @@ void Animator::UpdateWorld(std::weak_ptr<RenderData> ob)
 					if (cur == end)
 					{
 						auto next = ani->totals.begin();
-						float t = abs(curtick - cur->first) / abs(next->first - cur->first);
+						float t = static_cast<float>(abs(curtick - cur->first) / abs(next->first - cur->first));
 
 						std::shared_ptr<Node> curAni = ani->node.lock();
 						curAni->m_Local = DirectX::SimpleMath::Matrix::Lerp(cur->second, next->second, t).Transpose();
@@ -101,7 +101,7 @@ void Animator::UpdateWorld(std::weak_ptr<RenderData> ob)
 
 					//일반적인 보간
 					auto next = tick;
-					float t = abs(curtick - cur->first) / abs(next->first - cur->first);
+					float t = static_cast<float>(abs(curtick - cur->first) / abs(next->first - cur->first));
 
 					std::shared_ptr<Node> curAni = ani->node.lock();
 					curAni->m_Local = DirectX::SimpleMath::Matrix::Lerp(cur->second, next->second, t).Transpose();

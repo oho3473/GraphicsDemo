@@ -94,9 +94,9 @@ void LightManager::Update(std::unordered_map<uint32_t, LightData>& usinglight)
 		}
 	}
 
-	m_BufferStruct.DirIndex = dirIndex;
-	m_BufferStruct.PointIndex = pointIndex;
-	m_BufferStruct.SpotIndex = spotIndex;
+	m_BufferStruct.DirIndex = static_cast<float>(dirIndex);
+	m_BufferStruct.PointIndex = static_cast<float>(pointIndex);
+	m_BufferStruct.SpotIndex = static_cast<float>(spotIndex);
 
 	for (int i = 0; i < dirIndex; i++)
 	{

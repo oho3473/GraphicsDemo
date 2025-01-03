@@ -21,8 +21,8 @@ VertexShader::VertexShader(std::shared_ptr<Device>device, std::wstring filename,
 	shaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
 	basePath = L"..\\Renderer\\";
 #else
-	//basePath = L"..\\Data\\HLSL\\";
-	basePath = L"..\\Renderer\\";
+	basePath = L"..\\Data\\HLSL\\";
+	//basePath = L"..\\Renderer\\";
 #endif
 
 	const std::string& shaderModel = "vs_5_0";
@@ -83,7 +83,7 @@ VertexShader::VertexShader(const std::shared_ptr<Device>& device,
 	basePath = L"..\\Renderer\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
-	basePath = L"..\\Renderer\\";
+	//basePath = L"..\\Renderer\\";
 #endif
 
 	const std::string& shaderModel = "vs_5_0";

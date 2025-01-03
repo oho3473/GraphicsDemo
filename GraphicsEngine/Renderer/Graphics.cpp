@@ -411,7 +411,7 @@ void Graphics::Culling()
 						DirectX::ContainmentType contains = m_Frustum.Contains(obbInfo);
 						if (contains)
 						{
-							visible |= contains;
+							visible |= static_cast<bool>(contains);
 							//break
 						}
 					}
@@ -450,7 +450,7 @@ void Graphics::Culling()
 					DirectX::ContainmentType contains = m_Frustum.Contains(obbInfo);
 					if (contains)
 					{
-						visible |= contains;
+						visible |= static_cast<bool>(contains);
 						//m_AfterCulling.push_back(object);
 						//break;	//바운딩박스보려고 임시 해제
 					}

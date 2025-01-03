@@ -35,7 +35,7 @@ struct QuadVertex
 //¿ŒΩ∫≈œΩÃ
 struct InstanceData
 {
-	InstanceData() : world(DirectX::SimpleMath::Matrix::Identity),worldInverse(DirectX::SimpleMath::Matrix::Identity)
+	InstanceData() : world(DirectX::SimpleMath::Matrix::Identity),worldInverse(DirectX::SimpleMath::Matrix::Identity), lightmap_offset(0,0),lightmap_tiling(0,0),lightmap_index(0,0)
 	{
 
 	}

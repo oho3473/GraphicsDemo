@@ -364,7 +364,7 @@ void DeferredPass::GeometryPass()
 						MaterialData data = curMaterial->m_Data;
 						data.lightmapdata.x = curData->offset.x;
 						data.lightmapdata.y = curData->offset.y;
-						data.lightmapdata.z = curData->lightmapindex;
+						data.lightmapdata.z = static_cast<float>(curData->lightmapindex);
 						data.lightmapdata.w = 1; //curData->scale;
 						data.lightmaptiling = curData->tiling;
 						if (data.lightmaptiling.x != 0 || data.lightmaptiling.y != 0)
