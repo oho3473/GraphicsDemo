@@ -6,30 +6,6 @@ struct PS_OUTPUT
     float4 Gbuffer : SV_Target0;
 };
 
-float4 calcindirect()
-{
-    //for (int i = 0; i < sampleCount; ++i)
-    //{
-    //// Generate sample direction
-    //    float3 sampleDir = normalize(float3(rand() - 0.5, rand() - 0.5, rand() - 0.5));
-    
-    //// Project sample point
-    //    float3 samplePos = position + sampleDir * radius;
-    
-    //// Fetch the indirect lighting contribution from the sample point
-    //    float3 sampleColor = gAlbedo.Sample(samLinear, samplePos.xy).rgb;
-    //    float3 sampleNormal = normalize(gNormal.Sample(samLinear, samplePos.xy).xyz);
-    
-    //// Simple Lambertian reflection model for indirect light
-    //    float NdotL = max(dot(normal, sampleDir), 0.0);
-    //    indirectLight += sampleColor * NdotL;
-    //}
-    
-    return float4(0,0,0,0);
-
-}
-
-
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
     //PS_OUTPUT output;
@@ -53,7 +29,7 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     //texture sampling
     float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
     float metallicValue = gMetalic.Sample(samLinear, input.tex).r; //quad에 텍스처를 샘플링해서 이상하게 나오는거였음
-    float roughnessValue = gMetalic.Sample(samLinear, input.tex).g;
+    float roughnessValue = gRoughness.Sample(samLinear, input.tex).r;
     float aoValue = gAO.Sample(samLinear, input.tex).r;
     float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
     float4 depthTemp = gDepth.Sample(samLinear, input.tex);

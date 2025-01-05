@@ -202,7 +202,6 @@ float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0,float3 albedo,
 {
     float3 result  = float3(0,0,0);
     
-    float3 ambient  = float3(0,0,0);
     float3 diffuse  = float3(0,0,0);
     float3 specular = float3(0,0,0);
     
@@ -220,7 +219,7 @@ float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0,float3 albedo,
     float3 kD = float3(1.0, 1.0, 1.0) - F;//    +float3(0.4, 0.4, 0.4); // kS is equal to Fresnel
     // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals have no diffuse light)
     kD *= (1.0 - metalicValue);
-    diffuse = kD * albedo * Pi;
+    diffuse = kD * albedo / Pi;
    
     
     //Specular BRDF
@@ -232,7 +231,6 @@ float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0,float3 albedo,
     float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
     
     specular = n / d;
-    
     
     result = (specular + diffuse) * lightData.Intensity * lightData.Color * NdotL;
     
@@ -271,7 +269,7 @@ float3 CalcPoint(LightData lightData,float4 pos , float3 V, float3 N, float3 F0,
     // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals have no diffuse light)
     kD *= 1.0 - metalicValue;
     
-    diffuse = kD * albedo * Pi;
+    diffuse = kD * albedo / Pi;
     
    //Specular BRDF
     

@@ -34,8 +34,8 @@ void DeferredPass::Initialize(const std::shared_ptr<Device>& device, const std::
 	m_NormalRTV = resourceManager->Get<RenderTargetView>(L"Normal").lock();
 	m_PositionRTV = resourceManager->Get<RenderTargetView>(L"Position").lock();
 	m_DepthRTV = resourceManager->Get<RenderTargetView>(L"Depth").lock();
-	m_MetalicRoughnessRTV = resourceManager->Get<RenderTargetView>(L"Metalic_Roughness").lock();
-	m_AORTV = resourceManager->Get<RenderTargetView>(L"AO").lock();
+	m_MetalicRTV = resourceManager->Get<RenderTargetView>(L"Metalic_Roughness").lock();
+	m_RoughnessRTV = resourceManager->Get<RenderTargetView>(L"Roughness").lock();
 	m_EmissiveRTV = resourceManager->Get<RenderTargetView>(L"Emissive").lock();
 	m_LightMapRTV = resourceManager->Get<RenderTargetView>(L"LightMap").lock();
 
@@ -54,8 +54,8 @@ void DeferredPass::Initialize(const std::shared_ptr<Device>& device, const std::
 	m_NormalSRV = resourceManager->Get<ShaderResourceView>(L"Normal").lock();
 	m_PositionSRV = resourceManager->Get<ShaderResourceView>(L"Position").lock();
 	m_DepthSRV = resourceManager->Get<ShaderResourceView>(L"Depth").lock();
-	m_MetalicRoughnessSRV = resourceManager->Get<ShaderResourceView>(L"Metalic_Roughness").lock();
-	m_AmbientOcclusionSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
+	m_MetalicSRV = resourceManager->Get<ShaderResourceView>(L"Metalic").lock();
+	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
 
@@ -81,8 +81,8 @@ void DeferredPass::OnResize()
 	m_NormalRTV = manager->Get<RenderTargetView>(L"Normal").lock();
 	m_PositionRTV = manager->Get<RenderTargetView>(L"Position").lock();
 	m_DepthRTV = manager->Get<RenderTargetView>(L"Depth").lock();
-	m_MetalicRoughnessRTV = manager->Get<RenderTargetView>(L"Metalic_Roughness").lock();
-	m_AORTV = manager->Get<RenderTargetView>(L"AO").lock();
+	m_MetalicRTV = manager->Get<RenderTargetView>(L"Metalic").lock();
+	m_RoughnessRTV = manager->Get<RenderTargetView>(L"Roughness").lock();
 	m_EmissiveRTV = manager->Get<RenderTargetView>(L"Emissive").lock();
 	m_LightMapRTV = manager->Get<RenderTargetView>(L"LightMap").lock();
 
@@ -90,8 +90,8 @@ void DeferredPass::OnResize()
 	m_NormalSRV = manager->Get<ShaderResourceView>(L"Normal").lock();
 	m_PositionSRV = manager->Get<ShaderResourceView>(L"Position").lock();
 	m_DepthSRV = manager->Get<ShaderResourceView>(L"Depth").lock();
-	m_MetalicRoughnessSRV = manager->Get<ShaderResourceView>(L"Metalic_Roughness").lock();
-	m_AmbientOcclusionSRV = manager->Get<ShaderResourceView>(L"AO").lock();
+	m_MetalicSRV = manager->Get<ShaderResourceView>(L"Metalic_Roughness").lock();
+	m_RoughnessSRV = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = manager->Get<ShaderResourceView>(L"GBuffer").lock();
 	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
@@ -232,8 +232,8 @@ void DeferredPass::GeometryPass()
 		RTVs.push_back(m_NormalRTV.lock()->Get());
 		RTVs.push_back(m_PositionRTV.lock()->Get());
 		RTVs.push_back(m_DepthRTV.lock()->Get());
-		RTVs.push_back(m_MetalicRoughnessRTV.lock()->Get());
-		RTVs.push_back(m_AORTV.lock()->Get());
+		RTVs.push_back(m_MetalicRTV.lock()->Get());
+		RTVs.push_back(m_RoughnessRTV.lock()->Get());
 		RTVs.push_back(m_LightMapRTV.lock()->Get());
 		RTVs.push_back(m_EmissiveRTV.lock()->Get());
 
@@ -421,8 +421,8 @@ void DeferredPass::LightPass()
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Normal), 1, m_NormalSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Position), 1, m_PositionSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Depth), 1, m_DepthSRV.lock()->GetAddress());
-		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Metalic), 1, m_MetalicRoughnessSRV.lock()->GetAddress());
-		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::AO), 1, m_AmbientOcclusionSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Metalic), 1, m_MetalicSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::AO), 1, m_RoughnessSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Emissive), 1, m_EmissiveSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LightMap), 1, m_LightMapSRV.lock()->GetAddress());
 

@@ -179,9 +179,6 @@
     <ClInclude Include="DebugPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
-    <ClInclude Include="DecalPass.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredGeometryPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
@@ -194,28 +191,13 @@
     <ClInclude Include="DeferredPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
-    <ClInclude Include="EffectPass.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
     <ClInclude Include="OutputMain.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
-    <ClInclude Include="OverDrawPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
     <ClInclude Include="RenderPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
-    <ClInclude Include="RimLight.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
-    <ClInclude Include="TransparencyPass.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
     <ClInclude Include="UIPass.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
-    <ClInclude Include="VPOutLinePass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
     <ClInclude Include="ModelData.h">
@@ -232,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="VertexData.h">
       <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOffScreen.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -331,9 +316,6 @@
     <ClCompile Include="DebugPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
-    <ClCompile Include="DecalPass.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredGeometryPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
@@ -346,28 +328,13 @@
     <ClCompile Include="DeferredPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
-    <ClCompile Include="EffectPass.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
     <ClCompile Include="OutputMain.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
-    <ClCompile Include="OverDrawPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
     <ClCompile Include="RenderPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
-    <ClCompile Include="RimLight.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
-    <ClCompile Include="TransparencyPass.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
     <ClCompile Include="UIPass.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
-    <ClCompile Include="VPOutLinePass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
     <ClCompile Include="ModelData.cpp">
@@ -377,9 +344,6 @@
       <Filter>ModelLoader\ModelData</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>ModelLoader\ModelData</Filter>
-    </ClCompile>
-    <ClCompile Include="Node.cpp">
       <Filter>ModelLoader\ModelData</Filter>
     </ClCompile>
     <ClCompile Include="BufferData.cpp">
@@ -394,6 +358,12 @@
     <ClCompile Include="RenderData.cpp">
       <Filter>Interface\source</Filter>
     </ClCompile>
+    <ClCompile Include="DebugOffScreen.cpp">
+      <Filter>RenderPass\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>ModelLoader\ModelData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli">
@@ -404,64 +374,16 @@
     <FxCompile Include="InstancingPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="punch.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="VPOutLine.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="Sprite2DPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="Sprite2DVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="RimLight.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="PreDepthPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="QuadPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="QuadVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticleVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticlePS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OverDrawPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticleGS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineEdgeDetectVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineBlurVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineEdgeDetectPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineAddVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineBlurPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="ObjectMaskPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="ObjectMaskVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="OutlineAddPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="MeshPS.hlsl">
@@ -479,22 +401,16 @@
     <FxCompile Include="InstancingVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="IsOccluded.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="DecalVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="CopyTex.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="DecalPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BasePS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BlurCS.hlsl">
+    <FxCompile Include="DebugQuadVS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="DebugQuadPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

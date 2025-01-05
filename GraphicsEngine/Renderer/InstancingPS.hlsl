@@ -1,13 +1,3 @@
-cbuffer Camera : register(b0)
-{
-    float4x4 gWorldViewProj;
-    float4x4 gView;
-    float4x4 gProj;
-    float4x4 gViewInverse;
-    float4x4 gProjInverse;
-};
-
-
 
 //Material
 cbuffer Material : register(b1)
@@ -59,8 +49,8 @@ struct PS_OUTPUT
     float4 Normal : SV_Target1;
     float4 Position : SV_Target2;
     float4 Depth : SV_Target3;
-    float4 Metalic_Roughness : SV_Target4;
-    float4 AO : SV_Target5;
+    float4 Metalic: SV_Target4;
+    float4 Roughness : SV_Target5;
     float4 Emissive : SV_Target6;
     float4 LightMap : SV_Target7;
 };
@@ -75,8 +65,8 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Normal = float4(0, 0, 0, 1);
     output.Position = float4(0,0,0,1);
     output.Depth= float4(0,0,0,1);
-    output.Metalic_Roughness = float4(0,0,0,1);
-    output.AO = float4(0,0,0,1);
+    output.Metalic= float4(0,0,0,1);
+    output.Roughness = float4(0,0,0,1);
     output.Emissive = float4(0,0,0,1);
     output.LightMap = float4(0,0,0,1);
     
@@ -91,12 +81,12 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Albedo = gAlbedo.Sample(samLinear, input.tex.xy) * AMRO.x + input.color * (1 - AMRO.x);
     output.Albedo.a = useNEOL.z * gOpacity.Sample(samLinear, input.tex.xy).r + (1 - useNEOL.z);
     
-    output.Metalic_Roughness.r = AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).r + (1 - AMRO.y) * 0.04f;
-    output.Metalic_Roughness.g = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
+    output.Metalic.rgb = AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).r + (1 - AMRO.y) * 0.04f;
+    output.Roughness.rgb = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
     
     output.Emissive = gEmissive.Sample(samLinear, input.tex.xy) * useNEOL.y;
     
-    output.AO = AMRO.w * gAO.Sample(samLinear, input.tex.xy);
+    //output.AO = AMRO.w * gAO.Sample(samLinear, input.tex.xy);
     
     float gamma = 2.2f;
     output.LightMap = input.tex.w * pow(gLightMap.Sample(samLinear, float3(input.lightuv, input.tex.z)), gamma); // 기본값 설정

@@ -129,31 +129,19 @@ VS_OUTPUT main(VS_INPUT input)
     //y 반전 필요
     float2 uv = float2(x, 1 - y);
     
-    output.lightuv = min(uv, 1);
-  
-    
-    
+    output.lightuv = min(uv, 1);    
 
     float3x3 meshWorld = ExtractRotationMatrix(input.worldinverse); //메쉬의 월드 공간
         
-        //방향 vector
+    //방향 vector
     float3 vTangent =   useNEOL.x * normalize(mul((input.tangent.xyz), meshWorld))   + (1 - useNEOL.x) * input.tangent.xyz;
     float3 vBitangent = useNEOL.x * normalize(mul((input.bitangent.xyz), meshWorld)) + (1 - useNEOL.x) * input.bitangent.xyz;
     float3 vNormal =    useNEOL.x * normalize(mul((input.normal.xyz), meshWorld))    + (1 - useNEOL.x) * input.normal.xyz;
                         
-        //색상 표현을 위해 점으로 저장 w == 1
+    //색상 표현을 위해 점으로 저장 w == 1
     output.normal = float4(vNormal.xyz, 1);
     output.tangent = float4(vTangent.xyz, 0);
     output.bitangent = float4(vBitangent.xyz, 0);
-        
-        //float3 NormalTangentSpace = gNormal.SampleLevel(samLinear, input.tex,4).rgb;
-        //NormalTangentSpace = NormalTangentSpace * 2.0f - 1.0f; //-1~1
-        //NormalTangentSpace = normalize(NormalTangentSpace);
-        
-        //float3x3 WorldTransform = float3x3(vTangent.xyz, vBitangent.xyz, vNormal.xyz); //면의 공간으로 옮기기위한 행렬
-        //float3 worldNormal = normalize(mul(NormalTangentSpace, WorldTransform));
-        //output.normal = float4(worldNormal, 1);
-
     
     return output;
 }

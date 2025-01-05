@@ -17,6 +17,8 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+static bool ReSize = false;
+
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -70,6 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	///모델
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
+	//test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
 	test->world._42 = 1;
@@ -120,9 +123,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	XAxis.Color = { 1,0,0,1 };
 	XAxis.Direction= { 10,0,0 };
 	XAxis.Normalize = false;
+	XAxis.Origin.y = 0.01;
 
 	debug::RayInfo YAxis;
-	YAxis.Color = { 0,1,1,1 };
+	YAxis.Color = { 0,1,0,1 };
 	YAxis.Direction = { 0,10,0 };
 	YAxis.Normalize = false;
 
@@ -130,6 +134,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	ZAxis.Color = { 0,0,1,1 };
 	ZAxis.Direction = { 0,0,10 };
 	ZAxis.Normalize = false;
+	ZAxis.Origin.y= 0.01;
 #pragma endregion
 
 #pragma region Text
@@ -180,6 +185,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+
+		if (ReSize)
+		{
+			graphicsEngine->OnResize(hWnd,false);
+			ReSize = false;
+		}
+
 
 		timeManager->Update(timeManager->DeltaTime());
 		double FPS = timeManager->FPS();
@@ -327,6 +339,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		}
 		break;
+
+		case WM_SIZE:
+		case WM_SIZING:
+			ReSize = true;
+			break;
+
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;

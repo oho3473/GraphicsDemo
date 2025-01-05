@@ -27,8 +27,8 @@ private:
 	std::weak_ptr<RenderTargetView> m_NormalRTV;
 	std::weak_ptr<RenderTargetView> m_PositionRTV;
 	std::weak_ptr<RenderTargetView> m_DepthRTV;
-	std::weak_ptr<RenderTargetView> m_MetalicRoughnessRTV;
-	std::weak_ptr<RenderTargetView> m_AORTV;
+	std::weak_ptr<RenderTargetView> m_MetalicRTV;
+	std::weak_ptr<RenderTargetView> m_RoughnessRTV;
 	std::weak_ptr<RenderTargetView> m_EmissiveRTV;
 	std::weak_ptr<RenderTargetView> m_LightMapRTV;
 
@@ -37,8 +37,8 @@ private:
 	std::weak_ptr<ShaderResourceView> m_NormalSRV;
 	std::weak_ptr<ShaderResourceView> m_PositionSRV;
 	std::weak_ptr<ShaderResourceView> m_DepthSRV;
-	std::weak_ptr<ShaderResourceView> m_MetalicRoughnessSRV;
-	std::weak_ptr<ShaderResourceView> m_AmbientOcclusionSRV;
+	std::weak_ptr<ShaderResourceView> m_MetalicSRV;
+	std::weak_ptr<ShaderResourceView> m_RoughnessSRV;
 	std::weak_ptr<ShaderResourceView> m_EmissiveSRV;
 	std::weak_ptr<ShaderResourceView> m_LightMapSRV;
 

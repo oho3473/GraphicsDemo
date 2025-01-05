@@ -7,17 +7,21 @@
 
 #pragma region Manager
 #include "ResourceManager.h"
+#include "UIManager.h"
+#include "LightManager.h"
 #pragma endregion 
 
 #include <memory>
 #include <memory>
 
 #pragma region Pass
-#include "TransparencyPass.h"
+#include "DebugPass.h"
+#include "DeferredPass.h"
 #include "DeferredInstancing.h"
 #include "DeferredLightPass.h"
 #include "OutputMain.h"
 #include "UIPass.h"
+#include "DebugOffScreen.h"
 #pragma endregion Pass
 
 #include "StaticData.h"
@@ -25,7 +29,6 @@
 
 PassManager::PassManager()
 	: m_DeferredPass(std::make_shared<DeferredPass>())
-	, m_TransparencyPass(std::make_shared<TransparencyPass>())
 	, m_DebugPass(std::make_shared<DebugPass>())
 	, m_UIPass(std::make_shared<UIPass>())
 	,m_DeferredLight(std::make_shared<DeferredLightPass>())
@@ -64,19 +67,17 @@ PassManager::~PassManager()
 
 }
 
-void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resource, const std::shared_ptr<DebugDrawManager>& debug, const std::shared_ptr<LightManager>& lightmanager, const std::shared_ptr<DecalManager> decalmanager,const std::shared_ptr<UIManager>& uiManager)
+void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resource, const std::shared_ptr<DebugDrawManager>& debug, const std::shared_ptr<LightManager>& lightmanager,const std::shared_ptr<UIManager>& uiManager)
 {
 	m_Device = device;
 	m_ResourceManager = resource;
 	m_DebugDrawManager = debug;
 	m_UIManager = uiManager;
 	m_LightManager = lightmanager;
-	m_DecalManager = decalmanager;
 
 	//offscreen
 	m_DebugPass->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_DebugDrawManager.lock());
 	m_DeferredPass->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
-	m_TransparencyPass->Initialize(m_Device.lock(), m_ResourceManager.lock());
 	m_DebugPass->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_DebugDrawManager.lock());
 
 	m_Instancing = std::make_shared<DeferredInstancing>();
@@ -96,8 +97,9 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 	m_AfterLightPasses.push_back(m_DeferredLight);
 
-	m_main = std::make_shared<OutputMain>(m_Device.lock(), m_ResourceManager.lock());
+	m_MainOutput = std::make_shared<OutputMain>(m_Device.lock(), m_ResourceManager.lock());
 
+	m_DebugOffScreen= std::make_shared<DebugOffScreen>(m_Device.lock(), m_ResourceManager.lock());
 }
 
 void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling)
@@ -112,7 +114,7 @@ void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCu
 	{
 		pass->SetRenderQueue(afterCulling);
 	}
-
+		
 	if (!m_isDebugDraw)
 	{
 		m_DebugPass->ClearQueue();
@@ -153,9 +155,9 @@ void PassManager::Render(float deltaTime)
 		pass->Render();
 	}
 
-
+	m_DebugOffScreen->Render();
 	m_UIPass->Render();
-	m_main->Render();
+	m_MainOutput->Render();
 }
 
 void PassManager::OnResize()
@@ -182,7 +184,8 @@ void PassManager::OnResize()
 	}
 
 	m_DebugPass->OnResize();
-	m_main->OnResize();
+	m_DebugOffScreen->OnResize();
+	m_MainOutput->OnResize();
 
 }
 

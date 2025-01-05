@@ -49,7 +49,7 @@ bool Graphics::Initialize()
 	m_Animator->Initialize(m_ResourceManager);
 	m_DebugDrawManager->Initialize(m_Device, m_ResourceManager);
 	m_UIManager->Initialize(m_Device, m_ResourceManager);
-	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager, m_DecalManager,m_UIManager);
+	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager,m_UIManager);
 
 	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
 
@@ -167,9 +167,9 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Normal"));
 	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Position"));
 	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Depth"));
-	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Metalic_Roughness"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Metalic"));
 	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"LightMap"));
-	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"AO"));
+	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Roughness"));
 	m_RTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Emissive"));
 
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Main"));

@@ -26,9 +26,9 @@ ResourceManager::ResourceManager()
 	m_OffScreenName[1] = L"Normal";
 	m_OffScreenName[2] = L"Position";
 	m_OffScreenName[3] = L"Depth";
-	m_OffScreenName[4] = L"Metalic_Roughness";
+	m_OffScreenName[4] = L"Metalic";
 	m_OffScreenName[5] = L"LightMap";
-	m_OffScreenName[6] = L"AO";
+	m_OffScreenName[6] = L"Roughness";
 	m_OffScreenName[7] = L"Emissive";
 	m_OffScreenName[8] = L"GBuffer";
 }
@@ -127,8 +127,8 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<VertexShader>(L"Base", L"MeshVS", "main");
 	Create<VertexShader>(L"Skinning", L"MeshVS", "main", macro);
 	Create<VertexShader>(L"Quad", L"QuadVS", "main");
+	Create<VertexShader>(L"DebugQuad", L"DebugQuadVS", "main");
 	Create<VertexShader>(L"InstancingVS", L"InstancingVS");	//Instancing VS
-	Create<VertexShader>(L"DecalVS", L"DecalVS", Instancing::DecalDesc, Instancing::DecalCount);	//Decal VS
 
 	// ----------------------------------------------------------------------------------------
 	// Pixel Shader
@@ -138,55 +138,29 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<PixelShader>(L"MeshDeferredLight", L"MeshDeferredLightPS", "main");
 	Create<PixelShader>(L"MeshDeferredGeometry", L"MeshDeferredGeometryPS", "main");
 	Create<PixelShader>(L"Quad", L"QuadPS", "main");
-	Create<PixelShader>(L"VPOutLine", L"VPOutLine", "main");
-	Create<PixelShader>(L"RimLight", L"RimLight", "main");
+	Create<PixelShader>(L"DebugQuad", L"DebugQuadPS", "main");
 	Create<PixelShader>(L"InstancingPS", L"InstancingPS", "main");
-	Create<PixelShader>(L"DecalPS", L"DecalPS", "main");
-	Create<PixelShader>(L"OverDrawPS", L"OverDrawPS", "main");
 
 	// ----------------------------------------------------------------------------------------
 	// Vertex Buffer
 	// ----------------------------------------------------------------------------------------
 	UINT size = sizeof(QuadVertex);
 	Create<VertexBuffer>(L"Quad_VB", Quad::Vertex::Desc, Quad::Vertex::Data, size);
+	Create<VertexBuffer>(L"DebugQuad_VB", DebugQuad::Vertex::Desc, DebugQuad::Vertex::Data, size);
 
 	size = sizeof(BaseVertex);
 	Create<VertexBuffer>(L"TextureBox_VB", TextureBox::Vertex::Desc, TextureBox::Vertex::Data, size);
-
-	size = sizeof(DecalVertex);
-	Create<VertexBuffer>(L"Decal_VB", DecalVolume::Vertex::Desc, DecalVolume::Vertex::Data, size);
 
 
 	// ----------------------------------------------------------------------------------------
 	// Index Buffer
 	// ----------------------------------------------------------------------------------------
 	Create<IndexBuffer>(L"Quad_IB", Quad::Index::Desc, Quad::Index::Data, Quad::Index::count);
+	Create<IndexBuffer>(L"DebugQuad_IB", DebugQuad::Index::Desc, DebugQuad::Index::Data, Quad::Index::count);
 	Create<IndexBuffer>(L"TextureBox_IB", TextureBox::Index::Desc, TextureBox::Index::Data, TextureBox::Index::count);
-	Create<IndexBuffer>(L"Decal_IB", DecalVolume::Index::Desc, DecalVolume::Index::Data, DecalVolume::Index::count);
-
-
 	// ----------------------------------------------------------------------------------------
 	// Shader Resource View
 	// ----------------------------------------------------------------------------------------
-	const std::wstring filePath = L"..\\Data\\Texture\\base.png";
-
-	//텍스처 이미지가 없으면 임시로 쓸 기본 base.png
-	Create<ShaderResourceView>(filePath, L"base.png");
-	Create<ShaderResourceView>(L"normalbase.png", L"normalbase.png");
-	Create<ShaderResourceView>(L"Noise.png", L"Noise.png");
-
-	// BackBuffer UI Image
-	Create<ShaderResourceView>(L"DefaultUI", L"DefaultUI.png");
-	Create<ShaderResourceView>(L"shadow.png", L"shadow.png");
-	Create<ShaderResourceView>(L"Decal(1).png", L"Decal(1).png");
-	Create<ShaderResourceView>(L"Decal(2).png", L"Decal(2).png");
-	Create<ShaderResourceView>(L"Decal(3).png", L"Decal(3).png");
-	Create<ShaderResourceView>(L"Decal(4).png", L"Decal(4).png");
-	Create<ShaderResourceView>(L"Decal(1)_N.png", L"Decal(1)_N.png");
-	Create<ShaderResourceView>(L"Decal(2)_N.png", L"Decal(2)_N.png");
-	Create<ShaderResourceView>(L"Decal(3)_N.png", L"Decal(3)_N.png");
-	Create<ShaderResourceView>(L"Decal(4)_N.png", L"Decal(4)_N.png");
-
 
 	// ----------------------------------------------------------------------------------------
 	// Render Target View
@@ -220,6 +194,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	m_Pallete = Create<ConstantBuffer<MatrixPallete>>(L"MatrixPallete", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"TexelSize", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color", ConstantBufferType::Default);
+	Create<ConstantBuffer<DirectX::XMFLOAT4X4>>(L"QuadPos", ConstantBufferType::Default);
 
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, (m_Camera.lock()->GetAddress()));
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, m_Transform.lock()->GetAddress());
@@ -285,8 +260,6 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		Create<DepthStencilView>(L"DSV_Main", DepthStencilViewType::Default);
 		Create<DepthStencilView>(L"DSV_Deferred", texDesc);
 	}
-
-
 }
 
 void ResourceManager::ConvertDDS()
