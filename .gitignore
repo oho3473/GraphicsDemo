@@ -27,3 +27,6 @@ GraphicsEngine/include/recastnavigation/
 GraphicsEngine/include/imconfig.h
 GraphicsEngine/include/ImCurveEdit.h
 GraphicsEngine/include/ImGradient.h
+GraphicsEngine/Renderer/Debug/Renderer.tlog
+GraphicsEngine/Renderer/Renderer.tlog
+GraphicsEngine/Renderer/Debug/

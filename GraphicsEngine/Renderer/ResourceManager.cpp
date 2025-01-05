@@ -206,7 +206,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, m_UsingLights.lock()->GetAddress());
 
 
-	//ConvertDDS();
+	ConvertDDS();
 }
 
 void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
@@ -277,7 +277,11 @@ void ResourceManager::ConvertDDS()
 	for (const auto& entry : std::filesystem::directory_iterator(path))
 	{
 		std::string filename = std::filesystem::path(entry).filename().string();
-		filelist.push_back(filename);
+		std::string extend = std::filesystem::path(entry).filename().extension().string();
+		if (extend != ".dds")
+		{
+			filelist.push_back(filename);
+		}
 	}
 
 	for (auto& file : filelist)

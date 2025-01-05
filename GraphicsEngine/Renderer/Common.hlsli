@@ -227,7 +227,7 @@ float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0,float3 albedo,
     float D = Calc_D(N, H, max(0.01, roughness));
     float G = Calc_G(N, V, L, max(0.01, roughness));
     
-    float3 n = (F * D * G); //분자
+    float3 n = metalicValue * (F * D * G); //분자
     float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
     
     specular = n / d;
@@ -334,7 +334,7 @@ float3 CalcSpot(LightData lightData, float4 pos, float3 V, float3 N, float3 F0, 
     float G = Calc_G(N, V, L, roughness);
     
     float3 n = (F * D * G); //분자
-    float3 d = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.01; //분모 0으로 나누기 피하려고 + 0.01
+    float3 d = 4.0 * dot(N, V) * dot(N, L) + 0.01; //분모 0으로 나누기 피하려고 + 0.01
     
     specular = n / d;
 

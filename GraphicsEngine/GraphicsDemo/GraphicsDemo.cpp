@@ -72,7 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	///모델
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
-	//test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
 	test->world._42 = 1;
@@ -121,7 +121,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	debug::RayInfo XAxis;
 	XAxis.Color = { 1,0,0,1 };
-	XAxis.Direction= { 10,0,0 };
+	XAxis.Direction = { 10,0,0 };
 	XAxis.Normalize = false;
 	XAxis.Origin.y = 0.01;
 
@@ -134,7 +134,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	ZAxis.Color = { 0,0,1,1 };
 	ZAxis.Direction = { 0,0,10 };
 	ZAxis.Normalize = false;
-	ZAxis.Origin.y= 0.01;
+	ZAxis.Origin.y = 0.01;
 #pragma endregion
 
 #pragma region Text
@@ -145,13 +145,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	text.Text = L"카메라 이동 : WASD\n카메라 회전 : 마우스 우클릭 이동";
 	text.Scale = 0.3f;
 	graphicsEngine->CreateTextObject(11, text);
-	
+
 
 	ui::TextInfo camerapos;
 	camerapos.Color = { 1,0,0,1 };
 	camerapos.PosXPercent = 9;
 	camerapos.PosYPercent = 10;
-	camerapos.Text = std::format(L"카메라 위치 : {}, {}, {}",0,0,0);
+	camerapos.Text = std::format(L"카메라 위치 : {}, {}, {}", 0, 0, 0);
 	camerapos.Scale = 0.3f;
 	graphicsEngine->CreateTextObject(12, camerapos);
 
@@ -163,7 +163,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	fps.Scale = 0.3f;
 	graphicsEngine->CreateTextObject(13, fps);
 #pragma endregion
-	
+
 	InputManager::GetInstance()->Initialize(hWnd);
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
@@ -188,7 +188,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (ReSize)
 		{
-			graphicsEngine->OnResize(hWnd,false);
+			graphicsEngine->OnResize(hWnd, false);
 			ReSize = false;
 		}
 
@@ -198,11 +198,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		fps.Text = std::format(L"FPS : {:.1f}", FPS);
 		graphicsEngine->UpdateTextObject(13, fps);
 
+		InputManager::GetInstance()->Update();
 		//물체 y축 회전
-		test->world._11 = cosf(rotation);		test->world._13 = sinf(rotation);
-		test->world._31 = -sinf(rotation);		test->world._33 = cosf(rotation);
+		if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
+		{
+			test->world._11 = cosf(rotation);		test->world._13 = sinf(rotation);
+			test->world._31 = -sinf(rotation);		test->world._33 = cosf(rotation);
+			rotation += 0.5f * timeManager->DeltaTime();
+		}
 
-		rotation += 0.5f * timeManager->DeltaTime();
 
 		if (test->isSkinned && test->isPlay)
 		{
@@ -212,9 +216,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				test->duration -= static_cast<float>(animationtime);
 			}
 		}
-		
 
-		InputManager::GetInstance()->Update();
+
 		cameraManager->Update(timeManager->DeltaTime());
 		DirectX::SimpleMath::Matrix view = cameraManager->View();
 		DirectX::SimpleMath::Matrix proj = cameraManager->Proj();
@@ -232,8 +235,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		graphicsEngine->Update(timeManager->DeltaTime());
 		graphicsEngine->EndUpdate(timeManager->DeltaTime());
 
-		
-		
+
+
 		graphicsEngine->DrawGrid(grid);
 		graphicsEngine->DrawRay(XAxis);
 		graphicsEngine->DrawRay(YAxis);
@@ -245,6 +248,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 #pragma region Destroy
+	graphicsEngine->DeleteTextObject(11);
+	graphicsEngine->DeleteTextObject(12);
+	graphicsEngine->DeleteTextObject(13);
+	graphicsEngine->EraseObject(1);
 	graphicsEngine->Finalize();
 	DestroyGraphics(graphicsEngine);
 #pragma endregion 
