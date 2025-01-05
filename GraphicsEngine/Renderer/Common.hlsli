@@ -188,9 +188,9 @@ float Calc_G(float3 N, float3 V, float3 L, float roughness)
     float3 H = normalize(L + V);
     
     //GeometrySmith[
-    float NdotV = saturate(dot(N, V));
-    float NdotL = saturate(dot(N, L));
-    float NdotH = saturate(dot(N, H));
+    float NdotV = max(0,(dot(N, V)));
+    float NdotL = max(0,(dot(N, L)));
+    float NdotH = max(0,(dot(N, H)));
         
     float ggx1 = GeometrySchlickGGX(NdotL, k); 
     float ggx2 = GeometrySchlickGGX(NdotV, k);

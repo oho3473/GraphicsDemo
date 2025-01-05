@@ -51,7 +51,7 @@ void Camera::Update(double dt)
 	}
 	else
 	{
-		m_moveSpeed = 10;
+		m_moveSpeed = 1;
 	}
 
 

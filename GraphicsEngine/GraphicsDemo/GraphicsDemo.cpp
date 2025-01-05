@@ -73,7 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
 	test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	//test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
 	test->world._42 = 1;
 	test->offset = { 0,0 };
@@ -349,7 +349,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		case WM_SIZE:
 		case WM_SIZING:
+		{
+			if(wParam != SIZE_MINIMIZED)
 			ReSize = true;
+
+		}
 			break;
 
 		case WM_DESTROY:
