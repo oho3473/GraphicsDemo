@@ -366,30 +366,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli">
+    <FxCompile Include="DebugQuadVS.hlsl">
       <Filter>HLSL</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
+    </FxCompile>
+    <FxCompile Include="DebugQuadPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancingVS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
     <FxCompile Include="InstancingPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="Sprite2DPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="Sprite2DVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="QuadPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="QuadVS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="MeshPS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="MeshVS.hlsl">
+    <FxCompile Include="BasePS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="MeshDeferredGeometryPS.hlsl">
@@ -398,20 +387,28 @@
     <FxCompile Include="MeshDeferredLightPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="InstancingVS.hlsl">
+    <FxCompile Include="MeshPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="CopyTex.hlsl">
+    <FxCompile Include="MeshVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BasePS.hlsl">
+    <FxCompile Include="QuadPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="DebugQuadVS.hlsl">
+    <FxCompile Include="QuadVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="DebugQuadPS.hlsl">
+    <FxCompile Include="Sprite2DVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="Sprite2DPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Common.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>

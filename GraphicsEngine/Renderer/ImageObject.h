@@ -1,6 +1,6 @@
 #pragma once
 #include "ConstantBuffer.h"
-#include "vpGraphics.h"
+#include "RenderData.h"
 // 2D 이미지 오브젝트
 
 class ShaderResourceView;
@@ -18,14 +18,14 @@ private:
 
 	struct ImageTransformCB
 	{
-		VPMath::Matrix World;
-		VPMath::Matrix View;
-		VPMath::Matrix Projection;
+		DirectX::SimpleMath::Matrix World;
+		DirectX::SimpleMath::Matrix View;
+		DirectX::SimpleMath::Matrix Projection;
 	};
 
 	struct ColorCB
 	{
-		VPMath::Color Color;	// rgba
+		DirectX::SimpleMath::Color Color;	// rgba
 		float leftPercent;   // 왼쪽에서 사라지는 비율 (0.0f ~ 1.0f)
 		float rightPercent;  // 오른쪽에서 사라지는 비율 (0.0f ~ 1.0f)
 		float topPercent;    // 위쪽에서 사라지는 비율 (0.0f ~ 1.0f)
@@ -71,7 +71,7 @@ private:
 	float m_PrevScale = -1;
 	uint32_t m_PrevCanvasWidth = 0;
 	uint32_t m_PrevCanvasHeight = 0;
-	VPMath::Matrix m_PrevWorld = VPMath::Matrix::Identity;
+	DirectX::SimpleMath::Matrix m_PrevWorld = DirectX::SimpleMath::Matrix::Identity;
 
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
 	std::shared_ptr<IndexBuffer> m_IndexBuffer;

@@ -211,8 +211,8 @@ void ImageObject::UpdateBuffers()
 		m_CanvasHeight = m_Device->GetWndHeight();
 
 		const std::shared_ptr<ConstantBuffer<CameraData>> cameraCB = m_ResourceManager->Get<ConstantBuffer<CameraData>>(L"Camera").lock();
-		m_Transform.World = VPMath::Matrix::Identity;
-		m_Transform.View = VPMath::Matrix::Identity;
+		m_Transform.World = DirectX::SimpleMath::Matrix::Identity;
+		m_Transform.View = DirectX::SimpleMath::Matrix::Identity;
 		m_Transform.Projection = cameraCB->m_struct.orthoProj;	// 정사영 투영 행렬
 		m_ImageTransformCB->Update(m_Transform);
 

@@ -20,17 +20,17 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 {
 	float2 uv = input.uv;
 
-// 왼쪽에서 사라지는 부분 계산
-if (input.uv.x < leftPercent) discard;
+	// 왼쪽에서 사라지는 부분 계산
+	if (input.uv.x < leftPercent) discard;
 
-// 오른쪽에서 사라지는 부분 계산
-if (input.uv.x > (1.0f - rightPercent)) discard;
+	// 오른쪽에서 사라지는 부분 계산
+	if (input.uv.x > (1.0f - rightPercent)) discard;
 
-// 위쪽에서 사라지는 부분 계산
-if (input.uv.y < topPercent) discard;
+	// 위쪽에서 사라지는 부분 계산
+	if (input.uv.y < topPercent) discard;
 
-// 아래쪽에서 사라지는 부분 계산
-if (input.uv.y > (1.0f - bottomPercent)) discard;
+	// 아래쪽에서 사라지는 부분 계산
+	if (input.uv.y > (1.0f - bottomPercent)) discard;
 
 	// 텍스처 색상 샘플링
 	float4 color = shaderTexture.Sample(SampleType, uv);

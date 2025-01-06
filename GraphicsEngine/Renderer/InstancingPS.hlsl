@@ -11,11 +11,11 @@ cbuffer Material : register(b1)
     float pad;
     float4 lightmapdata; //index, offset(x,y),scale
     float2 lightmaptiling; // x y
-}; 
+};
 
 
 
-    //TEXTURE
+//TEXTURE
 Texture2D gAlbedo : register(t0);
 Texture2D gNormal : register(t1);
 Texture2D gPosition : register(t2);
@@ -30,7 +30,7 @@ Texture2DArray gLightMap : register(t9);
 
 
 SamplerState samLinear : register(s0);
-    
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -61,33 +61,33 @@ struct PS_OUTPUT
 PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고 있으므로 한번 더 지정해줄 필요는 없다.
 {
     PS_OUTPUT output;
-    output.Albedo = float4(0,0,0,1);
+    output.Albedo = float4(0, 0, 0, 1);
     output.Normal = float4(0, 0, 0, 1);
-    output.Position = float4(0,0,0,1);
-    output.Depth= float4(0,0,0,1);
-    output.Metalic= float4(0,0,0,1);
-    output.Roughness = float4(0,0,0,1);
-    output.Emissive = float4(0,0,0,1);
-    output.LightMap = float4(0,0,0,1);
-    
-    
+    output.Position = float4(0, 0, 0, 1);
+    output.Depth = float4(0, 0, 0, 1);
+    output.Metalic = float4(0, 0, 0, 1);
+    output.Roughness = float4(0, 0, 0, 1);
+    output.Emissive = float4(0, 0, 0, 1);
+    output.LightMap = float4(0, 0, 0, 1);
+
+
     output.Position = input.posWorld;
 
     float d = input.pos.z / input.pos.w;
     d *= 10;    //가시성 향상을 위해 값을 키우기
     output.Depth = float4(1 - d, 1 - d, 1 - d, 1.0f);
-       
+
 
     output.Albedo = gAlbedo.Sample(samLinear, input.tex.xy) * AMRO.x + input.color * (1 - AMRO.x);
     output.Albedo.a = useNEOL.z * gOpacity.Sample(samLinear, input.tex.xy).r + (1 - useNEOL.z);
-    
-    output.Metalic.rgb = max(0.04,AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).b + (1 - AMRO.y) * 0.04f);//monkey는 b채널이 metalic
-    output.Roughness.rgb = AMRO.z* gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
-    
+
+    output.Metalic.rgb = max(0.04, AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).b);//monkey는 b채널이 metalic
+    output.Roughness.rgb = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
+
     output.Emissive = gEmissive.Sample(samLinear, input.tex.xy) * useNEOL.y;
-    
+
     //output.AO = AMRO.w * gAO.Sample(samLinear, input.tex.xy);
-    
+
     float gamma = 2.2f;
     output.LightMap = input.tex.w * pow(gLightMap.Sample(samLinear, float3(input.lightuv, input.tex.z)), gamma); // 기본값 설정
 
@@ -97,7 +97,7 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
 
     float3x3 WorldTransform = float3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz); //면의 공간으로 옮기기위한 행렬
     output.Normal.xyz = normalize(mul(NormalTangentSpace, (WorldTransform))) * useNEOL.x + (1 - useNEOL.x) * input.normal.xyz;
-    
+
     return output;
-    
+
 }

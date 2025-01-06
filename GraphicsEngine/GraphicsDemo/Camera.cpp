@@ -49,9 +49,13 @@ void Camera::Update(double dt)
 	{
 		m_moveSpeed = 50;
 	}
-	else
+	else if (m_input->IsKeyDown(VK_CONTROL) || m_input->IsKeyPress(VK_CONTROL))
 	{
 		m_moveSpeed = 1;
+	}
+	else
+	{
+		m_moveSpeed = 10;
 	}
 
 
