@@ -22,6 +22,7 @@
 #include "OutputMain.h"
 #include "UIPass.h"
 #include "DebugOffScreen.h"
+#include "CubeMapPass.h"
 #pragma endregion Pass
 
 #include "StaticData.h"
@@ -91,7 +92,7 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 
 	//pass push
-	m_OffScreenPasses.push_back(m_DebugPass);
+	//m_OffScreenPasses.push_back(m_DebugPass);
 	m_OffScreenPasses.push_back(m_Instancing);	//static
 	m_OffScreenPasses.push_back(m_DeferredPass);	//skinned
 
@@ -99,7 +100,9 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 	m_MainOutput = std::make_shared<OutputMain>(m_Device.lock(), m_ResourceManager.lock());
 
-	m_DebugOffScreen= std::make_shared<DebugOffScreen>(m_Device.lock(), m_ResourceManager.lock());
+	m_DebugOffScreen = std::make_shared<DebugOffScreen>(m_Device.lock(), m_ResourceManager.lock());
+
+	m_CubeMap = std::make_shared<CubeMapPass>(m_Device.lock(), m_ResourceManager.lock());
 }
 
 void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling)
@@ -119,11 +122,11 @@ void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCu
 	{
 		m_DebugPass->ClearQueue();
 	}
-
 }
 
 void PassManager::Render(float deltaTime)
 {
+	m_CubeMap->Render();
 	if (m_isDebugDraw)
 	{
 		m_DebugPass->Render();
@@ -183,10 +186,10 @@ void PassManager::OnResize()
 		pass->OnResize();
 	}
 
+	m_CubeMap->OnResize();
 	m_DebugPass->OnResize();
 	m_DebugOffScreen->OnResize();
 	m_MainOutput->OnResize();
-
 }
 
 void PassManager::SetVP(bool isVP)
@@ -197,6 +200,11 @@ void PassManager::SetVP(bool isVP)
 void PassManager::SetDebugDraw(bool on_off)
 {
 	m_isDebugDraw = on_off;
+}
+
+void PassManager::SetCubeCamera(const DirectX::SimpleMath::Matrix* cameras)
+{
+	m_CubeMap->SetCamera(cameras);
 }
 
 void PassManager::DrawIMGUI()

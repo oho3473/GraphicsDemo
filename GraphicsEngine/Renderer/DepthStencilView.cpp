@@ -54,7 +54,7 @@ DepthStencilView::DepthStencilView(const std::shared_ptr<Device>& device, D3D11_
 	SAFE_RELEASE_COM(DSBuffer);
 }
 
-DepthStencilView::DepthStencilView(const std::shared_ptr<Device>& device, D3D11_DEPTH_STENCIL_VIEW_DESC desc, Texture2D* texture) : Resource(device)
+DepthStencilView::DepthStencilView(const std::shared_ptr<Device>& device, D3D11_DEPTH_STENCIL_VIEW_DESC desc, const std::shared_ptr<Texture2D>& texture) : Resource(device)
 {
 
 	HRESULT hr;
@@ -73,19 +73,7 @@ DepthStencilView::DepthStencilView(const std::shared_ptr<Device>& device, const 
 	OnResize();
 }
 
-DepthStencilView::DepthStencilView(const std::shared_ptr<Device>& device, D3D11_DEPTH_STENCIL_VIEW_DESC desc) : Resource(device)
-{
-	/*HRESULT hr;
-	hr = m_Device->Get()->CreateDepthStencilView(DSBuffer, 0, &m_DSV);
 
-
-	if (FAILED(hr))
-	{
-		MessageBox(0, L"Device CreateDepthStencilView Failed", 0, 0);
-	}
-
-	DSBuffer->Release();*/
-}
 
 ID3D11DepthStencilView* DepthStencilView::Get() const
 {

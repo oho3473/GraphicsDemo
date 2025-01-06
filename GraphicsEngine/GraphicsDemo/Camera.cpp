@@ -2,7 +2,13 @@
 #include <windowsx.h>
 
 
-Camera::Camera() : m_pos(0, 2, -10), m_forward(0, 0, 1), m_up(0, 1, 0), m_right(1, 0, 0), m_nearZ(0), m_farZ(0), m_FOV(0), m_nearWindowHeight(0), m_farWindowHeight(0), m_ratio(1),
+Camera::Camera() : m_pos(0, 0, 0), m_forward(0, 0, 1), m_up(0, 1, 0), m_right(1, 0, 0), m_nearZ(0), m_farZ(0), m_FOV(0), m_nearWindowHeight(0), m_farWindowHeight(0), m_ratio(1),m_worldMT(DirectX::XMMatrixIdentity()), m_viewMT(DirectX::XMMatrixIdentity()), m_projMT(DirectX::XMMatrixIdentity()), m_worldviewprojMT(DirectX::XMMatrixIdentity()),
+m_world(), m_view(), m_proj(), m_worldviewproj(), m_input(nullptr), m_moveSpeed(1)
+{
+
+}
+
+Camera::Camera(DirectX::XMFLOAT3 forward, DirectX::XMFLOAT3 up, DirectX::XMFLOAT3 right) : m_pos(0, 0, 0), m_forward(forward), m_up(up), m_right(right), m_nearZ(0), m_farZ(0), m_FOV(0), m_nearWindowHeight(0), m_farWindowHeight(0), m_ratio(1),
 m_worldMT(DirectX::XMMatrixIdentity()), m_viewMT(DirectX::XMMatrixIdentity()), m_projMT(DirectX::XMMatrixIdentity()), m_worldviewprojMT(DirectX::XMMatrixIdentity()),
 m_world(), m_view(), m_proj(), m_worldviewproj(), m_input(nullptr), m_moveSpeed(1)
 {
@@ -116,6 +122,62 @@ void Camera::Update(double dt)
 		m_projMT = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_ratio, m_nearZ, m_farZ);
 		XMStoreFloat4x4(&m_proj, m_projMT);
 	}
+
+	UpdateView();
+
+	m_worldviewprojMT = m_worldMT * m_viewMT * m_projMT;
+}
+
+void Camera::CubeMapUpdate(double dt)
+{
+	float dtf = static_cast<float>(dt);
+
+
+	if (m_input->IsKeyDown(VK_SHIFT) || m_input->IsKeyPress(VK_SHIFT))
+	{
+		m_moveSpeed = 50;
+	}
+	else if (m_input->IsKeyDown(VK_CONTROL) || m_input->IsKeyPress(VK_CONTROL))
+	{
+		m_moveSpeed = 1;
+	}
+	else
+	{
+		m_moveSpeed = 10;
+	}
+
+
+	if (m_input->IsKeyDown('S') || m_input->IsKeyPress('S'))
+	{
+		Walk(m_moveSpeed * -dtf);
+	}
+
+	if (m_input->IsKeyDown('W') || m_input->IsKeyPress('W'))
+	{
+		Walk(m_moveSpeed * dtf);
+	}
+
+	if (m_input->IsKeyDown('A') || m_input->IsKeyPress('A'))
+	{
+		Strafe(m_moveSpeed * -dtf);
+	}
+
+	if (m_input->IsKeyDown('D') || m_input->IsKeyPress('D'))
+	{
+		Strafe(m_moveSpeed * dtf);
+	}
+
+
+	if (m_input->IsKeyDown('Q') || m_input->IsKeyPress('Q'))
+	{
+		UpDown(m_moveSpeed * -dtf);
+	}
+
+	if (m_input->IsKeyDown('E') || m_input->IsKeyPress('E'))
+	{
+		UpDown(m_moveSpeed * dtf);
+	}
+
 
 	UpdateView();
 

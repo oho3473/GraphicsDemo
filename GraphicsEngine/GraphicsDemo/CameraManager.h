@@ -26,10 +26,16 @@ public:
 	void OnResize(double ratio);
 	DirectX::SimpleMath::Vector3 GetCamerPos() const;
 
+	const std::vector<Camera*>& GetCubeCameras();
+
 
 private:
 	Camera* m_curCamera;
 	std::vector<Camera*> m_cameraList;
+	std::vector<Camera*> m_CubecameraList;
 	double m_ratio;
+
+	void AddCubeMapCamera();
+
 };
 

@@ -18,6 +18,9 @@ bool CameraManager::Initialize()
 	//main camera
 	AddCamera();
 
+	AddCubeMapCamera();
+
+
 	return true;
 }
 
@@ -26,6 +29,12 @@ void CameraManager::Update(double dt)
 	if (!m_cameraList.empty() && m_curCamera != nullptr)
 	{
 		m_curCamera->Update(dt);
+	}
+
+	for (auto& camera : m_CubecameraList)
+	{
+		camera->SetPos(m_curCamera->GetPosition());
+		camera->CubeMapUpdate(dt);
 	}
 }
 
@@ -43,7 +52,7 @@ bool CameraManager::Finalize()
 
 void CameraManager::AddCamera(Camera* camera)
 {
-	m_cameraList.push_back(m_curCamera);
+	m_cameraList.push_back(camera);
 }
 
 void CameraManager::AddCamera()
@@ -95,4 +104,52 @@ void CameraManager::OnResize(double ratio)
 DirectX::SimpleMath::Vector3 CameraManager::GetCamerPos() const
 {
 	return m_curCamera->GetPosition();
+}
+
+
+const std::vector<Camera*>& CameraManager::GetCubeCameras()
+{
+	return m_CubecameraList;
+}
+
+void CameraManager::AddCubeMapCamera()
+{
+	auto curpos = m_curCamera->GetPosition();
+	DirectX::XMFLOAT3 forward[6] = {
+		DirectX::XMFLOAT3(curpos.x + 1,curpos.y,curpos.z),	//+X
+		DirectX::XMFLOAT3(curpos.x - 1,curpos.y,curpos.z),	//-X
+		DirectX::XMFLOAT3(curpos.x,curpos.y + 1,curpos.z),	//+Y
+		DirectX::XMFLOAT3(curpos.x,curpos.y - 1,curpos.z),	//-Y
+		DirectX::XMFLOAT3(curpos.x,curpos.y,curpos.z + 1),	//+Z
+		DirectX::XMFLOAT3(curpos.x,curpos.y,curpos.z - 1),	//-Z
+
+	};
+
+	DirectX::XMFLOAT3 up[6] = {
+		DirectX::XMFLOAT3(0,1,0),	//+X
+		DirectX::XMFLOAT3(0,1,0),	//-X
+		DirectX::XMFLOAT3(0,1,0),	//+Y
+		DirectX::XMFLOAT3(0,-1,0),	//-Y
+		DirectX::XMFLOAT3(0,1,0),	//+Z
+		DirectX::XMFLOAT3(0,1,0),	//-Z
+
+	};
+
+	DirectX::XMFLOAT3 right[6] = {
+		DirectX::XMFLOAT3(0,0,1),	//+X
+		DirectX::XMFLOAT3(0,0,-1),	//-X
+		DirectX::XMFLOAT3(0,0,1),	//+Y
+		DirectX::XMFLOAT3(0,0,1),	//-Y
+		DirectX::XMFLOAT3(0,0,1),	//+Z
+		DirectX::XMFLOAT3(0,0,-1),	//-Z
+	};
+
+	for (int i = 0; i < 6; i++)
+	{
+		Camera* camera = new Camera(forward[i], up[i], right[i]);
+		camera->Initialize(m_ratio);
+		m_CubecameraList.push_back(camera);
+	}
+
+	
 }

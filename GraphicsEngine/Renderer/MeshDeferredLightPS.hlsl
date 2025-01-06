@@ -57,10 +57,10 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    }
 
-   float2 uv = gLightMap.Sample(samLinear, input.tex).rg;
+   //float2 uv = gLightMap.Sample(samLinear, input.tex).rg;
 
    indirectlight = float3(0,0,0);
-   indirectlight = pow(gLightMap.Sample(samLinear, input.tex), float3(gamma, gamma, gamma));
+   //indirectlight = pow(gLightMap.Sample(samLinear, input.tex), float3(gamma, gamma, gamma));
 
    //ambient lighting (constant factor for simplicity)
    float3 ambient = aoValue * albedoColor;
@@ -75,8 +75,9 @@ float4 main(VS_OUTPUT input) : SV_TARGET
    result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
 
    //output.Gbuffer = float4(result, 1);
+   result = gLightMap.Sample(samLinear, float3(1,0,0));
 
-   //return output;
    return float4(result, 1);
+   //return output;
    //return float4(albedoColor, 1);
 }

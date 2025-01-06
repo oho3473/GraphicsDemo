@@ -18,6 +18,19 @@ RenderTargetView::RenderTargetView(const std::shared_ptr<Device>& device, const 
 }
 
 
+RenderTargetView::RenderTargetView(const std::shared_ptr<Device>& device, const D3D11_RENDER_TARGET_VIEW_DESC& rtvdesc, const D3D11_TEXTURE2D_DESC texdesc) : Resource(device)
+{
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	m_Device.lock()->Get()->CreateTexture2D(&texdesc, nullptr, texture.GetAddressOf());
+
+	m_Device.lock()->Get()->CreateRenderTargetView(texture.Get(), &rtvdesc, m_RTV.GetAddressOf());
+}
+
+RenderTargetView::RenderTargetView(const std::shared_ptr<Device>& device, const std::shared_ptr<Texture2D>& texture, const D3D11_RENDER_TARGET_VIEW_DESC& desc) : Resource(device)
+{
+	m_Device.lock()->Get()->CreateRenderTargetView(texture->Get(), &desc, m_RTV.GetAddressOf());
+}
+
 void RenderTargetView::CreateDownscaledView(const unsigned int& scaleRatio)
 {
 	Release();
@@ -100,41 +113,6 @@ void RenderTargetView::OnResize()
 			break;
 		}
 
-		case RenderTargetViewType::CubeMap:
-		{
-			int CubeMapSize = 256;
-			D3D11_TEXTURE2D_DESC cubeTexDesc;
-			cubeTexDesc.Width = CubeMapSize;
-			cubeTexDesc.Height = CubeMapSize;
-			cubeTexDesc.MipLevels = 0;
-			cubeTexDesc.ArraySize = 6;
-			cubeTexDesc.SampleDesc.Count = 1;
-			cubeTexDesc.SampleDesc.Quality = 0;
-			cubeTexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			cubeTexDesc.Usage = D3D11_USAGE_DEFAULT;
-			cubeTexDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-			cubeTexDesc.CPUAccessFlags = 0;
-			cubeTexDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE;
-
-			D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-			rtvDesc.Format = cubeTexDesc.Format;
-			rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-			rtvDesc.Texture2DArray.MipSlice = 0;
-			rtvDesc.Texture2DArray.ArraySize = 1;
-
-			Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-			HR_CHECK(m_Device.lock()->Get()->CreateTexture2D(&cubeTexDesc, nullptr, &texture));
-
-			for (int i = 0; i < 6; i++)
-			{
-				rtvDesc.Texture2DArray.FirstArraySlice = i;
-
-				HR_CHECK(m_Device.lock()->Get()->CreateRenderTargetView(texture.Get(), &rtvDesc, &m_RTVArray[i]));
-			}
-
-
-		}
-		break;
 
 		case RenderTargetViewType::Outline:
 		case RenderTargetViewType::ObjectMask:
@@ -172,13 +150,5 @@ void RenderTargetView::Release()
 {
 	const ULONG refCount = m_RTV.Reset();
 	assert(refCount == 0);
-
-
-	for (int i = 0; i < 6; i++)
-	{
-		m_RTVArray[i]->Release();
-		m_RTVArray[i] = nullptr;
-	}
-
 
 }

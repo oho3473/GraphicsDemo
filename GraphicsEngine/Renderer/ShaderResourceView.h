@@ -19,7 +19,8 @@ public:
 	};
 
 	ShaderResourceView(const std::shared_ptr<Device>& device);
-	ShaderResourceView(const std::shared_ptr<Device>& device, const D3D11_TEXTURE2D_DESC& cubeTexDesc);	//cubemap 전용
+	ShaderResourceView(const std::shared_ptr<Device>& device, const D3D11_TEXTURE2D_DESC& cubeTexDesc);	
+	ShaderResourceView(const std::shared_ptr<Device>& device, const std::shared_ptr<Texture2D>& texture2D,const D3D11_SHADER_RESOURCE_VIEW_DESC& desc);//cubemap 전용
 
 	ShaderResourceView(const std::shared_ptr<Device>& device, std::vector<std::string> filelist, Directory dir = Directory::Texture);
 	ShaderResourceView(const std::shared_ptr<Device>& device, const std::wstring& filename, Directory dir = Directory::Texture);

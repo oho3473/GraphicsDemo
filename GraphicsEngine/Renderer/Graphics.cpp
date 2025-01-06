@@ -5,7 +5,6 @@
 #include "ModelLoader.h"
 #include "LightManager.h"
 #include "Animator.h"
-#include "DecalManager.h"
 #include "PassManager.h"
 #include "DebugDrawManager.h"
 #include "UIManager.h"
@@ -22,7 +21,7 @@ Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
 , m_Loader(std::make_shared <ModelLoader>())
 , m_LightManager(std::make_shared<LightManager>())
 , m_Animator(std::make_shared <Animator>())
-, m_DecalManager(std::make_shared <DecalManager>())
+//, m_DecalManager(std::make_shared <DecalManager>())
 , m_DebugDrawManager(std::make_shared <DebugDrawManager>())
 , m_UIManager(std::make_shared <UIManager>())
 , m_PassManager(std::make_shared <PassManager>()), IGraphics()
@@ -55,6 +54,13 @@ bool Graphics::Initialize()
 
 	OnResize(m_hWnd, false);
 
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV1"));
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV2"));
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV3"));
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV4"));
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV5"));
+	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV6"));
+
 	return true;
 }
 
@@ -79,6 +85,7 @@ void Graphics::Update(double dt)
 {
 	m_PassManager->Update(m_AfterCulling);
 	m_LightManager->Update(m_Lights);
+	m_PassManager->SetCubeCamera(m_CubeMapCameras);
 
 }
 
@@ -135,6 +142,14 @@ void Graphics::BeginRender()
 			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), gray);
 		}
 	}
+
+	auto CubeDSV = m_ResourceManager->Get<DepthStencilView>(L"CubeMapDSV");
+
+	for (int i = 0; i < m_CubeRTVs.size(); i++)
+	{
+		m_Device->BeginRender(m_CubeRTVs[i].lock()->Get(), CubeDSV.lock()->Get(), gray);
+	}
+
 }
 
 void Graphics::Render(float deltaTime)
@@ -174,6 +189,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Main"));
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Deferred"));
+
 
 	m_PassManager->OnResize();
 
@@ -318,6 +334,14 @@ const double Graphics::GetDuration(std::wstring name, int index)
 
 
 	return 0;
+}
+
+void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix viewproj, int index)
+{
+	if (index >= 0 && index < 6)
+	{
+		m_CubeMapCameras[index] = viewproj.Transpose();;
+	}
 }
 
 void Graphics::DrawSphere(const debug::SphereInfo& info)

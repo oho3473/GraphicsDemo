@@ -134,9 +134,6 @@
     <ClInclude Include="DebugDrawManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="DecalManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
@@ -215,8 +212,11 @@
     <ClInclude Include="VertexData.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="DebugOffScreen.h">
+    <ClInclude Include="CubeMapPass.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOffScreen.h">
+      <Filter>RenderPass\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +278,6 @@
       <Filter>Manager\source</Filter>
     </ClCompile>
     <ClCompile Include="PassManager.cpp">
-      <Filter>Manager\source</Filter>
-    </ClCompile>
-    <ClCompile Include="DecalManager.cpp">
       <Filter>Manager\source</Filter>
     </ClCompile>
     <ClCompile Include="DebugDrawManager.cpp">
@@ -364,6 +361,9 @@
     <ClCompile Include="Node.cpp">
       <Filter>ModelLoader\ModelData</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMapPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DebugQuadVS.hlsl">
@@ -403,6 +403,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="Sprite2DPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="CubeMapPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="CubeMapVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

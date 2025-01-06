@@ -8,10 +8,12 @@ class Camera
 {
 public:
 	Camera();
+	Camera(DirectX::XMFLOAT3 forward, DirectX::XMFLOAT3 up, DirectX::XMFLOAT3 right);
 	~Camera();
 
 	void Initialize(double ratio);
 	void Update(double dt);
+	void CubeMapUpdate(double dt);
 	DirectX::XMFLOAT3 GetPosition() const;
 
 	DirectX::XMFLOAT4X4 World() const;
@@ -42,8 +44,8 @@ private:
 
 	DirectX::XMFLOAT3 m_pos;		//카메라 위치
 	DirectX::XMFLOAT3 m_forward;	//카메라의 전방 벡터
-	DirectX::XMFLOAT3 m_up;			//카메라
-	DirectX::XMFLOAT3 m_right;			//카메라
+	DirectX::XMFLOAT3 m_up;			//카메라의 상향
+	DirectX::XMFLOAT3 m_right;		//카메라의 우측
 
 
 	float m_nearZ;

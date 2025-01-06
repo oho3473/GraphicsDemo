@@ -22,7 +22,7 @@ class PassManager;
 
 #pragma region Manager
 class LightManager;
-class DecalManager;
+//class DecalManager;
 class DebugDrawManager;
 class UIManager;
 #pragma endregion
@@ -55,6 +55,8 @@ public:
 	virtual void EraseLight(uint32_t EntityID, LightType kind) override;
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 	virtual const double GetDuration(std::wstring name, int index) override;
+	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix viewproj,int index) override;
+
 
 	virtual void DrawSphere(const debug::SphereInfo& info)override;
 	virtual void DrawAABB(const debug::AABBInfo& info)override;
@@ -69,6 +71,7 @@ public:
 	virtual void DeleteTextObject(uint32_t entityId)override;
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
+	std::vector<std::weak_ptr<RenderTargetView>> m_CubeRTVs;
 	std::vector<std::weak_ptr<DepthStencilView>> m_DSVs;
 	
 	std::vector<std::shared_ptr<RenderData>> m_RenderVector;	//프레임워크쪽에서 준 데이터들
@@ -86,7 +89,7 @@ private:
 	std::shared_ptr<Animator> m_Animator;
 	std::shared_ptr<LightManager> m_LightManager;
 
-	std::shared_ptr <DecalManager> m_DecalManager;
+	//std::shared_ptr <DecalManager> m_DecalManager;
 	std::shared_ptr <DebugDrawManager> m_DebugDrawManager;
 	std::shared_ptr <UIManager> m_UIManager;
 
@@ -99,6 +102,8 @@ private:
 	DirectX::SimpleMath::Matrix m_Proj;
 	DirectX::SimpleMath::Matrix m_ViewProj;
 	DirectX::BoundingFrustum m_Frustum;
+
+	DirectX::SimpleMath::Matrix m_CubeMapCameras[6];
 
 	// Pipeline
 	std::shared_ptr<PassManager> m_PassManager;

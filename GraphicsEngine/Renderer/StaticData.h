@@ -269,7 +269,6 @@ namespace TextureBox
 	static D3D11_PRIMITIVE_TOPOLOGY PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
 
-
 namespace Quad
 {
 	namespace Vertex
@@ -344,10 +343,10 @@ namespace DebugQuad
 
 		static QuadVertex Buffer[] = {
 
-		{ DirectX::XMFLOAT4( -0.30f  , -0.30f , depth, 1.f),DirectX::XMFLOAT2(0.0f,1.0f) },// 왼쪽 아래
-		{ DirectX::XMFLOAT4( -0.30f  , 0.30f , depth, 1.f),DirectX::XMFLOAT2(0.0f,0.0f) },// 왼쪽 위
-		{ DirectX::XMFLOAT4(  0.30f  , 0.30f , depth, 1.f),DirectX::XMFLOAT2(1.0f,0.0f) },// 오른쪽 위
-		{ DirectX::XMFLOAT4(  0.30f  , -0.30f , depth, 1.f),DirectX::XMFLOAT2(1.0f,1.0f) },// 오른쪽 아래
+		{ DirectX::XMFLOAT4(-0.30f  , -0.30f , depth, 1.f),DirectX::XMFLOAT2(0.0f,1.0f) },// 왼쪽 아래
+		{ DirectX::XMFLOAT4(-0.30f  , 0.30f , depth, 1.f),DirectX::XMFLOAT2(0.0f,0.0f) },// 왼쪽 위
+		{ DirectX::XMFLOAT4(0.30f  , 0.30f , depth, 1.f),DirectX::XMFLOAT2(1.0f,0.0f) },// 오른쪽 위
+		{ DirectX::XMFLOAT4(0.30f  , -0.30f , depth, 1.f),DirectX::XMFLOAT2(1.0f,1.0f) },// 오른쪽 아래
 
 
 		};
@@ -394,8 +393,6 @@ namespace DebugQuad
 
 	static D3D11_PRIMITIVE_TOPOLOGY PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
-
-
 
 namespace DecalVolume
 {
@@ -503,6 +500,120 @@ namespace DecalVolume
 		};
 
 		static D3D11_SUBRESOURCE_DATA Data = { DecalVolume::Index::Buffer };
+	}
+
+	static D3D11_PRIMITIVE_TOPOLOGY PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+}
+
+
+
+
+namespace CubeMap
+{
+	namespace Vertex
+	{
+
+		static BaseVertex Buffer[] = {
+			// 뒤쪽 면 (-Z 방향)
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
+
+			// 앞쪽 면 (+Z 방향)
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
+
+			// 왼쪽 면 (-X 방향)
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
+
+			// 오른쪽 면 (+X 방향)
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
+
+			// 아래쪽 면 (-Y 방향)
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
+
+			// 위쪽 면 (+Y 방향)
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
+		};
+
+		static UINT count = 24;
+
+		static D3D11_BUFFER_DESC Desc =
+		{
+			sizeof(BaseVertex) * Box::Vertex::count,
+			D3D11_USAGE_IMMUTABLE,
+			D3D11_BIND_VERTEX_BUFFER,
+			0,
+			0,
+			0
+		};
+
+		static D3D11_SUBRESOURCE_DATA Data =
+		{
+			Box::Vertex::Buffer
+		};
+	}
+
+	namespace Index
+	{
+		static UINT Buffer[] =
+		{
+			// 뒤쪽 면 (-Z 방향)
+	   0, 1, 2, // 첫 번째 삼각형
+	   0, 2, 3, // 두 번째 삼각형
+
+	   // 앞쪽 면 (+Z 방향)
+	   4, 5, 6, // 첫 번째 삼각형
+	   4, 6, 7, // 두 번째 삼각형
+
+	   // 왼쪽 면 (-X 방향)
+	   8,  9, 10, // 첫 번째 삼각형
+	   8, 10, 11, // 두 번째 삼각형
+
+	   // 오른쪽 면 (+X 방향)
+	   12, 13, 14, // 첫 번째 삼각형
+	   12, 14, 15, // 두 번째 삼각형
+
+	   // 아래쪽 면 (-Y 방향)
+	   16, 17, 18, // 첫 번째 삼각형
+	   16, 18, 19, // 두 번째 삼각형
+
+	   // 위쪽 면 (+Y 방향)
+	   20, 21, 22, // 첫 번째 삼각형
+	   20, 22, 23  // 두 번째 삼각형
+		};
+
+		static UINT count = 36;
+
+		static D3D11_BUFFER_DESC Desc =
+		{
+			sizeof(UINT) * Box::Index::count,
+			D3D11_USAGE_IMMUTABLE,
+			D3D11_BIND_INDEX_BUFFER,
+			0,
+			0,
+			0
+		};
+
+		static D3D11_SUBRESOURCE_DATA Data =
+		{
+			Box::Index::Buffer
+		};
 	}
 
 	static D3D11_PRIMITIVE_TOPOLOGY PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

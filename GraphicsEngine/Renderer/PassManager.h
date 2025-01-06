@@ -20,6 +20,7 @@ class UIPass;
 class DebugOffScreen;
 class DebugPass;
 class DeferredPass;
+class CubeMapPass;
 #pragma region Pass
 
 #pragma region Manager
@@ -42,7 +43,7 @@ public:
 	void OnResize();
 	void SetVP(bool isVP);
 	void SetDebugDraw(bool on_off);
-
+	void SetCubeCamera(const DirectX::SimpleMath::Matrix* cameras);
 
 private:
 	void DrawIMGUI();
@@ -61,6 +62,7 @@ private:
 	std::shared_ptr<DeferredLightPass> m_DeferredLight;
 	std::shared_ptr<OutputMain> m_MainOutput;
 	std::shared_ptr<DebugOffScreen> m_DebugOffScreen;
+	std::shared_ptr<CubeMapPass> m_CubeMap;
 
 private:
 	std::weak_ptr<Device> m_Device;

@@ -391,7 +391,7 @@ ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, st
 
 
 
-ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, const D3D11_TEXTURE2D_DESC& cubeTexDesc)
+ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, const D3D11_TEXTURE2D_DESC& cubeTexDesc): Resource(device)
 {
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 	HR_CHECK(device->Get()->CreateTexture2D(&cubeTexDesc, nullptr, texture.GetAddressOf()));
@@ -404,6 +404,11 @@ ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, co
 	srvDesc.TextureCube.MipLevels = -1;
 
 	m_Device.lock()->Get()->CreateShaderResourceView(texture.Get(), &srvDesc, &m_SRV);
+}
+
+ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, const std::shared_ptr<Texture2D>& texture2D, const D3D11_SHADER_RESOURCE_VIEW_DESC& desc) : Resource(device)
+{
+	m_Device.lock()->Get()->CreateShaderResourceView(texture2D->Get(), &desc, &m_SRV);
 }
 
 ID3D11ShaderResourceView* ShaderResourceView::Get() const

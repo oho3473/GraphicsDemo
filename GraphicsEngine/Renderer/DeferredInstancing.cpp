@@ -267,7 +267,6 @@ void DeferredInstancing::Render()
 		Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 
 
-
 		Device->Context()->VSSetConstantBuffers(1, 1, MaterialCB->GetAddress());
 		Device->Context()->PSSetConstantBuffers(1, 1, MaterialCB->GetAddress());
 
