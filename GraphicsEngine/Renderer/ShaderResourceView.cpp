@@ -389,6 +389,23 @@ ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, st
 	}
 }
 
+
+
+ShaderResourceView::ShaderResourceView(const std::shared_ptr<Device>& device, const D3D11_TEXTURE2D_DESC& cubeTexDesc)
+{
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	HR_CHECK(device->Get()->CreateTexture2D(&cubeTexDesc, nullptr, texture.GetAddressOf()));
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	srvDesc.Format = cubeTexDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = -1;
+
+	m_Device.lock()->Get()->CreateShaderResourceView(texture.Get(), &srvDesc, &m_SRV);
+}
+
 ID3D11ShaderResourceView* ShaderResourceView::Get() const
 {
 	return m_SRV.Get();

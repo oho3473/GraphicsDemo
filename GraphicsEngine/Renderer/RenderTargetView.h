@@ -10,6 +10,7 @@ enum class RenderTargetViewType
 	OffScreen,	// for deferred rendering
 	ObjectMask,
 	Outline,
+	CubeMap
 	// 이후 HDR 용 RTV도 필요할 것이다.
 
 };
@@ -32,4 +33,6 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RTV;
 	RenderTargetViewType m_Type;
+	ID3D11RenderTargetView* m_RTVArray[6];
+	
 };
