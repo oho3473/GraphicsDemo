@@ -33,8 +33,39 @@ void CameraManager::Update(double dt)
 
 	for (auto& camera : m_CubecameraList)
 	{
-		camera->SetPos(m_curCamera->GetPosition());
-		camera->CubeMapUpdate(dt);
+		//camera->SetPos(m_curCamera->GetPosition());
+		auto curpos = m_curCamera->GetPosition();
+
+		DirectX::XMFLOAT3 forward[6] = {
+		DirectX::XMFLOAT3(1, 0, 0),  // +X
+		DirectX::XMFLOAT3(-1, 0, 0), // -X
+		DirectX::XMFLOAT3(0, 1, 0),  // +Y
+		DirectX::XMFLOAT3(0, -1, 0), // -Y
+		DirectX::XMFLOAT3(0, 0, 1),  // +Z
+		DirectX::XMFLOAT3(0, 0, -1)  // -Z
+		};
+
+		DirectX::XMFLOAT3 up[6] = {
+			DirectX::XMFLOAT3(0, 1, 0),  // +X
+			DirectX::XMFLOAT3(0, 1, 0),  // -X
+			DirectX::XMFLOAT3(0, 0, -1), // +Y
+			DirectX::XMFLOAT3(0, 0, 1),  // -Y
+			DirectX::XMFLOAT3(0, 1, 0),  // +Z
+			DirectX::XMFLOAT3(0, 1, 0)   // -Z
+		};
+
+		DirectX::XMMATRIX viewMatrices[6];
+		DirectX::XMVECTOR eyePos = DirectX::XMLoadFloat3(&curpos); // 큐브 맵의 중심
+
+		for (int i = 0; i < 6; ++i) {
+			DirectX::XMVECTOR lookAt = DirectX::XMVectorAdd(eyePos, DirectX::XMLoadFloat3(&forward[i]));
+			DirectX::XMVECTOR upVec = DirectX::XMLoadFloat3(&up[i]);
+
+			viewMatrices[i] = DirectX::XMMatrixLookAtLH(eyePos, lookAt, upVec);
+			camera->CubeMapUpdate(dt,viewMatrices[i]);
+		}
+
+
 	}
 }
 
@@ -115,41 +146,36 @@ const std::vector<Camera*>& CameraManager::GetCubeCameras()
 void CameraManager::AddCubeMapCamera()
 {
 	auto curpos = m_curCamera->GetPosition();
-	DirectX::XMFLOAT3 forward[6] = {
-		DirectX::XMFLOAT3(curpos.x + 1,curpos.y,curpos.z),	//+X
-		DirectX::XMFLOAT3(curpos.x - 1,curpos.y,curpos.z),	//-X
-		DirectX::XMFLOAT3(curpos.x,curpos.y + 1,curpos.z),	//+Y
-		DirectX::XMFLOAT3(curpos.x,curpos.y - 1,curpos.z),	//-Y
-		DirectX::XMFLOAT3(curpos.x,curpos.y,curpos.z + 1),	//+Z
-		DirectX::XMFLOAT3(curpos.x,curpos.y,curpos.z - 1),	//-Z
 
+	
+
+	DirectX::XMFLOAT3 forward[6] = {
+	DirectX::XMFLOAT3(1, 0, 0),  // +X
+	DirectX::XMFLOAT3(-1, 0, 0), // -X
+	DirectX::XMFLOAT3(0, 1, 0),  // +Y
+	DirectX::XMFLOAT3(0, -1, 0), // -Y
+	DirectX::XMFLOAT3(0, 0, 1),  // +Z
+	DirectX::XMFLOAT3(0, 0, -1)  // -Z
 	};
 
 	DirectX::XMFLOAT3 up[6] = {
-		DirectX::XMFLOAT3(0,1,0),	//+X
-		DirectX::XMFLOAT3(0,1,0),	//-X
-		DirectX::XMFLOAT3(0,1,0),	//+Y
-		DirectX::XMFLOAT3(0,-1,0),	//-Y
-		DirectX::XMFLOAT3(0,1,0),	//+Z
-		DirectX::XMFLOAT3(0,1,0),	//-Z
-
+		DirectX::XMFLOAT3(0, 1, 0),  // +X
+		DirectX::XMFLOAT3(0, 1, 0),  // -X
+		DirectX::XMFLOAT3(0, 0, -1), // +Y
+		DirectX::XMFLOAT3(0, 0, 1),  // -Y
+		DirectX::XMFLOAT3(0, 1, 0),  // +Z
+		DirectX::XMFLOAT3(0, 1, 0)   // -Z
 	};
 
-	DirectX::XMFLOAT3 right[6] = {
-		DirectX::XMFLOAT3(0,0,1),	//+X
-		DirectX::XMFLOAT3(0,0,-1),	//-X
-		DirectX::XMFLOAT3(0,0,1),	//+Y
-		DirectX::XMFLOAT3(0,0,1),	//-Y
-		DirectX::XMFLOAT3(0,0,1),	//+Z
-		DirectX::XMFLOAT3(0,0,-1),	//-Z
-	};
+	DirectX::XMMATRIX viewMatrices[6];
+	DirectX::XMVECTOR eyePos = DirectX::XMLoadFloat3(&curpos); // 큐브 맵의 중심
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; ++i) 
 	{
-		Camera* camera = new Camera(forward[i], up[i], right[i]);
+
+
+		Camera* camera = new Camera();
 		camera->Initialize(m_ratio);
 		m_CubecameraList.push_back(camera);
 	}
-
-	
 }

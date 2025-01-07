@@ -52,6 +52,22 @@ namespace RenderStateDESC
 		};
 	}
 
+	namespace BackFaceSolid
+	{
+		static D3D11_RASTERIZER_DESC Desc = {
+			D3D11_FILL_SOLID,
+			D3D11_CULL_FRONT,
+			false,//시계방향(카메라를 기준으로)으로 감긴 심각형을 전면 으로 간주하고 반시계방향(키메라를 기준으로)으로 감긴 삼각형을 후면으로 간주하	려면 false 를 지정한다
+			0,
+			0.0f,
+			0.0f,
+			true,
+			false,
+			false,
+			false,
+		};
+	}
+
 	namespace Wire
 	{
 		static D3D11_RASTERIZER_DESC Desc = {
@@ -67,6 +83,8 @@ namespace RenderStateDESC
 			false
 		};
 	}
+
+
 }
 
 namespace TextureDESC

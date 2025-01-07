@@ -120,6 +120,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	// Rasterizer State
 	// ----------------------------------------------------------------------------------------
 	Create<RenderState>(L"Solid", RenderStateDESC::Solid::Desc);
+	Create<RenderState>(L"BackFaceSolid", RenderStateDESC::BackFaceSolid::Desc);
 	Create<RenderState>(L"Wire", RenderStateDESC::Wire::Desc);
 
 
@@ -173,6 +174,8 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	// ----------------------------------------------------------------------------------------
 	// Shader Resource View
 	// ----------------------------------------------------------------------------------------
+	Create<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds", L"flower_road_8khdri_1kcubemapBC7.dds");
+
 
 	// ----------------------------------------------------------------------------------------
 	// Render Target View

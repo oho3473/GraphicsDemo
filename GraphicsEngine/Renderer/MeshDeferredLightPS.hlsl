@@ -69,15 +69,14 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    result = directlight + indirectlight;
 
-   result = result + EmissiveValue;
+    float4 cubemap = gLightMap.Sample(samLinear, V);
+   result = result + EmissiveValue + cubemap;
 
    // gamma correct
    result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
 
    //output.Gbuffer = float4(result, 1);
-   result = gLightMap.Sample(samLinear, float3(1,0,0));
 
-   return float4(result, 1);
-   //return output;
-   //return float4(albedoColor, 1);
+    return float4(result, 1);
+   //return float4(result, 1);
 }

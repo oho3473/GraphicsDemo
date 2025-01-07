@@ -12,8 +12,9 @@ public:
 	~Camera();
 
 	void Initialize(double ratio);
+	void InitializeCube(double ratio);
 	void Update(double dt);
-	void CubeMapUpdate(double dt);
+	void CubeMapUpdate(double dt, DirectX::XMMATRIX view);
 	DirectX::XMFLOAT3 GetPosition() const;
 
 	DirectX::XMFLOAT4X4 World() const;

@@ -1,10 +1,19 @@
-cbuffer Camera : register(b0)
+cbuffer mainCamera : register(b0)
 {
     float4x4 gWorldViewProj;
     float4x4 gView;
     float4x4 gProj;
     float4x4 gViewInverse;
     float4x4 gProjInverse;
+};
+
+cbuffer cubeCamera : register(b1)
+{
+    float4x4 gCubeWorldViewProj;
+    float4x4 gCubeView;
+    float4x4 gCubeProj;
+    float4x4 gCubeViewInverse;
+    float4x4 gCubeProjInverse;
 };
 
 struct VS_INPUT
@@ -34,7 +43,11 @@ VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
 
-    output.pos = mul(input.pos, gWorldViewProj);
-
+    output.pos = input.pos;
+    output.pos = mul(output.pos, gCubeViewInverse);
+    output.pos = mul(output.pos, gCubeProj);
+    output.normal = input.normal;
+    output.tex.xy = input.tex;
+    
 	return output;
 }

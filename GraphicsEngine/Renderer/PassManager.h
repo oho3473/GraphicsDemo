@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderData.h"
+#include "BufferData.h"
 
 
 
@@ -43,7 +44,7 @@ public:
 	void OnResize();
 	void SetVP(bool isVP);
 	void SetDebugDraw(bool on_off);
-	void SetCubeCamera(const DirectX::SimpleMath::Matrix* cameras);
+	void SetCubeCamera(const CameraData* datas);
 
 private:
 	void DrawIMGUI();

@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderPass.h"
+#include "BufferData.h"
 
 class ViewPort;
 
@@ -15,7 +16,7 @@ public:
     virtual void Render() override;
     virtual void OnResize() override;
 
-    void SetCamera(const DirectX::SimpleMath::Matrix* cameras);
+    void SetCamera(const CameraData* cameras);
 private:
 
 
@@ -30,6 +31,6 @@ private:
     std::weak_ptr<VertexShader> m_CubeVS;
     std::weak_ptr<PixelShader> m_CubePS;
 
-	DirectX::SimpleMath::Matrix m_CubeMapCameras[6];
+	CameraData m_CubeMapCameras[6];
 };
 

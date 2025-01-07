@@ -45,7 +45,7 @@ public:
 	virtual bool AddRenderModel(std::shared_ptr<RenderData> data) abstract;
 
 	virtual void SetCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, const DirectX::SimpleMath::Matrix& orthoProj) abstract;
-	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix viewproj, int index) abstract;
+	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro, int index) abstract;
 
 	virtual void AddLight(uint32_t EntityID, LightType kind, LightData data) abstract;
 	virtual void EraseLight(uint32_t EntityID, LightType kind) abstract;

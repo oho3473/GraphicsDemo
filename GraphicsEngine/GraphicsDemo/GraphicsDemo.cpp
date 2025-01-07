@@ -59,7 +59,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CameraManager* cameraManager = new CameraManager(ratio);
 	cameraManager->Initialize();
 
-	cameraManager->SetCurCameraPos({ 0, 2, -10 });
+	//cameraManager->SetCurCameraPos({ 0, 2, -10 });
+	cameraManager->SetCurCameraPos({ 0, 0, 0 });
 
 	TimeManager* timeManager = new TimeManager();
 	timeManager->Initialize();
@@ -235,7 +236,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		auto cubecameras = cameraManager->GetCubeCameras();
 		for (int i = 0; i < 6; i++)
 		{
-			graphicsEngine->SetCubeCamera(cubecameras[i]->WorldViewProj(),i);
+			graphicsEngine->SetCubeCamera(cubecameras[i]->View(), cubecameras[i]->Proj(),i);
 		}
 
 

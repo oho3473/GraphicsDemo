@@ -202,9 +202,9 @@ void PassManager::SetDebugDraw(bool on_off)
 	m_isDebugDraw = on_off;
 }
 
-void PassManager::SetCubeCamera(const DirectX::SimpleMath::Matrix* cameras)
+void PassManager::SetCubeCamera(const CameraData* datas)
 {
-	m_CubeMap->SetCamera(cameras);
+	m_CubeMap->SetCamera(datas);
 }
 
 void PassManager::DrawIMGUI()

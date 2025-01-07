@@ -515,47 +515,47 @@ namespace CubeMap
 
 		static BaseVertex Buffer[] = {
 			// 뒤쪽 면 (-Z 방향)
-			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
-			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
-			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, -1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, -1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
 
 			// 앞쪽 면 (+Z 방향)
-			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
-			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
-			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 0.f, 1.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 0.f, 1.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
 
 			// 왼쪽 면 (-X 방향)
-			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(-1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
 
 			// 오른쪽 면 (+X 방향)
-			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(1.f, 0.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
 
 			// 아래쪽 면 (-Y 방향)
-			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f, -1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f, -1.f,  1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f, -1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, -1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
 
 			// 위쪽 면 (+Y 방향)
-			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f},  DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
-			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f, -1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f, -1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 1.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(1.f,  1.f,  1.f, 1.0f),  {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(1.f, 0.f),DirectX::XMFLOAT2(0,0)},
+			{DirectX::XMFLOAT4(-1.f,  1.f,  1.f, 1.0f), {0.5f, 0.5f, 0.5f, 1.f}, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 0),DirectX::XMFLOAT4(0,0,0,0),DirectX::XMFLOAT4(0,0,0,0), DirectX::XMFLOAT2(0.f, 0.f),DirectX::XMFLOAT2(0,0)},
 		};
 
 		static UINT count = 24;
 
 		static D3D11_BUFFER_DESC Desc =
 		{
-			sizeof(BaseVertex) * Box::Vertex::count,
+			sizeof(BaseVertex) * CubeMap::Vertex::count,
 			D3D11_USAGE_IMMUTABLE,
 			D3D11_BIND_VERTEX_BUFFER,
 			0,
@@ -565,7 +565,7 @@ namespace CubeMap
 
 		static D3D11_SUBRESOURCE_DATA Data =
 		{
-			Box::Vertex::Buffer
+			CubeMap::Vertex::Buffer
 		};
 	}
 
@@ -602,7 +602,7 @@ namespace CubeMap
 
 		static D3D11_BUFFER_DESC Desc =
 		{
-			sizeof(UINT) * Box::Index::count,
+			sizeof(UINT) * CubeMap::Index::count,
 			D3D11_USAGE_IMMUTABLE,
 			D3D11_BIND_INDEX_BUFFER,
 			0,
@@ -612,7 +612,7 @@ namespace CubeMap
 
 		static D3D11_SUBRESOURCE_DATA Data =
 		{
-			Box::Index::Buffer
+			CubeMap::Index::Buffer
 		};
 	}
 

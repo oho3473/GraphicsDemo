@@ -12,7 +12,11 @@ struct VS_OUTPUT
     float4 posWorld : TEXCOORD5;
 };
 
+SamplerState samLinear : register(s0);
+
+Texture2D CubeTex : register(t0);
+
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    return CubeTex.Sample(samLinear, input.tex.xy);
 }

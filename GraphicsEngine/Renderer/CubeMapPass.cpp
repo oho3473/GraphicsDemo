@@ -8,7 +8,9 @@
 #include "DepthStencilView.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
-
+#include "RenderState.h"
+#include "DepthStencilState.h"
+#include "RenderData.h"
 
 CubeMapPass::CubeMapPass(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resourcemanager) : RenderPass(device,resourcemanager)
 {
@@ -34,29 +36,47 @@ void CubeMapPass::Render()
 {
 	std::shared_ptr<Device> device = m_Device.lock();
 	std::shared_ptr<Sampler> linear = m_ResourceManager.lock()->Get<Sampler>(L"LinearWrap").lock();
-	device->UnBindSRV();
 
 	device->Context()->IASetInputLayout(m_CubeVS.lock()->InputLayout());
+	const DirectX::SimpleMath::Color gray = { 0.15f, 0.15f, 0.15f, 1.f };
 
 	for (int i = 0; i < 6; i++)
 	{
+		device->UnBindSRV();
+
+		device->BeginRender(m_CubeRTVs[i].lock()->Get(), m_CubeDSV.lock()->Get(), gray);
+
+
 		device->Context()->RSSetViewports(1, m_CubeViewPort.lock()->Get());
 		device->Context()->OMSetRenderTargets(1, m_CubeRTVs[i].lock()->GetAddress(), m_CubeDSV.lock()->Get());
-		
+		device->Context()->OMSetDepthStencilState(m_ResourceManager.lock()->Get<DepthStencilState>(L"DisableDepth").lock()->GetState().Get(), 0); // 깊이 비활성화
+
 		device->Context()->IASetIndexBuffer(m_CubeIB.lock()->Get(), DXGI_FORMAT_R32_UINT, 0);
 		device->Context()->IASetVertexBuffers(0, 1, m_CubeVB.lock()->GetAddress(), m_CubeVB.lock()->Size(), m_CubeVB.lock()->Offset());
 		device->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		device->Context()->VSSetShader(m_CubeVS.lock()->GetVS(), nullptr, 0);
 		
+		auto maincamera = m_ResourceManager.lock()->Get<ConstantBuffer<CameraData>>(L"Camera");
+		device->Context()->VSSetConstantBuffers(0, 1, maincamera.lock()->GetAddress());
+
 		auto cb = m_ResourceManager.lock()->Get<ConstantBuffer<CameraData>>(L"CubeCamera");
 
-		cb.lock()->m_struct.worldviewproj = m_CubeMapCameras[i];
+		cb.lock()->m_struct.view= m_CubeMapCameras[i].view.Transpose();
+		cb.lock()->m_struct.viewInverse= m_CubeMapCameras[i].viewInverse;
+		cb.lock()->m_struct.proj= m_CubeMapCameras[i].proj.Transpose();
+
 		cb.lock()->Update();
-		device->Context()->VSSetConstantBuffers(0, 1, cb.lock()->GetAddress());
+		device->Context()->RSSetState(m_ResourceManager.lock()->Get<RenderState>(L"BackFaceSolid").lock()->Get());
+		device->Context()->VSSetConstantBuffers(1, 1, cb.lock()->GetAddress());
+
+	
 
 		device->Context()->PSSetShader(m_CubePS.lock()->GetPS(), nullptr, 0);
 		device->Context()->PSSetSamplers(0, 1, linear->GetAddress());
+
+		auto image = m_ResourceManager.lock()->Get<ShaderResourceView>(L"None_metallicRoughness.dds");
+		device->Context()->PSSetShaderResources(0, 1, image.lock()->GetAddress());
 
 		device->Context()->DrawIndexed(m_CubeIB.lock()->Count(),0,0);
 	
@@ -65,6 +85,8 @@ void CubeMapPass::Render()
 	
 
 	device->Context()->RSSetViewports(1, m_ResourceManager.lock()->Get<ViewPort>(L"Main").lock()->Get());
+		device->Context()->RSSetState(m_ResourceManager.lock()->Get<RenderState>(L"Solid").lock()->Get());
+		device->Context()->OMSetDepthStencilState(m_ResourceManager.lock()->Get<DepthStencilState>(L"DefaultDSS").lock()->GetState().Get(), 0); // 깊이 비활성화
 
 
 
@@ -82,10 +104,10 @@ void CubeMapPass::OnResize()
 	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV6"));
 }
 
-void CubeMapPass::SetCamera(const DirectX::SimpleMath::Matrix* cameras)
+void CubeMapPass::SetCamera(const CameraData* cameras)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		m_CubeMapCameras[0] = cameras[i];
+		m_CubeMapCameras[i] = cameras[i];
 	}
 }

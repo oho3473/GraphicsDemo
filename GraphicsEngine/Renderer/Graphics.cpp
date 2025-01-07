@@ -142,14 +142,6 @@ void Graphics::BeginRender()
 			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), gray);
 		}
 	}
-
-	auto CubeDSV = m_ResourceManager->Get<DepthStencilView>(L"CubeMapDSV");
-
-	for (int i = 0; i < m_CubeRTVs.size(); i++)
-	{
-		m_Device->BeginRender(m_CubeRTVs[i].lock()->Get(), CubeDSV.lock()->Get(), gray);
-	}
-
 }
 
 void Graphics::Render(float deltaTime)
@@ -336,11 +328,13 @@ const double Graphics::GetDuration(std::wstring name, int index)
 	return 0;
 }
 
-void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix viewproj, int index)
+void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro, int index)
 {
 	if (index >= 0 && index < 6)
 	{
-		m_CubeMapCameras[index] = viewproj.Transpose();;
+		m_CubeMapCameras[index].proj = pro;
+		m_CubeMapCameras[index].view = view;
+		m_CubeMapCameras[index].viewInverse = view.Invert();
 	}
 }
 

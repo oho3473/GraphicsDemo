@@ -46,6 +46,32 @@ void Camera::Initialize(double ratio)
 	XMStoreFloat4x4(&m_proj, m_projMT);
 }
 
+void Camera::InitializeCube(double ratio)
+{
+	m_ratio = static_cast<float>(ratio);
+	m_worldMT = DirectX::XMMatrixIdentity();
+	m_viewMT = DirectX::XMMatrixIdentity();
+	m_projMT = DirectX::XMMatrixIdentity();
+	m_worldviewprojMT = DirectX::XMMatrixIdentity();
+
+	XMStoreFloat4x4(&m_world, m_worldMT);
+	XMStoreFloat4x4(&m_view, m_viewMT);
+	XMStoreFloat4x4(&m_proj, m_projMT);
+	XMStoreFloat4x4(&m_worldviewproj, m_projMT);
+
+	m_input = InputManager::GetInstance();
+
+	m_FOV = 0.25f * 3.14f;
+	m_nearZ = 0.1f;
+	m_farZ = 1000;
+
+	m_nearWindowHeight = 2 * m_nearZ * tanf(0.5f * m_FOV);
+	m_farWindowHeight = 2 * m_farZ * tanf(0.5f * m_FOV);
+
+	m_projMT = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_ratio, m_nearZ, m_farZ);
+	XMStoreFloat4x4(&m_proj, m_projMT);
+}
+
 void Camera::Update(double dt)
 {
 	float dtf = static_cast<float>(dt);
@@ -128,12 +154,12 @@ void Camera::Update(double dt)
 	m_worldviewprojMT = m_worldMT * m_viewMT * m_projMT;
 }
 
-void Camera::CubeMapUpdate(double dt)
+void Camera::CubeMapUpdate(double dt, DirectX::XMMATRIX view)
 {
 	float dtf = static_cast<float>(dt);
 
 
-	if (m_input->IsKeyDown(VK_SHIFT) || m_input->IsKeyPress(VK_SHIFT))
+	/*if (m_input->IsKeyDown(VK_SHIFT) || m_input->IsKeyPress(VK_SHIFT))
 	{
 		m_moveSpeed = 50;
 	}
@@ -176,12 +202,12 @@ void Camera::CubeMapUpdate(double dt)
 	if (m_input->IsKeyDown('E') || m_input->IsKeyPress('E'))
 	{
 		UpDown(m_moveSpeed * dtf);
-	}
+	}*/
 
 
-	UpdateView();
+	//UpdateView();
 
-	m_worldviewprojMT = m_worldMT * m_viewMT * m_projMT;
+	m_worldviewprojMT = m_worldMT * view * m_projMT;
 }
 
 DirectX::XMFLOAT3 Camera::GetPosition() const
