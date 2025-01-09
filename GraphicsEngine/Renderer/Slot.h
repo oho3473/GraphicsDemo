@@ -12,7 +12,7 @@ enum class Slot_B
 	Material,
 	LightArray,
 	MatrixPallete,
-
+	IBL,
 	End
 };
 
@@ -29,6 +29,7 @@ enum class Slot_T
 	Opacity,
 	LightMap,
 	GBuffer,
+	Irradiance,
 	End,
 };
 

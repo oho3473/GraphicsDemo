@@ -42,7 +42,7 @@ public:
 
 	void Render(float deltaTime);
 	void OnResize();
-	void SetVP(bool isVP);
+	void IBLOnOff(bool isRender);
 	void SetDebugDraw(bool on_off);
 	void SetCubeCamera(const CameraData* datas);
 
@@ -76,7 +76,7 @@ private:
 	DirectX::SimpleMath::Matrix m_Proj;
 
 private:
-	bool m_isVP = false; 
+	bool m_IBL = false; 
 	bool m_isDebugDraw = false;
 };
 

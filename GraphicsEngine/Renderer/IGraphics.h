@@ -39,6 +39,7 @@ public:
 	virtual void OnResize(HWND hwnd, bool isFullScreen) abstract;
 
 	virtual void DebugRenderONOFF(bool isRender) abstract;
+	virtual void IBLONOFF(bool isRender) abstract;
 
 	virtual void EraseObject(uint32_t EntityID) abstract;
 	virtual void UpdateModel(uint32_t EntityID) abstract;

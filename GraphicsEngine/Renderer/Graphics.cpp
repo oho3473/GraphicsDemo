@@ -338,6 +338,11 @@ void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMa
 	}
 }
 
+void Graphics::IBLONOFF(bool isRender)
+{
+	m_PassManager->IBLOnOff(isRender);
+}
+
 void Graphics::DrawSphere(const debug::SphereInfo& info)
 {
 	m_DebugDrawManager->AddTask(info);
@@ -391,12 +396,6 @@ void Graphics::Culling()
 
 		if (curFBX != nullptr)
 		{
-			if (object->isOverDraw)
-			{
-				m_AfterCulling.push_back(object);
-				continue;
-			}
-
 			object->ModelID = curFBX->UID;
 
 			{

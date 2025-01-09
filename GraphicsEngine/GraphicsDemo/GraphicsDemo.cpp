@@ -59,8 +59,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CameraManager* cameraManager = new CameraManager(ratio);
 	cameraManager->Initialize();
 
-	//cameraManager->SetCurCameraPos({ 0, 2, -10 });
-	cameraManager->SetCurCameraPos({ 0, 0, 0 });
+	cameraManager->SetCurCameraPos({ 0, 1, -3 });
+	//cameraManager->SetCurCameraPos({ 0, 0, 0 });
 
 	TimeManager* timeManager = new TimeManager();
 	timeManager->Initialize();
@@ -73,34 +73,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #pragma region Model
 	///모델
-	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
-	test->EntityID = 1;
-	test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	test->world = DirectX::SimpleMath::Matrix::Identity;
-	test->world._42 = 1;
-	test->offset = { 0,0 };
-	test->lightmapindex = 0;
-	test->scale = 1;
-	test->tiling = { 0,0 };
-	test->punchEffect = false;
-	test->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-	test->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	test->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	test->preAni = 0;
-	test->curAni = 0;
-	test->duration = 0;
+	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
+	testmodel->EntityID = 1;
+	testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	//test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
+	testmodel->world._42 = 1;
+	testmodel->offset = { 0,0 };
+	testmodel->lightmapindex = 0;
+	testmodel->scale = 1;
+	testmodel->tiling = { 0,0 };
+	testmodel->punchEffect = false;
+	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
+	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
+	testmodel->preAni = 0;
+	testmodel->curAni = 0;
+	testmodel->duration = 0;
 
 	double animationtime = 0;
-	if (test->isSkinned && test->isPlay)
+	if (testmodel->isSkinned && testmodel->isPlay)
 	{
-		animationtime = graphicsEngine->GetDuration(test->FBX, 0);
+		animationtime = graphicsEngine->GetDuration(testmodel->FBX, 0);
 
 	}
 
 	//모델 회전을 위한 변수
 	double rotation = 0.0f;
-	graphicsEngine->AddRenderModel(test);
+	graphicsEngine->AddRenderModel(testmodel);
 
 
 
@@ -208,18 +208,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		//물체 y축 회전
 		if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
 		{
-			test->world._11 = cosf(rotation);		test->world._13 = sinf(rotation);
-			test->world._31 = -sinf(rotation);		test->world._33 = cosf(rotation);
+			testmodel->world._11 = cosf(rotation);		testmodel->world._13 = sinf(rotation);
+			testmodel->world._31 = -sinf(rotation);		testmodel->world._33 = cosf(rotation);
 			rotation += 0.5f * timeManager->DeltaTime();
 		}
 
-
-		if (test->isSkinned && test->isPlay)
+		if (InputManager::GetInstance()->IsKeyDown('I'))
 		{
-			test->duration += 0.001f;
-			if (animationtime <= test->duration)
+			testmodel->useIBL = !testmodel->useIBL;
+			graphicsEngine->IBLONOFF(testmodel->useIBL);
+		}
+
+
+		if (testmodel->isSkinned && testmodel->isPlay)
+		{
+			testmodel->duration += 0.001f;
+			if (animationtime <= testmodel->duration)
 			{
-				test->duration -= static_cast<float>(animationtime);
+				testmodel->duration -= static_cast<float>(animationtime);
 			}
 		}
 

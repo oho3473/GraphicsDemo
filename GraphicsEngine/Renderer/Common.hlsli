@@ -88,7 +88,7 @@ Texture2D gEmissive : register(t7);
 Texture2D gOpacity : register(t8);
 Texture2D  gLightMap : register(t9);
 Texture2D gGBuffer : register(t10);
-Texture2D gIMGUI : register(t11);
+TextureCube gIrradiance : register(t11);    //
 
 //***********************************************
 // Sampler States                               *
@@ -198,6 +198,45 @@ float Calc_G(float3 N, float3 V, float3 L, float roughness)
     return ggx1 * ggx2;
 }
 
+float3 CalcDirIBL(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue, float3 irradiance)
+{
+    float3 result = float3(0, 0, 0);
+
+    float3 diffuse = float3(0, 0, 0);
+    float3 specular = float3(0, 0, 0);
+
+    //표면점에서 광원으로의 벡터 
+    float3 L = -normalize(lightData.Direction); //directionlight는 모든 표면점에서 일정한 방향으로 들어오는 빛이므로 빛의 방향을 역으로 쓰자
+    float3 H = normalize(L + V);
+    float NdotL = max(dot(N, L), 0.0);
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotH = max(dot(N, H), 0.0);
+
+    float3 F = FresnelSchlick(F0, max(0.0, dot(H, V))); //최소값 F0 , 최대값은 1.0,1.0,1.0
+
+    //Diffuse BRDF
+    //kD - diffuse 반사율, kS - fresnel 반사율 -> 에너지 보존 법칙에 의해 프레넬로 반사되는 빛의 양과 물체에 흡수되 표면 밑에서 산란해 반사되는 빛의 양은 1
+    float3 kD = float3(1.0, 1.0, 1.0) - F;//    +float3(0.4, 0.4, 0.4); // kS is equal to Fresnel
+    // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals have no diffuse light)
+    kD *= (1.0 - metalicValue);
+    diffuse = kD * albedo / Pi * irradiance;
+
+
+    //Specular BRDF
+
+    float D = Calc_D(N, H, max(0.01, roughness));
+    float G = Calc_G(N, V, L, max(0.01, roughness));
+
+    float3 n = metalicValue * (F * D * G); //분자
+    float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
+
+    specular = n / d;
+
+    result = diffuse + specular;// * lightData.Intensity * lightData.Color;
+
+    return result;
+}
+
 float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue)
 {
     float3 result = float3(0, 0, 0);
@@ -232,7 +271,7 @@ float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo
 
     specular = n / d;
 
-    result = (specular + diffuse) * lightData.Intensity * lightData.Color * NdotL;
+    result = (diffuse + specular) * lightData.Intensity * lightData.Color * NdotL;
 
     return result;
 }

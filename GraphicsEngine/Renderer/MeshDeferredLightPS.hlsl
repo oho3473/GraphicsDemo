@@ -1,6 +1,12 @@
 
 #include"Common.hlsli"
 
+cbuffer useIBL : register(b5)
+{
+    float4 IBL;
+}
+
+
 struct PS_OUTPUT
 {
     float4 Gbuffer : SV_Target0;
@@ -34,6 +40,7 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
     float4 depthTemp = gDepth.Sample(samLinear, input.tex);
     float3 Depth = float3(depthTemp.x, depthTemp.y, depthTemp.z);
+    float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
 
 
     //수직 입사 시의 반사율 - 비금속이면 0.04 금속이면 metalic RGB 언리얼4는 이렇게 쓴다
@@ -42,7 +49,15 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    for (int i = 0; i < DirIndex; i++)
    {
-       directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+       if (IBL.r)
+       {
+        directlight += CalcDirIBL(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue,irradiance);
+       }
+       else
+       {
+        directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+       }
+
    }
 
    // Calculate Spot Light    

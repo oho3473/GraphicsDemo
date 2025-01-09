@@ -30,7 +30,7 @@ public:
 	DirectX::SimpleMath::Vector3 rotation;
 
 	//overdraw
-	bool isOverDraw = false;	//벽뒤에 플레이어랑 총 짤리는거 방지 flag
+	bool useIBL = false;	//IBL 사용하나?
 	bool punchEffect;	//펀치 이펙트 메쉬 flag
 
 	//애니메이션

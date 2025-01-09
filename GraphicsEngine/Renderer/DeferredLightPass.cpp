@@ -49,6 +49,7 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
+	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds").lock();
 
 	m_SkeletalMeshVS = resourceManager->Get<VertexShader>(L"Skinning");
 	m_StaticMeshVS = resourceManager->Get<VertexShader>(L"Base");
@@ -71,6 +72,7 @@ void DeferredLightPass::Render()
 	std::shared_ptr<ConstantBuffer<MatrixPallete>>SkeletalCB = m_ResourceManager.lock()->Get<ConstantBuffer<MatrixPallete>>(L"MatrixPallete").lock();
 	std::shared_ptr<ConstantBuffer<MaterialData>> MaterialCB = m_ResourceManager.lock()->Get<ConstantBuffer<MaterialData>>(L"MaterialData").lock();
 	std::shared_ptr<ConstantBuffer<LightArray>> light = m_ResourceManager.lock()->Get<ConstantBuffer<LightArray>>(L"LightArray").lock();
+	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useIBL = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color").lock();
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
@@ -86,6 +88,8 @@ void DeferredLightPass::Render()
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
+
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::IBL), 1, useIBL->GetAddress());
 
 	//Save GBuffer texture
 	{
@@ -109,6 +113,7 @@ void DeferredLightPass::Render()
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Roughness), 1, m_RoughnessSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Emissive), 1, m_EmissiveSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LightMap), 1, m_LightMapSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Irradiance), 1, m_IrrandianceSRV.lock()->GetAddress());
 
 		Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
 
@@ -142,5 +147,7 @@ void DeferredLightPass::OnResize()
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = manager->Get<ShaderResourceView>(L"GBuffer").lock();
 	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
+	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds").lock();
+
 }
 

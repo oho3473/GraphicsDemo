@@ -143,16 +143,6 @@ void PassManager::Render(float deltaTime)
 		pass->Render();
 	}
 
-
-	if (m_isVP)
-	{
-
-		for (auto& pass : m_VPPasses)
-		{
-			pass->Render();
-		}
-	}
-
 	for (auto& pass : m_IndepentCulling)
 	{
 		pass->Render();
@@ -192,9 +182,14 @@ void PassManager::OnResize()
 	m_MainOutput->OnResize();
 }
 
-void PassManager::SetVP(bool isVP)
+void PassManager::IBLOnOff(bool isRender)
 {
-	m_isVP = isVP;
+	m_IBL = isRender;
+	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useIBL = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color").lock();
+
+	useIBL->Update({ static_cast<float>(isRender),0,0,0});
+
+
 }
 
 void PassManager::SetDebugDraw(bool on_off)
