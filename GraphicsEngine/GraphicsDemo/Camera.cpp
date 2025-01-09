@@ -135,6 +135,14 @@ void Camera::Update(double dt)
 		Pitch(dy);
 	}
 
+	if (m_input->IsKeyDown(VK_SPACE))
+	{
+		m_pos = { 0, 0, 0 };
+		m_forward = { 0, 0, 1 };
+		m_up = { 0, 1, 0 };
+		m_right = { 1, 0, 0 };
+	}
+
 	if (m_input->IsKeyDown('Z') || m_input->IsKeyPress('Z'))
 	{
 		m_FOV += dtf;

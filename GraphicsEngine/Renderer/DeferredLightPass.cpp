@@ -141,6 +141,6 @@ void DeferredLightPass::OnResize()
 	m_RoughnessSRV = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = manager->Get<ShaderResourceView>(L"GBuffer").lock();
-	m_LightMapSRV = manager->Get<ShaderResourceView>(L"CubeMapSRV").lock();
+	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
 }
 

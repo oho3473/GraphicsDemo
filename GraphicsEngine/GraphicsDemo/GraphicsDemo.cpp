@@ -76,7 +76,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
 	test->EntityID = 1;
 	test->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	//test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	test->world = DirectX::SimpleMath::Matrix::Identity;
 	test->world._42 = 1;
 	test->offset = { 0,0 };
@@ -101,6 +101,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//모델 회전을 위한 변수
 	double rotation = 0.0f;
 	graphicsEngine->AddRenderModel(test);
+
+
+
 #pragma endregion 
 
 #pragma region Light
