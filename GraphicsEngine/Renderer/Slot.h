@@ -30,6 +30,8 @@ enum class Slot_T
 	LightMap,
 	GBuffer,
 	Irradiance,
+	Radiance,
+	LUT,
 	End,
 };
 

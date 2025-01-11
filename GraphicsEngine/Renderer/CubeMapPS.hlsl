@@ -36,7 +36,7 @@ float4 main(VS_OUTPUT input) : SV_TARGET
      float4 result;
      result = float4(0, 0, 0, 1);
      result.xyz = CubeTex.Sample(samLinear, -V);
-
+     
     //return CubeTex.Sample(samLinear, reflect(-V, input.normal));
     return result;
 }

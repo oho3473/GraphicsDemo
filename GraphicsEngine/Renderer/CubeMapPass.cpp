@@ -67,7 +67,7 @@ void CubeMapPass::Render()
 	device->Context()->PSSetShader(m_CubePS.lock()->GetPS(), nullptr, 0);
 	device->Context()->PSSetSamplers(0, 1, linear->GetAddress());
 
-	auto image = m_ResourceManager.lock()->Get<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds");
+	auto image = m_ResourceManager.lock()->Get<ShaderResourceView>(L"MyCube3EnvHDR.dds");
 	device->Context()->PSSetShaderResources(0, 1, image.lock()->GetAddress());
 
 	device->Context()->DrawIndexed(m_CubeIB.lock()->Count(), 0, 0);

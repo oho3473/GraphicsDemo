@@ -42,6 +42,8 @@ private:
 	std::weak_ptr<ShaderResourceView> m_EmissiveSRV;
 	std::weak_ptr<ShaderResourceView> m_LightMapSRV;
 	std::weak_ptr<ShaderResourceView> m_IrrandianceSRV;
+	std::weak_ptr<ShaderResourceView> m_RandianceSRV;
+	std::weak_ptr<ShaderResourceView> m_LUT;
 
 	//Light - Quad
 	std::weak_ptr<VertexBuffer> m_QuadVB;

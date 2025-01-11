@@ -147,8 +147,10 @@ void PassManager::Render(float deltaTime)
 	{
 		pass->Render();
 	}
-
-	m_DebugOffScreen->Render();
+	if (m_isDebugDraw)
+	{
+		m_DebugOffScreen->Render();
+	}
 	m_UIPass->Render();
 	m_MainOutput->Render();
 }

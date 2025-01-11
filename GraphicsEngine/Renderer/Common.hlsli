@@ -89,6 +89,8 @@ Texture2D gOpacity : register(t8);
 Texture2D  gLightMap : register(t9);
 Texture2D gGBuffer : register(t10);
 TextureCube gIrradiance : register(t11);    //
+TextureCube gRadiance : register(t12);    //
+Texture2D gLUT : register(t13);    //
 
 //***********************************************
 // Sampler States                               *
@@ -198,19 +200,21 @@ float Calc_G(float3 N, float3 V, float3 L, float roughness)
     return ggx1 * ggx2;
 }
 
-float3 CalcDirIBL(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue, float3 irradiance)
+float3 CalcIBL(float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue, float3 irradiance, float3 radiance)
 {
     float3 result = float3(0, 0, 0);
 
     float3 diffuse = float3(0, 0, 0);
     float3 specular = float3(0, 0, 0);
 
+    float NdotV = max(normalize(dot(N, V)), 0.0);
     //표면점에서 광원으로의 벡터 
-    float3 L = -normalize(lightData.Direction); //directionlight는 모든 표면점에서 일정한 방향으로 들어오는 빛이므로 빛의 방향을 역으로 쓰자
+    float3 L = 2.0 * NdotV * N - V; //시선에서 반사된 벡터가 곧 specular에서 입사한 빛의 방향벡터
+
     float3 H = normalize(L + V);
     float NdotL = max(dot(N, L), 0.0);
-    float NdotV = max(dot(N, V), 0.0);
     float NdotH = max(dot(N, H), 0.0);
+
 
     float3 F = FresnelSchlick(F0, max(0.0, dot(H, V))); //최소값 F0 , 최대값은 1.0,1.0,1.0
 
@@ -223,14 +227,16 @@ float3 CalcDirIBL(LightData lightData, float3 V, float3 N, float3 F0, float3 alb
 
 
     //Specular BRDF
-
     float D = Calc_D(N, H, max(0.01, roughness));
     float G = Calc_G(N, V, L, max(0.01, roughness));
 
-    float3 n = metalicValue * (F * D * G); //분자
+    float3 n = metalicValue * radiance * (F * D * G); //분자
     float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
 
     specular = n / d;
+
+    float2 DF = gLUT.Sample(samLinear, float2(NdotV, roughness));
+    specular = G * DF.r * radiance;
 
     result = diffuse + specular;// * lightData.Intensity * lightData.Color;
 

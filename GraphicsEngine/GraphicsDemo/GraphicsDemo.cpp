@@ -72,11 +72,39 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #pragma endregion
 
 #pragma region Model
-	///모델
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			///모델1
+			std::shared_ptr<RenderData> model = std::make_shared<RenderData>();
+			model->EntityID = (i * 10 ) + (j + 1);
+			model->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+			model->world = DirectX::SimpleMath::Matrix::Identity;
+			model->world._41 = 2 * j;
+			model->world._42 = 2 * (i + 1);
+			model->offset = { 0,0 };
+			model->lightmapindex = 0;
+			model->scale = 1;
+			model->tiling = { 0,0 };
+			model->punchEffect = false;
+			model->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+			model->isPlay = false;		//모델이 애니메이션을 실행하는가?
+			model->color = DirectX::XMFLOAT4{ 0,0,0,0 };
+			model->preAni = 0;
+			model->curAni = 0;
+			model->duration = 0;
+			
+			//graphicsEngine->AddRenderModel(model);
+		}
+	}
+
+	///모델1
 	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
 	testmodel->EntityID = 1;
-	testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	//test->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	//testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
 	testmodel->world._42 = 1;
 	testmodel->offset = { 0,0 };
@@ -91,16 +119,45 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	testmodel->curAni = 0;
 	testmodel->duration = 0;
 
-	double animationtime = 0;
+	double testmodelanimationtime = 0;
 	if (testmodel->isSkinned && testmodel->isPlay)
 	{
-		animationtime = graphicsEngine->GetDuration(testmodel->FBX, 0);
+		testmodelanimationtime = graphicsEngine->GetDuration(testmodel->FBX, 0);
 
 	}
+	graphicsEngine->AddRenderModel(testmodel);
+
+	///모델2
+	std::shared_ptr<RenderData> pureMetal = std::make_shared<RenderData>();
+	pureMetal->EntityID = 2;
+	pureMetal->FBX = L"pbrtest.fbx";
+	//pureMetal->FBX = L"monkey.fbx";
+	pureMetal->world = DirectX::SimpleMath::Matrix::Identity;
+	pureMetal->world._41 = 2;
+	pureMetal->world._42 = 1;
+	pureMetal->offset = { 0,0 };
+	pureMetal->lightmapindex = 0;
+	pureMetal->scale = 1;
+	pureMetal->tiling = { 0,0 };
+	pureMetal->punchEffect = false;
+	pureMetal->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+	pureMetal->isPlay = false;		//모델이 애니메이션을 실행하는가?
+	pureMetal->color = DirectX::XMFLOAT4{ 0,0,0,0 };
+	pureMetal->preAni = 0;
+	pureMetal->curAni = 0;
+	pureMetal->duration = 0;
+
+	double pureMetalanimationtime = 0;
+	if (pureMetal->isSkinned && pureMetal->isPlay)
+	{
+		pureMetalanimationtime = graphicsEngine->GetDuration(pureMetal->FBX, 0);
+	}
+	graphicsEngine->AddRenderModel(pureMetal);
+
+
 
 	//모델 회전을 위한 변수
 	double rotation = 0.0f;
-	graphicsEngine->AddRenderModel(testmodel);
 
 
 
@@ -108,7 +165,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #pragma region Light
 	LightData dir;
-	dir.direction = DirectX::XMFLOAT3(0, 0, 1);
+	dir.direction = DirectX::XMFLOAT3(0, -1, 1);
 	dir.type = static_cast<float>(LightType::Direction);
 
 	graphicsEngine->AddLight(1001, LightType::Direction, dir);
@@ -145,29 +202,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #pragma region Text
 	ui::TextInfo text;
+	int textuid = 111;
 	text.Color = { 0,1,0,1 };
 	text.PosXPercent = 10;
 	text.PosYPercent = 3;
 	text.Text = L"카메라 이동 : WASD\n카메라 회전 : 마우스 우클릭 이동";
 	text.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(11, text);
+	graphicsEngine->CreateTextObject(textuid, text);
 
 
 	ui::TextInfo camerapos;
+	int cameraposuid = 112;
 	camerapos.Color = { 1,0,0,1 };
 	camerapos.PosXPercent = 9;
 	camerapos.PosYPercent = 10;
 	camerapos.Text = std::format(L"카메라 위치 : {}, {}, {}", 0, 0, 0);
 	camerapos.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(12, camerapos);
+	graphicsEngine->CreateTextObject(cameraposuid, camerapos);
 
 	ui::TextInfo fps;
+	int fpsuid = 113;
 	fps.Color = { 1,1,0,1 };
 	fps.PosXPercent = 4;
 	fps.PosYPercent = 15;
 	fps.Text = std::format(L"FPS : {}", 0);
 	fps.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(13, fps);
+	graphicsEngine->CreateTextObject(fpsuid, fps);
 #pragma endregion
 
 	InputManager::GetInstance()->Initialize(hWnd);
@@ -202,15 +262,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		timeManager->Update(timeManager->DeltaTime());
 		double FPS = timeManager->FPS();
 		fps.Text = std::format(L"FPS : {:.1f}", FPS);
-		graphicsEngine->UpdateTextObject(13, fps);
+		graphicsEngine->UpdateTextObject(fpsuid, fps);
 
 		InputManager::GetInstance()->Update();
 		//물체 y축 회전
 		if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
 		{
+			float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(InputManager::GetInstance()->GetDeltMouseX()));
+			float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(InputManager::GetInstance()->GetDeltMouseY()));
+		
 			testmodel->world._11 = cosf(rotation);		testmodel->world._13 = sinf(rotation);
 			testmodel->world._31 = -sinf(rotation);		testmodel->world._33 = cosf(rotation);
-			rotation += 0.5f * timeManager->DeltaTime();
+			rotation += 2 * 0.5f * timeManager->DeltaTime();
 		}
 
 		if (InputManager::GetInstance()->IsKeyDown('I'))
@@ -219,13 +282,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			graphicsEngine->IBLONOFF(testmodel->useIBL);
 		}
 
+		if (InputManager::GetInstance()->IsKeyDown(VK_F1))
+		{
+			static bool use = true;
+			use = !use;
+			graphicsEngine->DebugRenderONOFF(use);
+		}
+
 
 		if (testmodel->isSkinned && testmodel->isPlay)
 		{
 			testmodel->duration += 0.001f;
-			if (animationtime <= testmodel->duration)
+			if (testmodelanimationtime <= testmodel->duration)
 			{
-				testmodel->duration -= static_cast<float>(animationtime);
+				testmodel->duration -= static_cast<float>(testmodelanimationtime);
 			}
 		}
 
@@ -237,7 +307,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		DirectX::SimpleMath::Vector3 pos = cameraManager->GetCamerPos();
 		camerapos.Text = std::format(L"카메라 위치 : {:.1f}, {:.1f}, {:.1f}", (double)pos.x, (double)pos.y, (double)pos.z);
-		graphicsEngine->UpdateTextObject(12, camerapos);
+		graphicsEngine->UpdateTextObject(cameraposuid, camerapos);
 
 
 		graphicsEngine->SetCamera(view, proj, ortho);

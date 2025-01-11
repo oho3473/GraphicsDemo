@@ -3,78 +3,80 @@
 
 cbuffer useIBL : register(b5)
 {
-    float4 IBL;
+	float4 isIBL;
 }
 
 
 struct PS_OUTPUT
 {
-    float4 Gbuffer : SV_Target0;
+	float4 Gbuffer : SV_Target0;
 };
 
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
-    //PS_OUTPUT output;
+	//PS_OUTPUT output;
 
-    float opacity = 1.0f;
-    if (useNEOL.z >= 1)
+	float opacity = 1.0f;
+	if (useNEOL.z >= 1)
+	{
+		opacity = gOpacity.Sample(samLinear, input.tex).r;
+	}
+
+	float4 position = gPosition.Sample(samLinear, input.tex);
+	float4 N = gNormal.Sample(samLinear, input.tex);
+
+	float3 result = float3(0, 0, 0);
+	float3 directlight = float3(0, 0, 0);
+	float3 indirectlight = float3(0, 0, 0);
+
+	//View
+	float3 V = normalize(float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - position.xyz);
+
+	//texture sampling
+	float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
+	float metallicValue = gMetalic.Sample(samLinear, input.tex).r; //quad에 텍스처를 샘플링해서 이상하게 나오는거였음
+	float roughnessValue = gRoughness.Sample(samLinear, input.tex).r;
+	float aoValue = gAO.Sample(samLinear, input.tex).r;
+	float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
+	float4 depthTemp = gDepth.Sample(samLinear, input.tex);
+	float3 Depth = float3(depthTemp.x, depthTemp.y, depthTemp.z);
+
+	uint width, height, levels;
+	gRadiance.GetDimensions(0,width,height, levels);
+
+	float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
+	float3 reflection = reflect(-V, N); //시선이 점에 들어가 반사되는 벡터를 통해 환경맵에서 어떤 값을 가져올지 확인
+	float3 radiance = gRadiance.SampleLevel(samLinear, reflection,roughnessValue * levels);
+
+	//수직 입사 시의 반사율 - 비금속이면 0.04 금속이면 metalic RGB 언리얼4는 이렇게 쓴다
+	float3 F0 = Fdielectric;
+	F0 = lerp(F0, albedoColor, metallicValue);
+
+	if (isIBL.r)
+	{
+
+		indirectlight = CalcIBL(V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, irradiance, radiance);
+	}
+	
+    for (int i = 0; i < DirIndex; i++)
     {
-        opacity = gOpacity.Sample(samLinear, input.tex).r;
+	    directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
     }
-
-    float4 position = gPosition.Sample(samLinear, input.tex);
-    float4 N = gNormal.Sample(samLinear, input.tex);
-
-    float3 result = float3(0, 0, 0);
-    float3 directlight = float3(0, 0, 0);
-    float3 indirectlight = float3(0, 0, 0);
-
-    //View
-    float3 V = normalize(float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - position.xyz);
-
-    //texture sampling
-    float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
-    float metallicValue = gMetalic.Sample(samLinear, input.tex).r; //quad에 텍스처를 샘플링해서 이상하게 나오는거였음
-    float roughnessValue = gRoughness.Sample(samLinear, input.tex).r;
-    float aoValue = gAO.Sample(samLinear, input.tex).r;
-    float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
-    float4 depthTemp = gDepth.Sample(samLinear, input.tex);
-    float3 Depth = float3(depthTemp.x, depthTemp.y, depthTemp.z);
-    float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
-
-
-    //수직 입사 시의 반사율 - 비금속이면 0.04 금속이면 metalic RGB 언리얼4는 이렇게 쓴다
-   float3 F0 = Fdielectric;
-   F0 = lerp(F0, albedoColor, metallicValue);
-
-   for (int i = 0; i < DirIndex; i++)
-   {
-       if (IBL.r)
-       {
-        directlight += CalcDirIBL(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue,irradiance);
-       }
-       else
-       {
-        directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
-       }
-
-   }
-
-   // Calculate Spot Light    
-   for (int k = DirIndex; k < DirIndex + SpotIndex; k++)
-   {
-       directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
-   }
-   // Calculate Point Light
-   for (int j = DirIndex + SpotIndex; j < DirIndex + SpotIndex + PointIndex; j++)
-   {
-       directlight += CalcPoint(array[j], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
-
-   }
+    
+    // Calculate Spot Light    
+    for (int k = DirIndex; k < DirIndex + SpotIndex; k++)
+    {
+	    directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+    }
+    // Calculate Point Light
+    for (int j = DirIndex + SpotIndex; j < DirIndex + SpotIndex + PointIndex; j++)
+    {
+	    directlight += CalcPoint(array[j], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
+    
+    }
 
    //float2 uv = gLightMap.Sample(samLinear, input.tex).rg;
 
-   indirectlight = float3(0,0,0);
    //indirectlight = pow(gLightMap.Sample(samLinear, input.tex), float3(gamma, gamma, gamma));
 
    //ambient lighting (constant factor for simplicity)
@@ -84,7 +86,8 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    result = directlight + indirectlight;
 
-   float3 cubemap = pow(gLightMap.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
+   //float3 cubemap = pow(gLightMap.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
+   float3 cubemap = gLightMap.Sample(samLinear, input.tex).rgb;
    result = result + EmissiveValue + cubemap;
 
    // gamma correct
@@ -92,6 +95,6 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    //output.Gbuffer = float4(result, 1);
 
-    return float4(result, 1);
-   //return float4(result, 1);
+	return float4(result, 1);
+	//return float4(result, 1);
 }

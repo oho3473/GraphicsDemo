@@ -130,6 +130,7 @@ void Graphics::BeginRender()
 	const DirectX::SimpleMath::Color green = { 0.f, 1.f, 0.f, 1.f };
 	const DirectX::SimpleMath::Color blue = { 0.f, 0.f, 1.f, 1.f };
 	const DirectX::SimpleMath::Color gray = { 0.15f, 0.15f, 0.15f, 1.f };
+	const DirectX::SimpleMath::Color black = { 0.f, 0.f, 0.f, 1.f };
 
 	for (int i = 0; i < m_RTVs.size(); i++)
 	{
@@ -192,7 +193,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 
 void Graphics::DebugRenderONOFF(bool isRender)
 {
-	m_PassManager->SetDebugDraw(true);
+	m_PassManager->SetDebugDraw(isRender);
 }
 
 void Graphics::EraseObject(uint32_t EntityID)

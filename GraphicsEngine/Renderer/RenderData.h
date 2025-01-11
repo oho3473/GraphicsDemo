@@ -195,5 +195,7 @@ namespace ui
 		bool isItalic = false;
 		bool isStrikeout = false;
 		bool isUnderlined = false;
+
+		int uid = -1;
 	};
 }

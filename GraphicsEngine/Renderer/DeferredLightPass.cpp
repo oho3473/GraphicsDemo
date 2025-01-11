@@ -49,7 +49,8 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
-	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds").lock();
+	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
+	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 
 	m_SkeletalMeshVS = resourceManager->Get<VertexShader>(L"Skinning");
 	m_StaticMeshVS = resourceManager->Get<VertexShader>(L"Base");
@@ -114,6 +115,8 @@ void DeferredLightPass::Render()
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Emissive), 1, m_EmissiveSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LightMap), 1, m_LightMapSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Irradiance), 1, m_IrrandianceSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Radiance), 1, m_RandianceSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LUT), 1, m_LUT.lock()->GetAddress());
 
 		Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
 
@@ -147,7 +150,9 @@ void DeferredLightPass::OnResize()
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = manager->Get<ShaderResourceView>(L"GBuffer").lock();
 	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
-	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds").lock();
+	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
+	m_RandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
+	m_LUT = manager->Get<ShaderResourceView>(L"MyCube3Brdf.dds").lock();
 
 }
 

@@ -173,6 +173,10 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	// Shader Resource View
 	// ----------------------------------------------------------------------------------------
 	Create<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds", L"flower_road_8khdri_1kcubemapBC7.dds");
+	Create<ShaderResourceView>(L"MyCube3DiffuseHDR.dds", L"MyCube3DiffuseHDR.dds");
+	Create<ShaderResourceView>(L"MyCube3SpecularHDR.dds", L"MyCube3SpecularHDR.dds");
+	Create<ShaderResourceView>(L"MyCube3Brdf.dds", L"MyCube3Brdf.dds");
+	Create<ShaderResourceView>(L"MyCube3EnvHDR.dds", L"MyCube3EnvHDR.dds");
 
 	// ----------------------------------------------------------------------------------------
 	// Render Target View

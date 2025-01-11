@@ -83,11 +83,8 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
 
     output.Metalic.rgb = max(0.04, AMRO.y * gMetalic.Sample(samLinear, input.tex.xy).b);//monkey는 b채널이 metalic
     output.Roughness.rgb = AMRO.z * gRoughness.Sample(samLinear, input.tex.xy).g + (1 - AMRO.z);  //pbrtest는 g값을 사용해야함 하나로 합쳐서 사용해서
-
     output.Emissive = gEmissive.Sample(samLinear, input.tex.xy) * useNEOL.y;
-
     //output.AO = AMRO.w * gAO.Sample(samLinear, input.tex.xy);
-
     float gamma = 2.2f;
     output.LightMap = input.tex.w * pow(gLightMap.Sample(samLinear, float3(input.lightuv, input.tex.z)), gamma); // 기본값 설정
 

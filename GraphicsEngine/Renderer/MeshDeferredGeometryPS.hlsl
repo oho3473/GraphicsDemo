@@ -96,7 +96,6 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
         output.Metalic.r = gMetalic.Sample(samLinear, input.tex).r;
     }
 
-    output.Roughness.g = 1.f;
 
     if (AMRO.z >= 1)
     {
