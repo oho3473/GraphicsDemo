@@ -33,7 +33,8 @@ void Process::Initialize()
 	m_inputManager = InputManager::GetInstance();
 	m_inputManager->Initialize(m_hWnd);
 
-	Scene();
+
+	SetScene();
 }
 
 void Process::Update()
@@ -45,6 +46,7 @@ void Process::Update()
 	fps.Text = std::format(L"FPS : {:.1f}", FPS);
 	m_graphicsEngine->UpdateTextObject(fps.uid, fps);
 
+#pragma region INPUT
 	if (InputManager::GetInstance()->IsKeyDown('I'))
 	{
 		static bool use = true;
@@ -57,6 +59,12 @@ void Process::Update()
 		static bool use = true;
 		use = !use;
 		m_graphicsEngine->DebugRenderONOFF(use);
+	}
+
+	if (InputManager::GetInstance()->IsKeyDown('1'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->FBX = L"monkey.fbx";
 	}
 
 	if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
@@ -73,6 +81,7 @@ void Process::Update()
 		rotation += 2 * 0.5f * m_timeManager->DeltaTime();
 	}
 	InputManager::GetInstance()->Update();
+#pragma endregion 
 
 	m_cameraManager->Update(m_timeManager->DeltaTime());
 	DirectX::SimpleMath::Matrix view = m_cameraManager->View();
@@ -83,104 +92,10 @@ void Process::Update()
 	ui::TextInfo camerapos = m_UIs[1];
 	camerapos.Text = std::format(L"카메라 위치 : {:.1f}, {:.1f}, {:.1f}", (double)pos.x, (double)pos.y, (double)pos.z);
 	m_graphicsEngine->UpdateTextObject(camerapos.uid, camerapos);
-
-
-
-	m_graphicsEngine->CulingUpdate();
-	m_graphicsEngine->AnimationUpdate(m_timeManager->DeltaTime());
-	m_graphicsEngine->Update(m_timeManager->DeltaTime());
-	m_graphicsEngine->EndUpdate(m_timeManager->DeltaTime());
-}
-
-void Process::Render()
-{
-	m_graphicsEngine->BeginRender();
-	m_graphicsEngine->Render(m_timeManager->DeltaTime());
-	m_graphicsEngine->EndRender();
-}
-
-void Process::Finalize()
-{
-	for (auto info : m_UIs)
-	{
-		m_graphicsEngine->DeleteTextObject(info.uid);
-	}
-
-	m_graphicsEngine->Finalize();
-	DestroyGraphics(m_graphicsEngine);
-
-}
-
-void Process::OnResize(HWND hWnd, bool isFullScreen)
-{
-	m_graphicsEngine->OnResize(m_hWnd, isFullScreen);
-}
-
-void Process::Scene()
-{
-	///모델1
-	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
-	testmodel->EntityID = 1;
-	//testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
-	testmodel->world._42 = 1;
-	testmodel->offset = { 0,0 };
-	testmodel->lightmapindex = 0;
-	testmodel->scale = 1;
-	testmodel->tiling = { 0,0 };
-	testmodel->punchEffect = false;
-	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	testmodel->preAni = 0;
-	testmodel->curAni = 0;
-	testmodel->duration = 0;
-
-	double testmodelanimationtime = 0;
-	if (testmodel->isSkinned && testmodel->isPlay)
-	{
-		testmodelanimationtime = m_graphicsEngine->GetDuration(testmodel->FBX, 0);
-
-	}
-	m_graphicsEngine->AddRenderModel(testmodel);
-	m_models.push_back(testmodel);
-
-	///모델2
-	std::shared_ptr<RenderData> pureMetal = std::make_shared<RenderData>();
-	pureMetal->EntityID = 2;
-	pureMetal->FBX = L"pbrtest.fbx";
-	//pureMetal->FBX = L"monkey.fbx";
-	pureMetal->world = DirectX::SimpleMath::Matrix::Identity;
-	pureMetal->world._41 = 2;
-	pureMetal->world._42 = 1;
-	pureMetal->offset = { 0,0 };
-	pureMetal->lightmapindex = 0;
-	pureMetal->scale = 1;
-	pureMetal->tiling = { 0,0 };
-	pureMetal->punchEffect = false;
-	pureMetal->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-	pureMetal->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	pureMetal->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	pureMetal->preAni = 0;
-	pureMetal->curAni = 0;
-	pureMetal->duration = 0;
-
-	double pureMetalanimationtime = 0;
-	if (pureMetal->isSkinned && pureMetal->isPlay)
-	{
-		pureMetalanimationtime = m_graphicsEngine->GetDuration(pureMetal->FBX, 0);
-	}
-	m_graphicsEngine->AddRenderModel(pureMetal);
-	m_models.push_back(pureMetal);
-
-	LightData dir;
-	dir.direction = DirectX::XMFLOAT3(0, -1, 1);
-	dir.type = static_cast<float>(LightType::Direction);
-	m_graphicsEngine->AddLight(1001, LightType::Direction, dir);
-
+	m_graphicsEngine->SetCamera(view,proj,ortho);
 
 	///디버그 드로우
+#pragma region GridAxis
 	debug::GridInfo grid;
 	grid.Color = { 1,1,1,1 };
 	grid.GridSize = 100;
@@ -211,9 +126,74 @@ void Process::Scene()
 	m_graphicsEngine->DrawRay(XAxis);
 	m_graphicsEngine->DrawRay(YAxis);
 	m_graphicsEngine->DrawRay(ZAxis);
+#pragma endregion
 
+	m_graphicsEngine->Update(m_timeManager->DeltaTime());
+}
 
+void Process::Render()
+{
+	m_graphicsEngine->BeginRender();
+	m_graphicsEngine->Render(m_timeManager->DeltaTime());
+	m_graphicsEngine->EndRender();
+}
 
+void Process::Finalize()
+{
+	for (auto info : m_UIs)
+	{
+		m_graphicsEngine->DeleteTextObject(info.uid);
+	}
+
+	m_graphicsEngine->Finalize();
+	DestroyGraphics(m_graphicsEngine);
+
+}
+
+void Process::OnResize(HWND hWnd, bool isFullScreen)
+{
+	m_graphicsEngine->OnResize(m_hWnd, isFullScreen);
+}
+
+void Process::SetScene()
+{
+
+#pragma region Model
+	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
+	testmodel->EntityID = 1;
+	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
+	testmodel->world._42 = 1;
+	testmodel->offset = { 0,0 };
+	testmodel->lightmapindex = 0;
+	testmodel->scale = 1;
+	testmodel->tiling = { 0,0 };
+	testmodel->punchEffect = false;
+	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
+	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
+	testmodel->preAni = 0;
+	testmodel->curAni = 0;
+	testmodel->duration = 0;
+
+	double testmodelanimationtime = 0;
+	if (testmodel->isSkinned && testmodel->isPlay)
+	{
+		testmodelanimationtime = m_graphicsEngine->GetDuration(testmodel->FBX, 0);
+
+	}
+	m_graphicsEngine->AddRenderModel(testmodel);
+	m_models.push_back(testmodel);
+#pragma endregion 
+
+#pragma region Light
+	LightData dir;
+	dir.direction = DirectX::XMFLOAT3(0, -1, 1);
+	dir.type = static_cast<float>(LightType::Direction);
+	m_graphicsEngine->AddLight(1001, LightType::Direction, dir);
+#pragma endregion
+
+#pragma region UI
 	ui::TextInfo text;
 	text.uid = 111;
 	text.Color = { 0,1,0,1 };
@@ -244,5 +224,6 @@ void Process::Scene()
 	fps.Scale = 0.3f;
 	m_graphicsEngine->CreateTextObject(fps.uid, fps);
 	m_UIs.push_back(fps);
+#pragma endregion
 
 }

@@ -83,10 +83,16 @@ void Graphics::AnimationUpdate(double dt)
 
 void Graphics::Update(double dt)
 {
+	for (auto& data : m_RenderVector)
+	{
+		m_AfterCulling.push_back(data);
+	}
+	m_Animator->Update(m_AfterCulling);
+
 	m_PassManager->Update(m_AfterCulling);
 	m_LightManager->Update(m_Lights);
-	m_PassManager->SetCubeCamera(m_CubeMapCameras);
 
+	m_AfterCulling.clear();
 }
 
 void Graphics::EndUpdate(double dt)

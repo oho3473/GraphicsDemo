@@ -10,6 +10,8 @@
 
 #include "..\Renderer\IGraphics.h"
 
+#include "Process.h"
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -49,192 +51,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	RECT tempsize{};
-	GetClientRect(hWnd, &tempsize);
-	float Width = static_cast<float>(tempsize.right - tempsize.left);
-	float Height = static_cast<float>(tempsize.bottom - tempsize.top);
-	float ratio = Width / Height;
 
-#pragma region Initialize
-	CameraManager* cameraManager = new CameraManager(ratio);
-	cameraManager->Initialize();
-
-	cameraManager->SetCurCameraPos({ 0, 1, -3 });
-	//cameraManager->SetCurCameraPos({ 0, 0, 0 });
-
-	TimeManager* timeManager = new TimeManager();
-	timeManager->Initialize();
-
-
-	IGraphics* graphicsEngine = CreateGraphics(hWnd);
-	graphicsEngine->Initialize();
-	graphicsEngine->DebugRenderONOFF(true);
-#pragma endregion
-
-#pragma region Model
-
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			///모델1
-			std::shared_ptr<RenderData> model = std::make_shared<RenderData>();
-			model->EntityID = (i * 10 ) + (j + 1);
-			model->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
-			model->world = DirectX::SimpleMath::Matrix::Identity;
-			model->world._41 = 2 * j;
-			model->world._42 = 2 * (i + 1);
-			model->offset = { 0,0 };
-			model->lightmapindex = 0;
-			model->scale = 1;
-			model->tiling = { 0,0 };
-			model->punchEffect = false;
-			model->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-			model->isPlay = false;		//모델이 애니메이션을 실행하는가?
-			model->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-			model->preAni = 0;
-			model->curAni = 0;
-			model->duration = 0;
-			
-			//graphicsEngine->AddRenderModel(model);
-		}
-	}
-
-	///모델1
-	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
-	testmodel->EntityID = 1;
-	//testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
-	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
-	testmodel->world._42 = 1;
-	testmodel->offset = { 0,0 };
-	testmodel->lightmapindex = 0;
-	testmodel->scale = 1;
-	testmodel->tiling = { 0,0 };
-	testmodel->punchEffect = false;
-	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	testmodel->preAni = 0;
-	testmodel->curAni = 0;
-	testmodel->duration = 0;
-
-	double testmodelanimationtime = 0;
-	if (testmodel->isSkinned && testmodel->isPlay)
-	{
-		testmodelanimationtime = graphicsEngine->GetDuration(testmodel->FBX, 0);
-
-	}
-	graphicsEngine->AddRenderModel(testmodel);
-
-	///모델2
-	std::shared_ptr<RenderData> pureMetal = std::make_shared<RenderData>();
-	pureMetal->EntityID = 2;
-	pureMetal->FBX = L"pbrtest.fbx";
-	//pureMetal->FBX = L"monkey.fbx";
-	pureMetal->world = DirectX::SimpleMath::Matrix::Identity;
-	pureMetal->world._41 = 2;
-	pureMetal->world._42 = 1;
-	pureMetal->offset = { 0,0 };
-	pureMetal->lightmapindex = 0;
-	pureMetal->scale = 1;
-	pureMetal->tiling = { 0,0 };
-	pureMetal->punchEffect = false;
-	pureMetal->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
-	pureMetal->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	pureMetal->color = DirectX::XMFLOAT4{ 0,0,0,0 };
-	pureMetal->preAni = 0;
-	pureMetal->curAni = 0;
-	pureMetal->duration = 0;
-
-	double pureMetalanimationtime = 0;
-	if (pureMetal->isSkinned && pureMetal->isPlay)
-	{
-		pureMetalanimationtime = graphicsEngine->GetDuration(pureMetal->FBX, 0);
-	}
-	graphicsEngine->AddRenderModel(pureMetal);
-
-
-
-	//모델 회전을 위한 변수
-	double rotation = 0.0f;
-
-
-
-#pragma endregion 
-
-#pragma region Light
-	LightData dir;
-	dir.direction = DirectX::XMFLOAT3(0, -1, 1);
-	dir.type = static_cast<float>(LightType::Direction);
-
-	graphicsEngine->AddLight(1001, LightType::Direction, dir);
-#pragma endregion 
-
-#pragma region Debug
-	///디버그 드로우
-	debug::GridInfo grid;
-	grid.Color = { 1,1,1,1 };
-	grid.GridSize = 100;
-	grid.XAxis = { 1,0,0 };
-	grid.YAxis = { 0,0,1 };
-	grid.Origin = { 0,0,0 };
-	grid.XDivs = 100;
-	grid.YDivs = 100;
-
-	debug::RayInfo XAxis;
-	XAxis.Color = { 1,0,0,1 };
-	XAxis.Direction = { 10,0,0 };
-	XAxis.Normalize = false;
-	XAxis.Origin.y = 0.01;
-
-	debug::RayInfo YAxis;
-	YAxis.Color = { 0,1,0,1 };
-	YAxis.Direction = { 0,10,0 };
-	YAxis.Normalize = false;
-
-	debug::RayInfo ZAxis;
-	ZAxis.Color = { 0,0,1,1 };
-	ZAxis.Direction = { 0,0,10 };
-	ZAxis.Normalize = false;
-	ZAxis.Origin.y = 0.01;
-#pragma endregion
-
-#pragma region Text
-	ui::TextInfo text;
-	int textuid = 111;
-	text.Color = { 0,1,0,1 };
-	text.PosXPercent = 10;
-	text.PosYPercent = 3;
-	text.Text = L"카메라 이동 : WASD\n카메라 회전 : 마우스 우클릭 이동";
-	text.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(textuid, text);
-
-
-	ui::TextInfo camerapos;
-	int cameraposuid = 112;
-	camerapos.Color = { 1,0,0,1 };
-	camerapos.PosXPercent = 9;
-	camerapos.PosYPercent = 10;
-	camerapos.Text = std::format(L"카메라 위치 : {}, {}, {}", 0, 0, 0);
-	camerapos.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(cameraposuid, camerapos);
-
-	ui::TextInfo fps;
-	int fpsuid = 113;
-	fps.Color = { 1,1,0,1 };
-	fps.PosXPercent = 4;
-	fps.PosYPercent = 15;
-	fps.Text = std::format(L"FPS : {}", 0);
-	fps.Scale = 0.3f;
-	graphicsEngine->CreateTextObject(fpsuid, fps);
-#pragma endregion
-
-	InputManager::GetInstance()->Initialize(hWnd);
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GRAPHICSDEMO));
+
+	Process* process = new Process(hWnd);
+	process->Initialize();
 
 
 	MSG msg;
@@ -254,96 +78,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (ReSize)
 		{
-			graphicsEngine->OnResize(hWnd, false);
+			//graphicsEngine->OnResize(hWnd, false);
+			process->OnResize(hWnd, false);
 			ReSize = false;
 		}
 
-
-		timeManager->Update(timeManager->DeltaTime());
-		double FPS = timeManager->FPS();
-		fps.Text = std::format(L"FPS : {:.1f}", FPS);
-		graphicsEngine->UpdateTextObject(fpsuid, fps);
-
-		InputManager::GetInstance()->Update();
-		//물체 y축 회전
-		if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
-		{
-			float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(InputManager::GetInstance()->GetDeltMouseX()));
-			float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(InputManager::GetInstance()->GetDeltMouseY()));
-		
-			testmodel->world._11 = cosf(rotation);		testmodel->world._13 = sinf(rotation);
-			testmodel->world._31 = -sinf(rotation);		testmodel->world._33 = cosf(rotation);
-			rotation += 2 * 0.5f * timeManager->DeltaTime();
-		}
-
-		if (InputManager::GetInstance()->IsKeyDown('I'))
-		{
-			testmodel->useIBL = !testmodel->useIBL;
-			graphicsEngine->IBLONOFF(testmodel->useIBL);
-		}
-
-		if (InputManager::GetInstance()->IsKeyDown(VK_F1))
-		{
-			static bool use = true;
-			use = !use;
-			graphicsEngine->DebugRenderONOFF(use);
-		}
-
-
-		if (testmodel->isSkinned && testmodel->isPlay)
-		{
-			testmodel->duration += 0.001f;
-			if (testmodelanimationtime <= testmodel->duration)
-			{
-				testmodel->duration -= static_cast<float>(testmodelanimationtime);
-			}
-		}
-
-
-		cameraManager->Update(timeManager->DeltaTime());
-		DirectX::SimpleMath::Matrix view = cameraManager->View();
-		DirectX::SimpleMath::Matrix proj = cameraManager->Proj();
-		DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::Identity;
-
-		DirectX::SimpleMath::Vector3 pos = cameraManager->GetCamerPos();
-		camerapos.Text = std::format(L"카메라 위치 : {:.1f}, {:.1f}, {:.1f}", (double)pos.x, (double)pos.y, (double)pos.z);
-		graphicsEngine->UpdateTextObject(cameraposuid, camerapos);
-
-
-		graphicsEngine->SetCamera(view, proj, ortho);
-
-		auto cubecameras = cameraManager->GetCubeCameras();
-		for (int i = 0; i < 6; i++)
-		{
-			graphicsEngine->SetCubeCamera(cubecameras[i]->View(), cubecameras[i]->Proj(),i);
-		}
-
-
-		graphicsEngine->CulingUpdate();
-		graphicsEngine->AnimationUpdate(timeManager->DeltaTime());
-		graphicsEngine->Update(timeManager->DeltaTime());
-		graphicsEngine->EndUpdate(timeManager->DeltaTime());
-
-
-
-		graphicsEngine->DrawGrid(grid);
-		graphicsEngine->DrawRay(XAxis);
-		graphicsEngine->DrawRay(YAxis);
-		graphicsEngine->DrawRay(ZAxis);
-
-		graphicsEngine->BeginRender();
-		graphicsEngine->Render(timeManager->DeltaTime());
-		graphicsEngine->EndRender();
+		process->Update();
+		process->Render();
 	}
 
-#pragma region Destroy
-	graphicsEngine->DeleteTextObject(11);
-	graphicsEngine->DeleteTextObject(12);
-	graphicsEngine->DeleteTextObject(13);
-	graphicsEngine->EraseObject(1);
-	graphicsEngine->Finalize();
-	DestroyGraphics(graphicsEngine);
-#pragma endregion 
+	process->Finalize();
+
+	delete process;
 
 	return (int)msg.wParam;
 }

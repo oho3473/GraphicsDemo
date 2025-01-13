@@ -19,7 +19,7 @@ public:
 	void Finalize();
 	void OnResize(HWND hWnd,bool isFullScreen);
 private:
-	void Scene();
+	void SetScene();
 
 private:
 	HWND m_hWnd;

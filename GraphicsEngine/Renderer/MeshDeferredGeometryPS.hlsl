@@ -1,23 +1,21 @@
-//#include "Common.hlsli"
+///deferred rendering을 할때 offscreen buffer를 그려내는 shader
 
-/// <summary>
-///
-/// The pixel shader for the geometry pass in the first pass of "Deferred Shading".
-///
-/// </summary>
-
-//Material
+//물체를 그려낼때 어떤 texture를 사용하는가?
 cbuffer Material : register(b2)
 {
-    float4 AMRO;
-    float4 useNEOL; //normal, Emissive, opacity, LightMap
-    float4 albedo;
-    float metalness;
+    float4 useAMRO;    //Albedo, Metalic, Roughness, AO 
+    float4 useNEOL; //normal, Emissive, Opacity, LightMap
+    
+    //외부에서 임의로 지정한 값을 사용하기위한 변수
+    float4 albedo;  
+    float metalness;    
     float roughness;
     float ao; // Ambient Occlusion
     float pad;
+    
+    //유니티에서 가져온 lightmap을 사용하기 위한 정보
     float4 lightmapdata; //index, offset(x,y),scale
-    float2 lightmaptiling; // x y
+    float2 lightmaptiling; // x y 라이트맵에서 해당 texture가 어떤 scale로 저장되어있는 정도
 };
 
 //TEXTURE
@@ -29,15 +27,8 @@ Texture2D gMetalic : register(t4);
 Texture2D gRoughness : register(t5);
 Texture2D gAO : register(t6);
 Texture2D gEmissive : register(t7);
-
 Texture2D gOpacity : register(t8);
-Texture2D gLightMap : register(t9);
-Texture2D gGBuffer : register(t10);
-Texture2D gIMGUI : register(t11);
 
-//***********************************************
-// Sampler States                               *
-//***********************************************
 SamplerState samLinear : register(s0);
 
 struct VS_OUTPUT
@@ -67,14 +58,14 @@ struct PS_OUTPUT
 PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고 있으므로 한번 더 지정해줄 필요는 없다.
 {
     PS_OUTPUT output;
-    output.Albedo = float4(0, 0, 0, 0);
-    output.Normal = float4(0, 0, 0, 0);
-    output.Position = float4(0, 0, 0, 0);
-    output.Depth = float4(0, 0, 0, 0);
-    output.Metalic = float4(0, 0, 0, 0);
-    output.Roughness = float4(0, 0, 0, 0);
-    output.LightMap = float4(0, 0, 0, 0);
-    output.Emissive = float4(0, 0, 0, 0);
+    output.Albedo = float4(0, 0, 0, 1);
+    output.Normal = float4(0, 0, 0, 1);
+    output.Position = float4(0, 0, 0, 1);
+    output.Depth = float4(0, 0, 0, 1);
+    output.Metalic = float4(0, 0, 0, 1);
+    output.Roughness = float4(0, 0, 0, 1);
+    output.LightMap = float4(0, 0, 0, 1);
+    output.Emissive = float4(0, 0, 0, 1);
 
 
     output.Position = input.posWorld;
@@ -84,30 +75,12 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Depth = float4(1 - d, 1 - d, 1 - d, 1.0f);
     output.Albedo = input.color;
 
-    if (AMRO.x > 0)
-    {
-        output.Albedo = gAlbedo.Sample(samLinear, input.tex);
-    }
-
-    output.Metalic = 0.04f;
-    output.Roughness.r = 0.04f;
-    if (AMRO.y >= 1)
-    {
-        output.Metalic.r = gMetalic.Sample(samLinear, input.tex).r;
-    }
-
-
-    if (AMRO.z >= 1)
-    {
-        output.Roughness.r = gRoughness.Sample(samLinear, input.tex).r;
-    }
-
-    //output.AO = 0.f;
-
-    if (AMRO.w >= 1)
-    {
-        //output.AO = gAO.Sample(samLinear, input.tex);
-    }
+    output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
+    output.Albedo.a = (useNEOL.w * gOpacity.Sample(samLinear, input.tex).r) + (1 - useNEOL.w);
+    
+    output.Metalic.rgb = max(0.04, useAMRO.y * gMetalic.Sample(samLinear, input.tex).b);
+    output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
+    output.Emissive = gEmissive.Sample(samLinear, input.tex) * useNEOL.y;
 
     output.Normal = input.normal;
     if (useNEOL.x >= 1)
@@ -120,19 +93,5 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
         output.Normal.xyz = normalize(mul(NormalTangentSpace, (WorldTransform)));
     }
 
-    output.Emissive = 0;
-    if (useNEOL.y >= 1)
-    {
-        output.Emissive = gEmissive.Sample(samLinear, input.tex);
-    }
-
-    if (useNEOL.z >= 1)
-    {
-        output.Albedo.a = gOpacity.Sample(samLinear, input.tex).r;
-    }
-
-    output.LightMap = gLightMap.Sample(samLinear, input.lightuv);
-
     return output;
-
 }

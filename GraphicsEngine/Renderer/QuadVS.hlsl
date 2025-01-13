@@ -1,13 +1,13 @@
 struct VS_OUTPUT
 {
-    float4 pos : SV_POSITION;
-    float4 posWorld : WORLDPOSITION;
+       float4 pos : SV_POSITION;
+    float4 posWorld : TEXCOORD0;
     float4 color : COLOR;
-    float4 normal : NORMAL;
-    float4 tangent : TANGENT;
-    float4 bitangent : BITANGENT;
-    float2 tex : TEXCOORD;
-    float2 lightuv : LIGHTMAPUV;
+    float4 normal : TEXCOORD1;
+    float4 tangent : TEXCOORD2;
+    float4 bitangent : TEXCOORD3;
+    float2 tex : TEXCOORD4;
+    float2 lightuv : TEXCOORD5;
 };
 
 struct Quad

@@ -81,9 +81,6 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 	m_DeferredPass->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
 	m_DebugPass->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_DebugDrawManager.lock());
 
-	m_Instancing = std::make_shared<DeferredInstancing>();
-	m_Instancing->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
-
 
 	m_DeferredLight->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
 
@@ -92,11 +89,8 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 
 	//pass push
-	//m_OffScreenPasses.push_back(m_DebugPass);
-	m_OffScreenPasses.push_back(m_Instancing);	//static
-	m_OffScreenPasses.push_back(m_DeferredPass);	//skinned
-
-	m_AfterLightPasses.push_back(m_DeferredLight);
+	m_OffScreenPasses.push_back(m_DeferredPass);	//geometry
+	m_AfterLightPasses.push_back(m_DeferredLight);	//deferred light
 
 	m_MainOutput = std::make_shared<OutputMain>(m_Device.lock(), m_ResourceManager.lock());
 

@@ -15,7 +15,6 @@ public:
 	void OnResize() override;
 
 private:
-	void PreDepth();
 	void GeometryPass();
 	void LightPass();
 
