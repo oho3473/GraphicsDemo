@@ -42,7 +42,7 @@ public:
 
 	void Render(float deltaTime);
 	void OnResize();
-	void IBLOnOff(bool isRender);
+	void ChageDebugQuad(const debug::quadstate state);
 	void SetDebugDraw(bool on_off);
 	void SetCubeCamera(const CameraData* datas);
 

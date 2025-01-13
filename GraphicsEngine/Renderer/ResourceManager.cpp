@@ -32,12 +32,10 @@ ResourceManager::ResourceManager()
 	m_OffScreenName[7] = L"Emissive";
 	m_OffScreenName[8] = L"GBuffer";
 
-	m_CubeScreenName[0] = L"CubeMapRTV1";
-	m_CubeScreenName[1] = L"CubeMapRTV2";
-	m_CubeScreenName[2] = L"CubeMapRTV3";
-	m_CubeScreenName[3] = L"CubeMapRTV4";
-	m_CubeScreenName[4] = L"CubeMapRTV5";
-	m_CubeScreenName[5] = L"CubeMapRTV6";
+	m_PBRScreenName[0] = L"Fresnel";
+	m_PBRScreenName[1] = L"Distribute";
+	m_PBRScreenName[2] = L"Geometry";
+	m_PBRScreenName[3] = L"NdotL";
 
 }
 
@@ -187,7 +185,10 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 		Create<RenderTargetView>(m_OffScreenName[i], RenderTargetViewType::OffScreen, width, height);
 	}
 
-	//
+	for (int i = 0; i < m_PBRScreenName.size(); i++)
+	{
+		Create<RenderTargetView>(m_PBRScreenName[i], RenderTargetViewType::OffScreen, width, height);
+	}
 
 	// ----------------------------------------------------------------------------------------
 	// Cube Map Resource
@@ -196,74 +197,6 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<VertexBuffer>(L"CubeMap_VB", CubeMap::Vertex::Desc, CubeMap::Vertex::Data, size);
 	Create<IndexBuffer>(L"CubeMap_IB", CubeMap::Index::Desc, CubeMap::Index::Data, CubeMap::Index::count);
 
-	////Texture2D
-	//int CubeMapSize = 256;
-	//D3D11_TEXTURE2D_DESC cubeTexDesc;
-	//cubeTexDesc.Width = CubeMapSize;
-	//cubeTexDesc.Height = CubeMapSize;
-	//cubeTexDesc.MipLevels = 0;
-	//cubeTexDesc.ArraySize = 6;
-	//cubeTexDesc.SampleDesc.Count = 1;
-	//cubeTexDesc.SampleDesc.Quality = 0;
-	//cubeTexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//cubeTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	//cubeTexDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	//cubeTexDesc.CPUAccessFlags = 0;
-	//cubeTexDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE;
-	//std::weak_ptr<Texture2D> cubeMapTex = Create<Texture2D>(L"CubeMap", cubeTexDesc);
-
-
-	////RTV 
-	//D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	//rtvDesc.Format = cubeTexDesc.Format;
-	//rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-	//rtvDesc.Texture2DArray.MipSlice = 0;
-	//rtvDesc.Texture2DArray.ArraySize = 1;
-	//for (int i = 0; i < 6; i++)
-	//{
-	//	rtvDesc.Texture2DArray.FirstArraySlice = i;
-	//	Create<RenderTargetView>(m_CubeScreenName[i], cubeMapTex.lock(), rtvDesc);
-	//}
-
-	////SRV
-	//D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	//srvDesc.Format = cubeTexDesc.Format;
-	//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-	//srvDesc.TextureCube.MostDetailedMip = 0;
-	//srvDesc.TextureCube.MipLevels = -1;
-	//Create<ShaderResourceView>(L"CubeMapSRV", cubeMapTex.lock(), srvDesc);
-
-	////DSV
-	//D3D11_TEXTURE2D_DESC depthTexDesc;
-	//depthTexDesc.Width = CubeMapSize;
-	//depthTexDesc.Height = CubeMapSize;
-	//depthTexDesc.MipLevels = 1;
-	//depthTexDesc.ArraySize = 1;
-	//depthTexDesc.SampleDesc.Count = 1;
-	//depthTexDesc.SampleDesc.Quality = 0;
-	//depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	//depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	//depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	//depthTexDesc.CPUAccessFlags = 0;
-	//depthTexDesc.MiscFlags = 0;
-
-	//auto depthTex = Create<Texture2D>(L"CubeDepthTex", depthTexDesc);
-	//D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	//dsvDesc.Format = depthTexDesc.Format;
-	//dsvDesc.Flags = 0;
-	//dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	//dsvDesc.Texture2D.MipSlice = 0;
-	//Create<DepthStencilView>(L"CubeMapDSV", dsvDesc, depthTex.lock());
-
-	////viewport
-	//RECT cube;
-	//cube.left = 0;
-	//cube.top = 0;
-	//cube.bottom = CubeMapSize;
-	//cube.right = CubeMapSize;
-	//Create<ViewPort>(L"CubeMapViewPort", cube);
-
-	
 	// ----------------------------------------------------------------------------------------
 	// Depth Stencil View
 	// ----------------------------------------------------------------------------------------
@@ -298,7 +231,6 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Material), 1, m_UsingMaterial.lock()->GetAddress());
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, m_UsingLights.lock()->GetAddress());
 
-
 	ConvertDDS();
 }
 
@@ -313,6 +245,11 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 	Erase<RenderTargetView>(L"RTV_Main");
 
 	for (auto tex : m_OffScreenName)
+	{
+		Erase<RenderTargetView>(tex);
+	}
+
+	for (auto tex : m_PBRScreenName)
 	{
 		Erase<RenderTargetView>(tex);
 	}
@@ -333,6 +270,17 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		Create<ShaderResourceView>(m_OffScreenName[i], newRTV.lock());
 	}
 
+	//pbr 디버그용
+	for (int i = 0; i < m_PBRScreenName.size(); i++)
+	{
+		//기존에 있으면 지우고
+		Erase<ShaderResourceView>(m_PBRScreenName[i]);
+		Erase<Texture2D>(m_PBRScreenName[i]);
+
+		std::weak_ptr <RenderTargetView> newRTV = Create<RenderTargetView>(m_PBRScreenName[i], RenderTargetViewType::OffScreen, width, height);
+		Create<ShaderResourceView>(m_PBRScreenName[i], newRTV.lock());
+	}
+
 	{
 		D3D11_TEXTURE2D_DESC texDesc = TextureDESC::OffScreen;
 		texDesc.Width = width;
@@ -351,46 +299,6 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		Create<DepthStencilView>(L"DSV_Main", DepthStencilViewType::Default);
 		Create<DepthStencilView>(L"DSV_Deferred", texDesc);
 	}
-
-	///cubemap
-	////Texture2D
-	//int CubeMapSize = 256;
-	//D3D11_TEXTURE2D_DESC cubeTexDesc;
-	//cubeTexDesc.Width = CubeMapSize;
-	//cubeTexDesc.Height = CubeMapSize;
-	//cubeTexDesc.MipLevels = 0;
-	//cubeTexDesc.ArraySize = 6;
-	//cubeTexDesc.SampleDesc.Count = 1;
-	//cubeTexDesc.SampleDesc.Quality = 0;
-	//cubeTexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//cubeTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	//cubeTexDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	//cubeTexDesc.CPUAccessFlags = 0;
-	//cubeTexDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE;
-	////std::weak_ptr<Texture2D> cubemap = Create<Texture2D>(L"CubeMap", cubeTexDesc);
-
-	////DSV
-	//D3D11_TEXTURE2D_DESC depthTexDesc;
-	//depthTexDesc.Width = CubeMapSize;
-	//depthTexDesc.Height = CubeMapSize;
-	//depthTexDesc.MipLevels = 1;
-	//depthTexDesc.ArraySize = 1;
-	//depthTexDesc.SampleDesc.Count = 1;
-	//depthTexDesc.SampleDesc.Quality = 0;
-	//depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	//depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	//depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	//depthTexDesc.CPUAccessFlags = 0;
-	//depthTexDesc.MiscFlags = 0;
-
-	//auto depthTex = Create<Texture2D>(L"CubeDepthTex", depthTexDesc);
-	//D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	//dsvDesc.Format = depthTexDesc.Format;
-	//dsvDesc.Flags = 0;
-	//dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	//dsvDesc.Texture2D.MipSlice = 0;
-	//Create<DepthStencilView>(L"CubeMapDSV", dsvDesc, depthTex.lock());
-
 }
 
 void ResourceManager::ConvertDDS()

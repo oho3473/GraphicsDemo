@@ -137,10 +137,6 @@ void PassManager::Render(float deltaTime)
 		pass->Render();
 	}
 
-	for (auto& pass : m_IndepentCulling)
-	{
-		pass->Render();
-	}
 	if (m_isDebugDraw)
 	{
 		m_DebugOffScreen->Render();
@@ -178,14 +174,9 @@ void PassManager::OnResize()
 	m_MainOutput->OnResize();
 }
 
-void PassManager::IBLOnOff(bool isRender)
+void PassManager::ChageDebugQuad(const debug::quadstate state)
 {
-	m_IBL = isRender;
-	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useIBL = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color").lock();
-
-	useIBL->Update({ static_cast<float>(isRender),0,0,0});
-
-
+	m_DebugOffScreen->ChangeQuadState(state);
 }
 
 void PassManager::SetDebugDraw(bool on_off)

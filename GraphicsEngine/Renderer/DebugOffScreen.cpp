@@ -5,7 +5,7 @@
 #include "StaticData.h"
 #include "ConstantBuffer.h"
 
-DebugOffScreen::DebugOffScreen(std::shared_ptr<Device> device, std::shared_ptr<ResourceManager> manager)
+DebugOffScreen::DebugOffScreen(std::shared_ptr<Device> device, std::shared_ptr<ResourceManager> manager) : m_quadstate(debug::quadstate::GEOMETRY)
 {
 	m_ResourceManager = manager;
 	m_Device = device;
@@ -59,18 +59,44 @@ void DebugOffScreen::Render()
 	float scale = 1 / static_cast<float>(m_SRVs.size());
 	pos._11 = scale; pos._22 = scale; pos._33 = scale; pos._44 = 1.f;
 
-	for (int i = 0; i < m_SRVs.size(); i++)
+	switch (m_quadstate)
 	{
-		m_QuadPos.lock()->m_struct;
+		case debug::quadstate::GEOMETRY:
+		{
+			for (int i = 0; i < m_SRVs.size(); i++)
+			{
+				m_QuadPos.lock()->m_struct;
 
-		pos._14 = 1 - scale; pos._24 = (1 - scale) - i * scale * 2;
-		m_QuadPos.lock()->Update(pos);
+				pos._14 = 1 - scale; pos._24 = (1 - scale) - i * scale * 2;
+				m_QuadPos.lock()->Update(pos);
 
-		Device->Context()->VSSetConstantBuffers(0, 1, m_QuadPos.lock()->GetAddress());
+				Device->Context()->VSSetConstantBuffers(0, 1, m_QuadPos.lock()->GetAddress());
 
-		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_SRVs[i].lock()->GetAddress());
+				Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_SRVs[i].lock()->GetAddress());
 
-		Device->Context()->DrawIndexed(DebugQuad::Index::count, 0, 0);
+				Device->Context()->DrawIndexed(DebugQuad::Index::count, 0, 0);
+			}
+		}
+		break;
+		case debug::quadstate::PBR:
+		{
+			for (int i = 0; i < m_PBRs.size(); i++)
+			{
+				m_QuadPos.lock()->m_struct;
+
+				pos._14 = 1 - scale; pos._24 = (1 - scale) - i * scale * 2;
+				m_QuadPos.lock()->Update(pos);
+
+				Device->Context()->VSSetConstantBuffers(0, 1, m_QuadPos.lock()->GetAddress());
+
+				Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_PBRs[i].lock()->GetAddress());
+
+				Device->Context()->DrawIndexed(DebugQuad::Index::count, 0, 0);
+			}
+		}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -98,10 +124,27 @@ void DebugOffScreen::OnResize()
 
 	m_SRVs.clear();
 
-	//m_SRVs.push_back(m_Position);
 	m_SRVs.push_back(m_Normal);
 	m_SRVs.push_back(m_Metalic);
 	m_SRVs.push_back(m_Roughness);
 	m_SRVs.push_back(m_Depth);
 	m_SRVs.push_back(m_Albedo);
+
+
+	m_Fresnel = manager->Get<ShaderResourceView>(L"Fresnel").lock();
+	m_Distribute = manager->Get<ShaderResourceView>(L"Distribute").lock();
+	m_Geometry = manager->Get<ShaderResourceView>(L"Geometry").lock();
+	m_NdotL = manager->Get<ShaderResourceView>(L"NdotL").lock();
+
+	m_PBRs.clear();
+
+	m_PBRs.push_back(m_Fresnel);
+	m_PBRs.push_back(m_Distribute);
+	m_PBRs.push_back(m_Geometry);
+	m_PBRs.push_back(m_NdotL);
+}
+
+void DebugOffScreen::ChangeQuadState(const debug::quadstate state)
+{
+	m_quadstate = state;
 }

@@ -98,6 +98,6 @@ LONG InputManager::GetDeltMouseY()
 	return dxdy.y;
 }
 
-InputManager::InputManager()
+InputManager::InputManager() : dxdy(),m_curMousePos(),m_prevMousePos(),m_wheelState(WheelState::None),m_hwnd()
 {
 }

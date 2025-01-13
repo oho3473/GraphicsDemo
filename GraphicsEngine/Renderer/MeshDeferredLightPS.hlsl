@@ -10,11 +10,15 @@ cbuffer useIBL : register(b5)
 struct PS_OUTPUT
 {
 	float4 Gbuffer : SV_Target0;
+	float4 Fresnel : SV_Target1;
+	float4 Distribute : SV_Target2;
+	float4 Geometry : SV_Target3;
+	float4 NdotL: SV_Target4;
 };
 
-float4 main(VS_OUTPUT input) : SV_TARGET
+PS_OUTPUT main(VS_OUTPUT input)
 {
-	//PS_OUTPUT output;
+	PS_OUTPUT output;
 
 	float opacity = 1.0f;
 	if (useNEOL.z >= 1)
@@ -95,6 +99,11 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
    //output.Gbuffer = float4(result, 1);
 
-	return float4(result, 1);
+    output.Gbuffer = float4(result, 1);
+    output.Fresnel = float4(1, 0, 0, 1);
+    output.Distribute = float4(0, 1, 0, 1);
+    output.Geometry= float4(0, 0, 1, 1);
+    output.NdotL= float4(1, 1, 0, 1);
+    return output;
 	//return float4(result, 1);
 }

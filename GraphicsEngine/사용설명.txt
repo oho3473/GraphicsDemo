@@ -1,0 +1,9 @@
+wasd : 카메라 이동
+우클릭 : 카메라 회전
+zx : 줌인/아웃
+qe : 카메라 수직 이동
+f1 : 디버그데이터 ON/OFF
+f2 : deferred geometry info ( Normal/Metalic/Roughness/Depth/Albedo)
+f3 : PBR info (Fresnel/Distribute/Geometry/NdotL)
+1 : pbrtest.fbx로 교체
+2 : monkey.fbx로 교체

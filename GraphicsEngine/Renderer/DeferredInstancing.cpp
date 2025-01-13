@@ -96,16 +96,6 @@ void DeferredInstancing::Render()
 	for (auto& object : m_RenderList)
 	{
 		bool isTranparency = false;
-
-		if (object->color.x != 0.f ||
-			object->color.y != 0.f ||
-			object->color.z != 0.f)
-		{
-			continue;
-		}
-
-
-
 		//유효한 모델을 가지고 있지 않음
 		if (object->ModelID < 0)
 		{

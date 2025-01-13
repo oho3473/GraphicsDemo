@@ -31,7 +31,7 @@ public:
 
 	//overdraw
 	bool useIBL = false;	//IBL 사용하나?
-	bool punchEffect;	//펀치 이펙트 메쉬 flag
+	bool useEditMaterial = false;	//IBL 사용하나?
 
 	//애니메이션
 	float duration;
@@ -50,13 +50,11 @@ public:
 	int lightmapindex;
 	float scale;
 
-	// 아웃라인 관련 변수
-	DirectX::SimpleMath::Color MaskingColor = DirectX::SimpleMath::Color{ 0, 0, 0, 0 };
-	// 인터랙티브 COLOR
+	//useEditMaterial
 	DirectX::XMFLOAT4 color;
+	DirectX::XMFLOAT4 metalic;
+	DirectX::XMFLOAT4 roughness;
 };
-
-
 
 namespace decal
 {
@@ -138,6 +136,12 @@ namespace debug
 		DirectX::SimpleMath::Vector3 Direction;
 		bool Normalize = true;
 		DirectX::SimpleMath::Color Color = { 1.f, 1.f, 1.f, 1.f };
+	};
+
+	enum class __declspec(dllexport) quadstate
+	{
+		GEOMETRY = 0,
+		PBR = 1,
 	};
 }
 

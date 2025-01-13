@@ -32,5 +32,6 @@ private:
 
 	std::vector<std::shared_ptr<RenderData>> m_models;
 	std::vector<ui::TextInfo> m_UIs;
+	bool DebugOnOff= true;
 };
 

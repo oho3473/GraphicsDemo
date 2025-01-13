@@ -54,13 +54,6 @@ bool Graphics::Initialize()
 
 	OnResize(m_hWnd, false);
 
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV1"));
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV2"));
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV3"));
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV4"));
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV5"));
-	m_CubeRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"CubeMapRTV6"));
-
 	return true;
 }
 
@@ -149,6 +142,11 @@ void Graphics::BeginRender()
 			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[1].lock()->Get(), gray);
 		}
 	}
+
+	for (int i = 0; i < m_PBRRTVs.size(); i++)
+	{
+		m_Device->Context()->ClearRenderTargetView(m_PBRRTVs[i].lock()->Get(), gray);
+	}
 }
 
 void Graphics::Render(float deltaTime)
@@ -168,6 +166,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 	m_hWnd = hwnd;
 	GetClientRect(m_hWnd, &m_wndSize);
 
+	m_PBRRTVs.clear();
 	m_RTVs.clear();
 	m_DSVs.clear();
 
@@ -189,6 +188,11 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Main"));
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Deferred"));
 
+
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Fresnel"));
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Distribute"));
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Geometry"));
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"NdotL"));
 
 	m_PassManager->OnResize();
 
@@ -345,9 +349,9 @@ void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMa
 	}
 }
 
-void Graphics::IBLONOFF(bool isRender)
+void Graphics::ChangeDebugQuad(const debug::quadstate state)
 {
-	m_PassManager->IBLOnOff(isRender);
+	m_PassManager->ChageDebugQuad(state);
 }
 
 void Graphics::DrawSphere(const debug::SphereInfo& info)

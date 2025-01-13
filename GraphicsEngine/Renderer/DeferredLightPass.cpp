@@ -94,9 +94,6 @@ void DeferredLightPass::Render()
 
 	//Save GBuffer texture
 	{
-		std::shared_ptr<RenderTargetView> rtv = resourcemanager->Get<RenderTargetView>(L"GBuffer").lock();
-		std::shared_ptr<DepthStencilView> dsv = resourcemanager->Get<DepthStencilView>(L"DSV_Deferred").lock();
-
 		Device->BindVS(m_QuadVS.lock());
 		Device->Context()->PSSetShader(m_Deferred.lock()->GetPS(), nullptr, 0);
 
@@ -120,7 +117,7 @@ void DeferredLightPass::Render()
 
 		Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
 
-		Device->Context()->OMSetRenderTargets(1, rtv->GetAddress(), nullptr);
+		Device->Context()->OMSetRenderTargets(m_PBRs.size(), m_PBRs.data(), nullptr);
 
 		Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
 	}
@@ -153,6 +150,21 @@ void DeferredLightPass::OnResize()
 	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 	m_LUT = manager->Get<ShaderResourceView>(L"MyCube3Brdf.dds").lock();
+
+
+	m_FresnelRTV = manager->Get<RenderTargetView>(L"Fresnel").lock();
+	m_DistributeRTV = manager->Get<RenderTargetView>(L"Distribute").lock();
+	m_GeometryRTV = manager->Get<RenderTargetView>(L"Geometry").lock();
+	m_NdotLRTV = manager->Get<RenderTargetView>(L"NdotL").lock();
+	m_GbufferRTV = manager->Get<RenderTargetView>(L"GBuffer").lock();
+
+
+	m_PBRs.clear();
+	m_PBRs.push_back(m_GbufferRTV.lock()->Get());
+	m_PBRs.push_back(m_FresnelRTV.lock()->Get());
+	m_PBRs.push_back(m_DistributeRTV.lock()->Get());
+	m_PBRs.push_back(m_GeometryRTV.lock()->Get());
+	m_PBRs.push_back(m_NdotLRTV.lock()->Get());
 
 }
 

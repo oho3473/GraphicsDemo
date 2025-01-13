@@ -71,7 +71,7 @@ private:
 	std::array<std::unordered_map<std::wstring, std::shared_ptr<Resource>>, static_cast<int>(ResourceType::End)> m_ResourceArray;
 	
 	std::array<std::wstring, 10> m_OffScreenName;
-	std::array<std::wstring, 6> m_CubeScreenName;
+	std::array<std::wstring, 4> m_PBRScreenName;
 };
 
 

@@ -1,6 +1,6 @@
 #include "Process.h"
 
-Process::Process(HWND hWnd) : m_hWnd(hWnd)
+Process::Process(HWND hWnd) : m_hWnd(hWnd), m_inputManager(nullptr), m_timeManager(nullptr), m_cameraManager(nullptr), m_graphicsEngine(nullptr)
 {
 
 }
@@ -47,25 +47,34 @@ void Process::Update()
 	m_graphicsEngine->UpdateTextObject(fps.uid, fps);
 
 #pragma region INPUT
-	if (InputManager::GetInstance()->IsKeyDown('I'))
+	if (InputManager::GetInstance()->IsKeyDown(VK_F3))
 	{
-		static bool use = true;
-		use = !use;
-		m_graphicsEngine->IBLONOFF(use);
+		m_graphicsEngine->ChangeDebugQuad(debug::quadstate::PBR);
+	}
+
+	if (InputManager::GetInstance()->IsKeyDown(VK_F2))
+	{
+		m_graphicsEngine->ChangeDebugQuad(debug::quadstate::GEOMETRY);
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown(VK_F1))
 	{
-		static bool use = true;
-		use = !use;
-		m_graphicsEngine->DebugRenderONOFF(use);
+		DebugOnOff = !DebugOnOff;
+		m_graphicsEngine->DebugRenderONOFF(DebugOnOff);
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('1'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->FBX = L"pbrtest.fbx";
+	}
+
+	if (InputManager::GetInstance()->IsKeyDown('2'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
 		testmodel->FBX = L"monkey.fbx";
 	}
+
 
 	if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
 	{
@@ -168,7 +177,6 @@ void Process::SetScene()
 	testmodel->lightmapindex = 0;
 	testmodel->scale = 1;
 	testmodel->tiling = { 0,0 };
-	testmodel->punchEffect = false;
 	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
 	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
 	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
@@ -188,7 +196,7 @@ void Process::SetScene()
 
 #pragma region Light
 	LightData dir;
-	dir.direction = DirectX::XMFLOAT3(0, -1, 1);
+	dir.direction = DirectX::XMFLOAT3(0, 0, 1);
 	dir.type = static_cast<float>(LightType::Direction);
 	m_graphicsEngine->AddLight(1001, LightType::Direction, dir);
 #pragma endregion

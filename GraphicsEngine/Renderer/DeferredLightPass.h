@@ -32,6 +32,13 @@ private:
 	std::weak_ptr<RenderTargetView> m_EmissiveRTV;
 	std::weak_ptr<RenderTargetView> m_LightMapRTV;
 
+	//pbr
+	std::weak_ptr<RenderTargetView> m_FresnelRTV;
+	std::weak_ptr<RenderTargetView> m_DistributeRTV;
+	std::weak_ptr<RenderTargetView> m_GeometryRTV;
+	std::weak_ptr<RenderTargetView> m_NdotLRTV;
+	std::weak_ptr<RenderTargetView> m_GbufferRTV;
+
 	//GBuffer Texture
 	std::weak_ptr<ShaderResourceView> m_AlbedoSRV;
 	std::weak_ptr<ShaderResourceView> m_NormalSRV;
@@ -45,6 +52,7 @@ private:
 	std::weak_ptr<ShaderResourceView> m_RandianceSRV;
 	std::weak_ptr<ShaderResourceView> m_LUT;
 
+
 	//Light - Quad
 	std::weak_ptr<VertexBuffer> m_QuadVB;
 	std::weak_ptr<IndexBuffer> m_QuadIB;
@@ -54,6 +62,9 @@ private:
 
 	//GBuffer Result
 	std::weak_ptr<ShaderResourceView> m_GBufferSRV;
+
+
+	std::vector<ID3D11RenderTargetView*> m_PBRs;
 
 };
 

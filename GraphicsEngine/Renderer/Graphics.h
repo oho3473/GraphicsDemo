@@ -56,7 +56,7 @@ public:
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 	virtual const double GetDuration(std::wstring name, int index) override;
 	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro,int index) override;
-	virtual void IBLONOFF(bool isRender) override;
+	virtual void ChangeDebugQuad(const debug::quadstate state)override;
 
 
 	virtual void DrawSphere(const debug::SphereInfo& info)override;
@@ -72,7 +72,7 @@ public:
 	virtual void DeleteTextObject(uint32_t entityId)override;
 protected:
 	std::vector<std::weak_ptr<RenderTargetView>> m_RTVs;
-	std::vector<std::weak_ptr<RenderTargetView>> m_CubeRTVs;
+	std::vector<std::weak_ptr<RenderTargetView>> m_PBRRTVs;
 	std::vector<std::weak_ptr<DepthStencilView>> m_DSVs;
 	
 	std::vector<std::shared_ptr<RenderData>> m_RenderVector;	//프레임워크쪽에서 준 데이터들
