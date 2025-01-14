@@ -37,7 +37,8 @@ private:
 	std::weak_ptr<ShaderResourceView> m_Fresnel;
 	std::weak_ptr<ShaderResourceView> m_Distribute;
 	std::weak_ptr<ShaderResourceView> m_Geometry;
-	std::weak_ptr<ShaderResourceView> m_NdotL;
+	std::weak_ptr<ShaderResourceView> m_Specular;
+	std::weak_ptr<ShaderResourceView> m_Diffuse;
 	std::vector<std::weak_ptr<ShaderResourceView> > m_PBRs;
 
 	debug::quadstate m_quadstate;

@@ -36,7 +36,8 @@ private:
 	std::weak_ptr<RenderTargetView> m_FresnelRTV;
 	std::weak_ptr<RenderTargetView> m_DistributeRTV;
 	std::weak_ptr<RenderTargetView> m_GeometryRTV;
-	std::weak_ptr<RenderTargetView> m_NdotLRTV;
+	std::weak_ptr<RenderTargetView> m_SpecularRTV;
+	std::weak_ptr<RenderTargetView> m_DiffuseRTV;
 	std::weak_ptr<RenderTargetView> m_GbufferRTV;
 
 	//GBuffer Texture

@@ -90,7 +90,8 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     
     if (editMaterial.x)
     {
-        output.Albedo.rgb = editMaterial.w;
+        //output.Albedo.rgb = editMaterial.w;
+        output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
         output.Metalic.rgb = max(0.04, editMaterial.y);
         output.Roughness.rgb = max(0.04, editMaterial.z);
     }

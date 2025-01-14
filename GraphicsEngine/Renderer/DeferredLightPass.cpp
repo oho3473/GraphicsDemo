@@ -155,7 +155,8 @@ void DeferredLightPass::OnResize()
 	m_FresnelRTV = manager->Get<RenderTargetView>(L"Fresnel").lock();
 	m_DistributeRTV = manager->Get<RenderTargetView>(L"Distribute").lock();
 	m_GeometryRTV = manager->Get<RenderTargetView>(L"Geometry").lock();
-	m_NdotLRTV = manager->Get<RenderTargetView>(L"NdotL").lock();
+	m_SpecularRTV = manager->Get<RenderTargetView>(L"Specular").lock();
+	m_DiffuseRTV = manager->Get<RenderTargetView>(L"Diffuse").lock();
 	m_GbufferRTV = manager->Get<RenderTargetView>(L"GBuffer").lock();
 
 
@@ -164,7 +165,8 @@ void DeferredLightPass::OnResize()
 	m_PBRs.push_back(m_FresnelRTV.lock()->Get());
 	m_PBRs.push_back(m_DistributeRTV.lock()->Get());
 	m_PBRs.push_back(m_GeometryRTV.lock()->Get());
-	m_PBRs.push_back(m_NdotLRTV.lock()->Get());
+	m_PBRs.push_back(m_SpecularRTV.lock()->Get());
+	m_PBRs.push_back(m_DiffuseRTV.lock()->Get());
 
 }
 

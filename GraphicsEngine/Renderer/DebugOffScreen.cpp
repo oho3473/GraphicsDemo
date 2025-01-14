@@ -134,14 +134,16 @@ void DebugOffScreen::OnResize()
 	m_Fresnel = manager->Get<ShaderResourceView>(L"Fresnel").lock();
 	m_Distribute = manager->Get<ShaderResourceView>(L"Distribute").lock();
 	m_Geometry = manager->Get<ShaderResourceView>(L"Geometry").lock();
-	m_NdotL = manager->Get<ShaderResourceView>(L"NdotL").lock();
+	m_Specular = manager->Get<ShaderResourceView>(L"Specular").lock();
+	m_Diffuse = manager->Get<ShaderResourceView>(L"Diffuse").lock();
 
 	m_PBRs.clear();
 
 	m_PBRs.push_back(m_Fresnel);
 	m_PBRs.push_back(m_Distribute);
 	m_PBRs.push_back(m_Geometry);
-	m_PBRs.push_back(m_NdotL);
+	m_PBRs.push_back(m_Specular);
+	m_PBRs.push_back(m_Diffuse);
 }
 
 void DebugOffScreen::ChangeQuadState(const debug::quadstate state)

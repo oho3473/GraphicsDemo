@@ -192,7 +192,8 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Fresnel"));
 	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Distribute"));
 	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Geometry"));
-	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"NdotL"));
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Specular"));
+	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Diffuse"));
 
 	m_PassManager->OnResize();
 

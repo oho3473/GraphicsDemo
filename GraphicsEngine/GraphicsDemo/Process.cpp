@@ -81,6 +81,12 @@ void Process::Update()
 		testmodel->FBX = L"vidiger.fbx";
 	}
 
+	if (InputManager::GetInstance()->IsKeyDown('4'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->FBX = L"pureMetal.fbx";
+	}
+
 	if (InputManager::GetInstance()->IsKeyDown('O'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];

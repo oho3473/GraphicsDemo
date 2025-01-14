@@ -165,18 +165,18 @@ float Calc_D(float3 N, float3 H, float roughness)
     float NdotH2 = NdotH * NdotH;
 
     float num = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    float denom = (NdotH2 * (a2 - 1.0)) + 1.0;
 
-    float den = Pi * denom * denom;
+    float den = Pi * max(Epsilon, denom * denom);
 
     return num / den;
 }
 
-float GeometrySchlickGGX(float NdotV, float k)
+float GeometrySchlickGGX(float cosTheta, float k)
 {
     //GeometrySchlickGGX
-    float num = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
+    float num = cosTheta;
+    float denom = cosTheta * (1.0 - k) + k;
 
     return num / denom;
 }
@@ -243,7 +243,7 @@ float3 CalcIBL(float3 V, float3 N, float3 F0, float3 albedo, float roughness, fl
     return result;
 }
 
-float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughness, float metalic, out float3 Fresnel, out float3 Distribute, out float3 GeometryAttenuation)
+float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughness, float metalic, out float3 Fresnel, out float3 Distribute, out float3 GeometryAttenuation,out float3 Diffuse, out float3 Specular)
 {
     float3 result = float3(0, 0, 0);
     float3 diffuse = float3(0, 0, 0);
@@ -253,11 +253,11 @@ float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughne
     float NdotV = max(0, dot(N, normalize(V)));
     float3 F0 = Fdielectric;    //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
     F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속 고유의 색상이된다
-    
     float3 F = FresnelSchlick(F0, max(0, NdotV));   //슐릭근사
     
+    
     //Diffuse BRDF
-    float3 kS = F0; //fresnel 반사율
+    float3 kS = F; //fresnel 반사율 metalic? F0? F? metalic이 맞다고 생각하는데...
     float3 kD = 1.0 - kS; //diffuse 반사율, 에너지 보존 법칙에 의해 kD + kS <= 1
     diffuse = kD * albedo / Pi;
     
@@ -275,13 +275,17 @@ float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughne
     
     specular = n / d;
     
-    result = (diffuse + specular) * float3(1,1,1) * NdotL;
+    //result = (diffuse + specular) * NdotL;
+    result = diffuse;
+    //result = specular * NdotL;
     
     
     //debug 값 출력
     Fresnel = F / (4.0 * NdotV + 0.01);
     Distribute.rgb = D / (4.0 * NdotV + 0.01);
     GeometryAttenuation.rgb = G / (4.0 * NdotV + 0.01);
+    Diffuse = diffuse;
+    Specular = specular;
     
     return result;
 }

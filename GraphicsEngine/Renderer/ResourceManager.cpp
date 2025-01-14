@@ -35,7 +35,8 @@ ResourceManager::ResourceManager()
 	m_PBRScreenName[0] = L"Fresnel";
 	m_PBRScreenName[1] = L"Distribute";
 	m_PBRScreenName[2] = L"Geometry";
-	m_PBRScreenName[3] = L"NdotL";
+	m_PBRScreenName[3] = L"Specular";
+	m_PBRScreenName[4] = L"Diffuse";
 
 }
 
