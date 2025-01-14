@@ -12,19 +12,17 @@ struct PS_OUTPUT
 	float4 Gbuffer : SV_Target0;
 	float4 Fresnel : SV_Target1;
 	float4 Distribute : SV_Target2;
-	float4 Geometry : SV_Target3;
+    float4 GeometryAttenuation : SV_Target3;
 	float4 NdotL: SV_Target4;
 };
 
 PS_OUTPUT main(VS_OUTPUT input)
 {
 	PS_OUTPUT output;
-
-	float opacity = 1.0f;
-	if (useNEOL.z >= 1)
-	{
-		opacity = gOpacity.Sample(samLinear, input.tex).r;
-	}
+	
+    float3 Fresnel = float3(0, 0, 0);
+    float3 Distribute = float3(0, 0, 0);
+    float3 GeometryAttenuation = float3(0, 0, 0);
 
 	float4 position = gPosition.Sample(samLinear, input.tex);
 	float4 N = gNormal.Sample(samLinear, input.tex);
@@ -34,76 +32,64 @@ PS_OUTPUT main(VS_OUTPUT input)
 	float3 indirectlight = float3(0, 0, 0);
 
 	//View
-	float3 V = normalize(float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - position.xyz);
+	float3 V = float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - position;
 
 	//texture sampling
 	float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
-	float metallicValue = gMetalic.Sample(samLinear, input.tex).r; //quad에 텍스처를 샘플링해서 이상하게 나오는거였음
-	float roughnessValue = gRoughness.Sample(samLinear, input.tex).r;
-	float aoValue = gAO.Sample(samLinear, input.tex).r;
+    float opacity = (1 - useNEOL.z) + (useNEOL.z * gOpacity.Sample(samLinear, input.tex).r);	//투명도
+	float metallicValue = gMetalic.Sample(samLinear, input.tex).b; 
+    float roughnessValue = gRoughness.Sample(samLinear, input.tex).g;
+	
 	float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
 	float4 depthTemp = gDepth.Sample(samLinear, input.tex);
 	float3 Depth = float3(depthTemp.x, depthTemp.y, depthTemp.z);
 
+
+   float3 cubemap = gLightMap.Sample(samLinear, input.tex).rgb;
+	
+	//cube texture의 정보를 얻어온다
 	uint width, height, levels;
 	gRadiance.GetDimensions(0,width,height, levels);
-
+	
 	float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
 	float3 reflection = reflect(-V, N); //시선이 점에 들어가 반사되는 벡터를 통해 환경맵에서 어떤 값을 가져올지 확인
-	float3 radiance = gRadiance.SampleLevel(samLinear, reflection,roughnessValue * levels);
-
-	//수직 입사 시의 반사율 - 비금속이면 0.04 금속이면 metalic RGB 언리얼4는 이렇게 쓴다
-	float3 F0 = Fdielectric;
-	F0 = lerp(F0, albedoColor, metallicValue);
-
+	float3 radiance = gRadiance.SampleLevel(samLinear, reflection,roughnessValue * levels);	//거칠기에 따른 밉맵 적용
+	
 	if (isIBL.r)
 	{
-
-		indirectlight = CalcIBL(V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, irradiance, radiance);
+		//indirectlight = CalcIBL(V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, irradiance, radiance);
 	}
 	
     for (int i = 0; i < DirIndex; i++)
     {
-	    directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+        //directlight += CalcDir(array[i], V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Fresnel, Distribute, GeometryAttenuation);
+        directlight += CalcDir(array[i], V, N.xyz, albedoColor,roughnessValue, metallicValue, Fresnel, Distribute, GeometryAttenuation);
     }
     
     // Calculate Spot Light    
     for (int k = DirIndex; k < DirIndex + SpotIndex; k++)
     {
-	    directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+	    //directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
     }
     // Calculate Point Light
     for (int j = DirIndex + SpotIndex; j < DirIndex + SpotIndex + PointIndex; j++)
     {
-	    directlight += CalcPoint(array[j], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
+	    //directlight += CalcPoint(array[j], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
     
     }
 
-   //float2 uv = gLightMap.Sample(samLinear, input.tex).rg;
-
-   //indirectlight = pow(gLightMap.Sample(samLinear, input.tex), float3(gamma, gamma, gamma));
-
-   //ambient lighting (constant factor for simplicity)
-   float3 ambient = aoValue * albedoColor;
-
-   // directlight = indirectlight + directlight;
-
    result = directlight + indirectlight;
 
-   //float3 cubemap = pow(gLightMap.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
-   float3 cubemap = gLightMap.Sample(samLinear, input.tex).rgb;
    result = result + EmissiveValue + cubemap;
 
    // gamma correct
    result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
 
-   //output.Gbuffer = float4(result, 1);
 
     output.Gbuffer = float4(result, 1);
-    output.Fresnel = float4(1, 0, 0, 1);
-    output.Distribute = float4(0, 1, 0, 1);
-    output.Geometry= float4(0, 0, 1, 1);
-    output.NdotL= float4(1, 1, 0, 1);
+    output.Fresnel = float4(Fresnel.rgb, 1);
+    output.Distribute = float4(Distribute.rgb, 1);
+    output.GeometryAttenuation = float4(GeometryAttenuation, 1);
+    output.NdotL= float4(1, 0, 0, 1);
     return output;
-	//return float4(result, 1);
 }

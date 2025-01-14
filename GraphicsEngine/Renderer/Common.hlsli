@@ -147,7 +147,7 @@ struct Particle
 // LIGHT HELPER FUNCTIONS                    *
 //***********************************************
 
-
+//슐릭 근사 - 반사율 계산 함수
 float3 FresnelSchlick(float3 F0, float cosTheta)
 {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
@@ -243,44 +243,87 @@ float3 CalcIBL(float3 V, float3 N, float3 F0, float3 albedo, float roughness, fl
     return result;
 }
 
-float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue)
+float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughness, float metalic, out float3 Fresnel, out float3 Distribute, out float3 GeometryAttenuation)
 {
     float3 result = float3(0, 0, 0);
-
     float3 diffuse = float3(0, 0, 0);
     float3 specular = float3(0, 0, 0);
-
-    //표면점에서 광원으로의 벡터 
-    float3 L = -normalize(lightData.Direction); //directionlight는 모든 표면점에서 일정한 방향으로 들어오는 빛이므로 빛의 방향을 역으로 쓰자
-    float3 H = normalize(L + V);
-    float NdotL = max(dot(N, L), 0.0);
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotH = max(dot(N, H), 0.0);
-
-    float3 F = FresnelSchlick(F0, max(0.0, dot(H, V))); //최소값 F0 , 최대값은 1.0,1.0,1.0
-
+    
+    //Fresnel - 시선과 노말의 각도에 따른 반사율
+    float NdotV = max(0, dot(N, normalize(V)));
+    float3 F0 = Fdielectric;    //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
+    F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속 고유의 색상이된다
+    
+    float3 F = FresnelSchlick(F0, max(0, NdotV));   //슐릭근사
+    
     //Diffuse BRDF
-    //kD - diffuse 반사율, kS - fresnel 반사율 -> 에너지 보존 법칙에 의해 프레넬로 반사되는 빛의 양과 물체에 흡수되 표면 밑에서 산란해 반사되는 빛의 양은 1
-    float3 kD = float3(1.0, 1.0, 1.0) - F;//    +float3(0.4, 0.4, 0.4); // kS is equal to Fresnel
-    // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals have no diffuse light)
-    kD *= (1.0 - metalicValue);
+    float3 kS = F0; //fresnel 반사율
+    float3 kD = 1.0 - kS; //diffuse 반사율, 에너지 보존 법칙에 의해 kD + kS <= 1
     diffuse = kD * albedo / Pi;
-
-
+    
     //Specular BRDF
-
+    float3 L = normalize(-light.Direction); //표면에서 광원으로 가는 벡터
+    float NdotL = max(0, dot(N, L));
+    
+    float3 H = normalize(L + V);
+    
     float D = Calc_D(N, H, max(0.01, roughness));
     float G = Calc_G(N, V, L, max(0.01, roughness));
-
-    float3 n = metalicValue * (F * D * G); //분자
+    
+    float3 n = kS * (F * D * G); //분자
     float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
-
+    
     specular = n / d;
-
-    result = (diffuse + specular) * lightData.Intensity * lightData.Color * NdotL;
-
+    
+    result = (diffuse + specular) * float3(1,1,1) * NdotL;
+    
+    
+    //debug 값 출력
+    Fresnel = F / (4.0 * NdotV + 0.01);
+    Distribute.rgb = D / (4.0 * NdotV + 0.01);
+    GeometryAttenuation.rgb = G / (4.0 * NdotV + 0.01);
+    
     return result;
 }
+
+//float3 CalcDir(LightData lightData, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue)
+//{
+//    float3 result = float3(0, 0, 0);
+
+//    float3 diffuse = float3(0, 0, 0);
+//    float3 specular = float3(0, 0, 0);
+
+//    //표면점에서 광원으로의 벡터 
+//    float3 L = -normalize(lightData.Direction); //directionlight는 모든 표면점에서 일정한 방향으로 들어오는 빛이므로 빛의 방향을 역으로 쓰자
+//    float3 H = normalize(L + V);
+//    float NdotL = max(dot(N, L), 0.0);
+//    float NdotV = max(dot(N, V), 0.0);
+//    float NdotH = max(dot(N, H), 0.0);
+
+//    float3 F = FresnelSchlick(F0, max(0.0, dot(H, V))); //최소값 F0 , 최대값은 1.0,1.0,1.0
+
+//    //Diffuse BRDF
+//    //kD - diffuse 반사율, kS - fresnel 반사율 -> 에너지 보존 법칙에 의해 프레넬로 반사되는 빛의 양과 물체에 흡수되 표면 밑에서 산란해 반사되는 빛의 양은 1
+//    float3 kD = float3(1.0, 1.0, 1.0) - F;//    +float3(0.4, 0.4, 0.4); // kS is equal to Fresnel
+//    // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals have no diffuse light)
+//    kD *= (1.0 - metalicValue);
+//    diffuse = kD * albedo / Pi;
+
+
+//    //Specular BRDF
+
+//    float D = Calc_D(N, H, max(0.01, roughness));
+//    float G = Calc_G(N, V, L, max(0.01, roughness));
+
+//    float3 n = metalicValue * (F * D * G); //분자
+//    float3 d = 4.0 * NdotV * NdotL + 0.01; //분모 0으로 나누기 피하려고 + 0.01
+
+//    specular = n / d;
+
+//    result = (diffuse + specular) * lightData.Intensity * lightData.Color * NdotL;
+
+//    return result;
+//}
 
 float3 CalcPoint(LightData lightData, float4 pos, float3 V, float3 N, float3 F0, float3 albedo, float roughness, float metalicValue, float3 Depth)
 {
@@ -393,8 +436,4 @@ float3 CalcSpot(LightData lightData, float4 pos, float3 V, float3 N, float3 F0, 
     result += (specular + diffuse) * lightData.Color/*radiance 복사-(빛날)휘도*/ * max(dot(N, L), 0.0) * lightData.Intensity;
     return result;
 }
-
-//***********************************************
-// PARTICLE HELPER FUNCTIONS                    *
-//***********************************************
 

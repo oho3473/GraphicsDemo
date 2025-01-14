@@ -2,8 +2,20 @@ wasd : 카메라 이동
 우클릭 : 카메라 회전
 zx : 줌인/아웃
 qe : 카메라 수직 이동
+space : 카메라 원점 이동
+l shift : 카메라 속도 빠름
+l control : 카메라 속도 느림
 f1 : 디버그데이터 ON/OFF
 f2 : deferred geometry info ( Normal/Metalic/Roughness/Depth/Albedo)
 f3 : PBR info (Fresnel/Distribute/Geometry/NdotL)
 1 : pbrtest.fbx로 교체
 2 : monkey.fbx로 교체
+3 : vidiger.fbx로 교체
+
+o : 머테리얼 값 수정
+insert : metalic ++
+delete : metalic --
+home : roghness ++
+end : roughness --
+page up : albedo.rgb ++
+page down : albedo.rgb --

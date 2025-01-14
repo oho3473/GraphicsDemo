@@ -221,6 +221,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"TexelSize", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4X4>>(L"QuadPos", ConstantBufferType::Default);
+	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditMaterial", ConstantBufferType::Default);
 
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, (m_Camera.lock()->GetAddress()));
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, m_Transform.lock()->GetAddress());
@@ -230,6 +231,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, m_Transform.lock()->GetAddress());
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Material), 1, m_UsingMaterial.lock()->GetAddress());
 	m_Device.lock()->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, m_UsingLights.lock()->GetAddress());
+
 
 	ConvertDDS();
 }

@@ -1,5 +1,16 @@
 ///deferred rendering을 할때 offscreen buffer를 그려내는 shader
 
+cbuffer EditColor : register(b0)
+{
+    float4 color;
+}
+
+
+cbuffer EditMaterial : register(b1)
+{
+    float4 editMaterial; //useEdit,Metalic,Roughness
+};
+
 //물체를 그려낼때 어떤 texture를 사용하는가?
 cbuffer Material : register(b2)
 {
@@ -75,11 +86,22 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Depth = float4(1 - d, 1 - d, 1 - d, 1.0f);
     output.Albedo = input.color;
 
-    output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
-    output.Albedo.a = (useNEOL.w * gOpacity.Sample(samLinear, input.tex).r) + (1 - useNEOL.w);
     
-    output.Metalic.rgb = max(0.04, useAMRO.y * gMetalic.Sample(samLinear, input.tex).b);
-    output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
+    
+    if (editMaterial.x)
+    {
+        output.Albedo.rgb = editMaterial.w;
+        output.Metalic.rgb = max(0.04, editMaterial.y);
+        output.Roughness.rgb = max(0.04, editMaterial.z);
+    }
+    else
+    {
+        output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
+        output.Albedo.a = (useNEOL.w * gOpacity.Sample(samLinear, input.tex).r) + (1 - useNEOL.w);
+        output.Metalic.rgb = max(0.04, useAMRO.y * gMetalic.Sample(samLinear, input.tex).b);
+        output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
+    }
+    
     output.Emissive = gEmissive.Sample(samLinear, input.tex) * useNEOL.y;
 
     output.Normal = input.normal;

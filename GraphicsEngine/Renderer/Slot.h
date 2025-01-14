@@ -13,6 +13,7 @@ enum class Slot_B
 	LightArray,
 	MatrixPallete,
 	IBL,
+	EditMatreial,
 	End
 };
 

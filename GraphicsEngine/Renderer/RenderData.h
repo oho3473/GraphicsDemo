@@ -31,7 +31,7 @@ public:
 
 	//overdraw
 	bool useIBL = false;	//IBL 사용하나?
-	bool useEditMaterial = false;	//IBL 사용하나?
+	bool useEditMaterial = false;	//런타임에서 모델의 albedo, metalic,roghness 수정 flag
 
 	//애니메이션
 	float duration;
@@ -52,8 +52,7 @@ public:
 
 	//useEditMaterial
 	DirectX::XMFLOAT4 color;
-	DirectX::XMFLOAT4 metalic;
-	DirectX::XMFLOAT4 roughness;
+	DirectX::XMFLOAT4 metalicRoughness;	//x : useEditMaterial, y : Metalic, z : Roughness
 };
 
 namespace decal

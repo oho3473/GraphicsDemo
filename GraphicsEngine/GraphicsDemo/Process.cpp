@@ -75,6 +75,80 @@ void Process::Update()
 		testmodel->FBX = L"monkey.fbx";
 	}
 
+	if (InputManager::GetInstance()->IsKeyDown('3'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->FBX = L"vidiger.fbx";
+	}
+
+	if (InputManager::GetInstance()->IsKeyDown('O'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->useEditMaterial = !testmodel->useEditMaterial;
+		testmodel->metalicRoughness.x = static_cast<INT>(testmodel->useEditMaterial);
+
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_INSERT))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.y += m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.y > 1)
+		{
+			testmodel->metalicRoughness.y = 1;
+		}
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_DELETE))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.y -= m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.y < 0)
+		{
+			testmodel->metalicRoughness.y = 0;
+		}
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_HOME))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.z += m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.z > 1)
+		{
+			testmodel->metalicRoughness.z = 1;
+		}
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_END))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.z -= m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.z < 0)
+		{
+			testmodel->metalicRoughness.z = 0;
+		}
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_PRIOR))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.w += m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.w > 1)
+		{
+			testmodel->metalicRoughness.w = 1;
+		}
+	}
+
+	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_NEXT))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->metalicRoughness.w -= m_timeManager->DeltaTime();
+		if (testmodel->metalicRoughness.w < 0)
+		{
+			testmodel->metalicRoughness.w = 0;
+		}
+	}
+
 
 	if (InputManager::GetInstance()->IsKeyPress(VK_MBUTTON))
 	{
