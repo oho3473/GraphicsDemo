@@ -2,24 +2,24 @@
 
 cbuffer EditColor : register(b0)
 {
-    float4 color;
+    float4 editAlbedo; //x : useEditAlbedo, y : R, z : G, w : B
 }
 
 
 cbuffer EditMaterial : register(b1)
 {
-    float4 editMaterial; //useEdit,Metalic,Roughness
+    float4 editMaterial; //useEditMetalic, useEditRoughness ,Metalic,Roughness
 };
 
 //물체를 그려낼때 어떤 texture를 사용하는가?
 cbuffer Material : register(b2)
 {
-    float4 useAMRO;    //Albedo, Metalic, Roughness, AO 
+    float4 useAMRO; //Albedo, Metalic, Roughness, AO 
     float4 useNEOL; //normal, Emissive, Opacity, LightMap
     
     //외부에서 임의로 지정한 값을 사용하기위한 변수
-    float4 albedo;  
-    float metalness;    
+    float4 albedo;
+    float metalness;
     float roughness;
     float ao; // Ambient Occlusion
     float pad;
@@ -90,18 +90,31 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     
     if (editMaterial.x)
     {
-        //output.Albedo.rgb = editMaterial.w;
-        output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
-        output.Metalic.rgb = max(0.04, editMaterial.y);
-        output.Roughness.rgb = max(0.04, editMaterial.z);
+        output.Metalic.rgb = max(0.04, editMaterial.z);
+    }
+    else
+    {
+        output.Metalic.rgb = max(0.04, useAMRO.y * gMetalic.Sample(samLinear, input.tex).b);
+    }
+    
+    if (editMaterial.y)
+    {
+        output.Roughness.rgb = max(0.04, editMaterial.w);
+    }
+    else
+    {
+        output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
+    }
+    
+    if(editAlbedo.x)
+    {
+        output.Albedo.xyz = editAlbedo.yzw;
     }
     else
     {
         output.Albedo = (useAMRO.x * gAlbedo.Sample(samLinear, input.tex)) + ((1 - useAMRO.x) * input.color);
-        output.Albedo.a = (useNEOL.w * gOpacity.Sample(samLinear, input.tex).r) + (1 - useNEOL.w);
-        output.Metalic.rgb = max(0.04, useAMRO.y * gMetalic.Sample(samLinear, input.tex).b);
-        output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
     }
+    output.Albedo.a = (useNEOL.w * gOpacity.Sample(samLinear, input.tex).r) + (1 - useNEOL.w);
     
     output.Emissive = gEmissive.Sample(samLinear, input.tex) * useNEOL.y;
 

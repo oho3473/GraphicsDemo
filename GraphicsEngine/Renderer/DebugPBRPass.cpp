@@ -77,6 +77,11 @@ void DebugPBRPass::Render()
 		Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 	}
 
+	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useEditMaterial = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditMaterial").lock();
+	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> editAlbedo = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditAlbedo").lock();
+	Device->Context()->PSSetConstantBuffers(5, 1, editAlbedo->GetAddress());
+	Device->Context()->PSSetConstantBuffers(6, 1, useEditMaterial->GetAddress());
+
 
 	for (const auto& curData : m_RenderList)
 	{
@@ -169,6 +174,9 @@ void DebugPBRPass::Render()
 						Device->BindMaterialSRV(curMaterial);
 					}
 				}
+
+				useEditMaterial->Update(curData->metalicRoughness);
+				editAlbedo->Update(curData->albedo);
 
 				Device->Context()->DrawIndexed(mesh->IBCount(), 0, 0);
 			}

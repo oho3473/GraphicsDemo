@@ -12,7 +12,10 @@ f3 : PBR info (Fresnel/Distribute/Geometry/NdotL)
 2 : monkey.fbx로 교체
 3 : vidiger.fbx로 교체
 
-o : 머테리얼 값 수정
+o : metalic 값 수정 On/Off
+p : Roughness 값 수정 On/Off
+[ : Albedo 값 수정 On/Off
+
 insert : metalic ++
 delete : metalic --
 home : roghness ++

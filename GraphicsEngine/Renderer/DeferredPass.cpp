@@ -89,7 +89,7 @@ void DeferredPass::Render()
 	std::shared_ptr<ConstantBuffer<LightArray>> light = m_ResourceManager.lock()->Get<ConstantBuffer<LightArray>>(L"LightArray").lock();
 
 	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useEditMaterial = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditMaterial").lock();
-	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> color = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"Color").lock();
+	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> editAlbedo = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditAlbedo").lock();
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 
@@ -102,7 +102,7 @@ void DeferredPass::Render()
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 
 	Device->Context()->PSSetConstantBuffers(1, 1, useEditMaterial->GetAddress());
-	Device->Context()->PSSetConstantBuffers(0, 1, color->GetAddress());
+	Device->Context()->PSSetConstantBuffers(0, 1, editAlbedo->GetAddress());
 
 
 
@@ -222,7 +222,7 @@ void DeferredPass::Render()
 				}
 
 				useEditMaterial->Update(curData->metalicRoughness);
-				color->Update(curData->color);
+				editAlbedo->Update(curData->albedo);
 
 				Device->Context()->DrawIndexed(mesh->IBCount(), 0, 0);
 			}

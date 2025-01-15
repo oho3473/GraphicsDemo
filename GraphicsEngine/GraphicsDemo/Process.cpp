@@ -90,68 +90,114 @@ void Process::Update()
 	if (InputManager::GetInstance()->IsKeyDown('O'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->useEditMaterial = !testmodel->useEditMaterial;
-		testmodel->metalicRoughness.x = static_cast<INT>(testmodel->useEditMaterial);
+		testmodel->useEditMetalic = !testmodel->useEditMetalic;
+		testmodel->metalicRoughness.x = static_cast<INT>(testmodel->useEditMetalic);
 
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_INSERT))
+	if (InputManager::GetInstance()->IsKeyDown('P'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.y += m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.y > 1)
+		testmodel->useEditRoughness = !testmodel->useEditRoughness;
+		testmodel->metalicRoughness.y = static_cast<INT>(testmodel->useEditRoughness);
+
+	}
+
+	// [{
+	if (InputManager::GetInstance()->IsKeyDown(VK_OEM_4))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->useEditAlbedo = !testmodel->useEditAlbedo;
+		testmodel->albedo.x = static_cast<INT>(testmodel->useEditAlbedo);
+	}
+
+	if (InputManager::GetInstance()->IsKeyPress(VK_INSERT))
+	{
+		if (m_models[0]->useEditMetalic)
 		{
-			testmodel->metalicRoughness.y = 1;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->metalicRoughness.z += m_timeManager->DeltaTime();
+			if (testmodel->metalicRoughness.z > 1)
+			{
+				testmodel->metalicRoughness.z = 1;
+			}
 		}
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_DELETE))
+	if (InputManager::GetInstance()->IsKeyPress(VK_DELETE))
 	{
-		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.y -= m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.y < 0)
+		if (m_models[0]->useEditMetalic)
 		{
-			testmodel->metalicRoughness.y = 0;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->metalicRoughness.z -= m_timeManager->DeltaTime();
+			if (testmodel->metalicRoughness.z < 0)
+			{
+				testmodel->metalicRoughness.z = 0;
+			}
 		}
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_HOME))
+	if (InputManager::GetInstance()->IsKeyPress(VK_HOME))
 	{
-		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.z += m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.z > 1)
+		if (m_models[0]->useEditRoughness)
 		{
-			testmodel->metalicRoughness.z = 1;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->metalicRoughness.w += m_timeManager->DeltaTime();
+			if (testmodel->metalicRoughness.w > 1)
+			{
+				testmodel->metalicRoughness.w = 1;
+			}
 		}
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_END))
+	if (InputManager::GetInstance()->IsKeyPress(VK_END))
 	{
-		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.z -= m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.z < 0)
+		if (m_models[0]->useEditMetalic)
 		{
-			testmodel->metalicRoughness.z = 0;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->metalicRoughness.w -= m_timeManager->DeltaTime();
+			if (testmodel->metalicRoughness.w < 0)
+			{
+				testmodel->metalicRoughness.w = 0;
+			}
 		}
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_PRIOR))
+	
+
+	//page up
+	if (InputManager::GetInstance()->IsKeyPress(VK_PRIOR))
 	{
-		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.w += m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.w > 1)
+		if (m_models[0]->useEditAlbedo)
 		{
-			testmodel->metalicRoughness.w = 1;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->albedo.y += m_timeManager->DeltaTime();
+			testmodel->albedo.z += m_timeManager->DeltaTime();
+			testmodel->albedo.w += m_timeManager->DeltaTime();
+			if (testmodel->albedo.y > 1)
+			{
+				testmodel->albedo.y = 1;
+				testmodel->albedo.z = 1;
+				testmodel->albedo.w = 1;
+			}
 		}
 	}
 
-	if (m_models[0]->useEditMaterial && InputManager::GetInstance()->IsKeyPress(VK_NEXT))
+	//page down
+	if (InputManager::GetInstance()->IsKeyPress(VK_NEXT))
 	{
-		std::shared_ptr<RenderData> testmodel = m_models[0];
-		testmodel->metalicRoughness.w -= m_timeManager->DeltaTime();
-		if (testmodel->metalicRoughness.w < 0)
+		if (m_models[0]->useEditAlbedo)
 		{
-			testmodel->metalicRoughness.w = 0;
+			std::shared_ptr<RenderData> testmodel = m_models[0];
+			testmodel->albedo.y -= m_timeManager->DeltaTime();
+			testmodel->albedo.z -= m_timeManager->DeltaTime();
+			testmodel->albedo.w -= m_timeManager->DeltaTime();
+			if (testmodel->albedo.y < 0)
+			{
+				testmodel->albedo.y = 0;
+				testmodel->albedo.z = 0;
+				testmodel->albedo.w = 0;
+			}
 		}
 	}
 
@@ -181,7 +227,7 @@ void Process::Update()
 	ui::TextInfo camerapos = m_UIs[1];
 	camerapos.Text = std::format(L"카메라 위치 : {:.1f}, {:.1f}, {:.1f}", (double)pos.x, (double)pos.y, (double)pos.z);
 	m_graphicsEngine->UpdateTextObject(camerapos.uid, camerapos);
-	m_graphicsEngine->SetCamera(view,proj,ortho);
+	m_graphicsEngine->SetCamera(view, proj, ortho);
 
 	///디버그 드로우
 #pragma region GridAxis
@@ -259,7 +305,7 @@ void Process::SetScene()
 	testmodel->tiling = { 0,0 };
 	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
 	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
-	testmodel->color = DirectX::XMFLOAT4{ 0,0,0,0 };
+	testmodel->albedo = DirectX::XMFLOAT4{ 0,0,0,0 };
 	testmodel->preAni = 0;
 	testmodel->curAni = 0;
 	testmodel->duration = 0;

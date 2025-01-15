@@ -1,5 +1,16 @@
 #include "Common.hlsli"
 
+cbuffer EditColor : register(b5)
+{
+    float4 editAlbedo; //x : useEditAlbedo, y : R, z : G, w : B
+}
+
+
+cbuffer EditMaterial : register(b6)
+{
+    float4 editMaterial; //useEditMetalic, useEditRoughness ,Metalic,Roughness
+};
+
 struct PS_OUTPUT
 {
     float4 Fresnel : SV_Target0;
@@ -33,11 +44,40 @@ PS_OUTPUT main(VS_OUTPUT input)
     float3 Specular = float3(0, 0, 0);
     float3 Diffuse = float3(0, 0, 0);
     
+    float metallicValue;
+    float roughnessValue;
+    float3 albedoColor;
+    
 	//texture sampling
-    float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
+    if(editAlbedo.x)
+    {
+        albedoColor.rgb = editAlbedo.yzw;
+    }
+    else
+    {
+        albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
+    }
+    
     float opacity = (1 - useNEOL.z) + (useNEOL.z * gOpacity.Sample(samLinear, input.tex).r); //투명도
-    float metallicValue = gMetalic.Sample(samLinear, input.tex).b;
-    float roughnessValue = gRoughness.Sample(samLinear, input.tex).g;
+    
+    if(editMaterial.x)
+    {
+        metallicValue = max(0.04, editMaterial.z);
+    }
+    else
+    {
+        metallicValue = max(0.04, gMetalic.Sample(samLinear, input.tex).b);
+    }
+    
+    if (editMaterial.y)
+    {
+        roughnessValue = editMaterial.w;
+    }
+    else
+    {
+        roughnessValue = gRoughness.Sample(samLinear, input.tex).g;
+    }
+    
     float4 position = gPosition.Sample(samLinear, input.tex);
     float4 N = input.normal;
     if (useNEOL.x >= 1)
