@@ -39,6 +39,8 @@ public:
 	virtual void OnResize(HWND hwnd, bool isFullScreen) abstract;
 
 	virtual void DebugRenderONOFF(bool isRender) abstract;
+	virtual void IBLONOFF(bool isRender) abstract;
+
 	virtual void ChangeDebugQuad(const debug::quadstate state) abstract;
 
 	virtual void EraseObject(uint32_t EntityID) abstract;
@@ -46,7 +48,6 @@ public:
 	virtual bool AddRenderModel(std::shared_ptr<RenderData> data) abstract;
 
 	virtual void SetCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, const DirectX::SimpleMath::Matrix& orthoProj) abstract;
-	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro, int index) abstract;
 
 	virtual void AddLight(uint32_t EntityID, LightType kind, LightData data) abstract;
 	virtual void EraseLight(uint32_t EntityID, LightType kind) abstract;

@@ -87,6 +87,14 @@ void Process::Update()
 		testmodel->FBX = L"pureMetal.fbx";
 	}
 
+	if (InputManager::GetInstance()->IsKeyDown('I'))
+	{
+		std::shared_ptr<RenderData> testmodel = m_models[0];
+		testmodel->useIBL = !testmodel->useIBL;
+		IBLOnOff = !IBLOnOff;
+		m_graphicsEngine->IBLONOFF(IBLOnOff);
+	}
+
 	if (InputManager::GetInstance()->IsKeyDown('O'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];

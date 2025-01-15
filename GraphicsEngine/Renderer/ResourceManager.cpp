@@ -225,6 +225,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<ConstantBuffer<DirectX::XMFLOAT4X4>>(L"QuadPos", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditMaterial", ConstantBufferType::Default);
 	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditAlbedo", ConstantBufferType::Default);
+	Create<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL", ConstantBufferType::Default);
 
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, (m_Camera.lock()->GetAddress()));
 	m_Device.lock()->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, m_Transform.lock()->GetAddress());

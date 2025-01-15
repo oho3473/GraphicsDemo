@@ -55,8 +55,8 @@ public:
 	virtual void EraseLight(uint32_t EntityID, LightType kind) override;
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 	virtual const double GetDuration(std::wstring name, int index) override;
-	virtual void SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro,int index) override;
 	virtual void ChangeDebugQuad(const debug::quadstate state)override;
+	virtual void IBLONOFF(bool isRender) override;
 
 
 	virtual void DrawSphere(const debug::SphereInfo& info)override;

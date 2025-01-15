@@ -1,4 +1,3 @@
-
 #include"Common.hlsli"
 
 //TEXTURE
@@ -81,13 +80,13 @@ float4 main(VS_OUTPUT input) : SV_Target
     // Calculate Spot Light    
     for (int k = DirIndex; k < DirIndex + SpotIndex; k++)
     {
-	    //directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue);
+	    //directlight += CalcSpot(array[k], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
     }
+    
     // Calculate Point Light
     for (int j = DirIndex + SpotIndex; j < DirIndex + SpotIndex + PointIndex; j++)
     {
-	    //directlight += CalcPoint(array[j], position, V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, Depth);
-    
+        directlight += CalcPoint(array[j], position, V, N.xyz, albedoColor, roughnessValue, metallicValue, Fresnel, Distribute, GeometryAttenuation, Diffuse, Specular);
     }
 
     result = directlight + indirectlight;

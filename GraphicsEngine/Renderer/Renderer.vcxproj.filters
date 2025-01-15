@@ -176,9 +176,6 @@
     <ClInclude Include="DebugPass.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredGeometryPass.h">
-      <Filter>RenderPass\header</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredInstancing.h">
       <Filter>RenderPass\header</Filter>
     </ClInclude>
@@ -316,9 +313,6 @@
     <ClCompile Include="DebugPass.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredGeometryPass.cpp">
-      <Filter>RenderPass\source</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredInstancing.cpp">
       <Filter>RenderPass\source</Filter>
     </ClCompile>
@@ -385,9 +379,6 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BasePS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="MeshDeferredGeometryPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="MeshDeferredLightPS.hlsl">

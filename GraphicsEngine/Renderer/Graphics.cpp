@@ -12,7 +12,7 @@
 #include "ModelData.h"
 #include "Mesh.h"
 #include "Animation.h"
-
+#include "ConstantBuffer.h"
 
 Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
 , m_wndSize()
@@ -341,19 +341,15 @@ const double Graphics::GetDuration(std::wstring name, int index)
 	return 0;
 }
 
-void Graphics::SetCubeCamera(DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix pro, int index)
-{
-	if (index >= 0 && index < 6)
-	{
-		m_CubeMapCameras[index].proj = pro;
-		m_CubeMapCameras[index].view = view;
-		m_CubeMapCameras[index].viewInverse = view.Invert();
-	}
-}
-
 void Graphics::ChangeDebugQuad(const debug::quadstate state)
 {
 	m_PassManager->ChageDebugQuad(state);
+}
+
+void Graphics::IBLONOFF(bool isRender)
+{
+	auto useIBL = m_ResourceManager->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL");
+	useIBL.lock()->Update(DirectX::XMFLOAT4(static_cast<int>(isRender),0,0,0 ));
 }
 
 void Graphics::DrawSphere(const debug::SphereInfo& info)
