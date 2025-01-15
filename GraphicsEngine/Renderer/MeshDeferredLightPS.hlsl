@@ -65,6 +65,7 @@ float4 main(VS_OUTPUT input) : SV_Target
     float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
     float3 reflection = reflect(-V, N); //시선이 점에 들어가 반사되는 벡터를 통해 환경맵에서 어떤 값을 가져올지 확인
     float3 radiance = gRadiance.SampleLevel(samLinear, reflection, roughnessValue * levels); //거칠기에 따른 밉맵 적용
+    float2 DF = gLUT.Sample(samLinear, float2(max(0,dot(N, normalize(V))), roughness));
 	
     if (isIBL.r)
     {
