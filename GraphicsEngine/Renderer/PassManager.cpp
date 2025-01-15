@@ -22,6 +22,7 @@
 #include "OutputMain.h"
 #include "UIPass.h"
 #include "DebugOffScreen.h"
+#include "DebugPBRPass.h"
 #include "CubeMapPass.h"
 #pragma endregion Pass
 
@@ -97,6 +98,10 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 	m_DebugOffScreen = std::make_shared<DebugOffScreen>(m_Device.lock(), m_ResourceManager.lock());
 
 	m_CubeMap = std::make_shared<CubeMapPass>(m_Device.lock(), m_ResourceManager.lock());
+
+	m_DebugPBR = std::make_shared<DebugPBRPass>();
+	m_DebugPBR->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
+	m_OffScreenPasses.push_back(m_DebugPBR);
 }
 
 void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling)
@@ -187,38 +192,4 @@ void PassManager::SetDebugDraw(bool on_off)
 void PassManager::SetCubeCamera(const CameraData* datas)
 {
 	m_CubeMap->SetCamera(datas);
-}
-
-void PassManager::DrawIMGUI()
-{
-	std::shared_ptr<Device> Device = m_Device.lock();
-	std::shared_ptr<ResourceManager> resourcemanager = m_ResourceManager.lock();
-	std::shared_ptr<Sampler> linear = resourcemanager->Get<Sampler>(L"LinearWrap").lock();
-	std::shared_ptr<VertexBuffer> vb = resourcemanager->Get<VertexBuffer>(L"Quad_VB").lock();
-	std::shared_ptr<IndexBuffer> ib = resourcemanager->Get<IndexBuffer>(L"Quad_IB").lock();
-	std::shared_ptr<PixelShader> ps = resourcemanager->Get<PixelShader>(L"Quad").lock();
-	std::shared_ptr<VertexShader> vs = resourcemanager->Get<VertexShader>(L"Quad").lock();
-	std::shared_ptr<ShaderResourceView> gui = resourcemanager->Get<ShaderResourceView>(L"GBuffer").lock();
-	std::shared_ptr<RenderTargetView> rtv = resourcemanager->Get<RenderTargetView>(L"RTV_Main").lock();
-	std::shared_ptr<DepthStencilView> dsv = resourcemanager->Get<DepthStencilView>(L"DSV_Main").lock();
-
-	Device->UnBindSRV();
-
-	Device->Context()->IASetInputLayout(vs->InputLayout());
-	Device->Context()->VSSetShader(vs->GetVS(), nullptr, 0);
-	Device->Context()->PSSetShader(ps->GetPS(), nullptr, 0);
-
-	Device->Context()->RSSetState(resourcemanager->Get<RenderState>(L"Solid").lock()->Get());
-
-	m_Device.lock()->Context()->IASetVertexBuffers(0, 1, vb->GetAddress(), vb->Size(), vb->Offset());
-	m_Device.lock()->Context()->IASetIndexBuffer(ib->Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	m_Device.lock()->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, gui->GetAddress());
-
-	Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
-
-	Device->Context()->OMSetRenderTargets(1, rtv->GetAddress(), nullptr);
-	Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
 }

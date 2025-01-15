@@ -145,7 +145,7 @@ void Graphics::BeginRender()
 
 	for (int i = 0; i < m_PBRRTVs.size(); i++)
 	{
-		m_Device->Context()->ClearRenderTargetView(m_PBRRTVs[i].lock()->Get(), gray);
+		m_Device->BeginRender(m_PBRRTVs[i].lock()->Get(), m_DSVs[2].lock()->Get(), gray);
 	}
 }
 
@@ -187,6 +187,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Main"));
 	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_Deferred"));
+	m_DSVs.push_back(m_ResourceManager->Get<DepthStencilView>(L"DSV_DebugPBR"));
 
 
 	m_PBRRTVs.push_back(m_ResourceManager->Get<RenderTargetView>(L"Fresnel"));

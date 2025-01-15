@@ -30,14 +30,9 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_EmissiveRTV = resourceManager->Get<RenderTargetView>(L"Emissive").lock();
 	m_LightMapRTV = resourceManager->Get<RenderTargetView>(L"CubeMapSRV").lock();
 
-	m_StaticMeshVS = resourceManager->Get<VertexShader>(L"Base").lock();
-	m_StaticMeshVS = resourceManager->Get<VertexShader>(L"Skinning").lock();
-	m_GeometryPS = resourceManager->Get<PixelShader>(L"MeshDeferredGeometry").lock();
-
 	m_QuadVB = resourceManager->Get<VertexBuffer>(L"Quad_VB");
 	m_QuadIB = resourceManager->Get<IndexBuffer>(L"Quad_IB");
 	m_QuadVS = resourceManager->Get<VertexShader>(L"Quad");
-	m_QuadPS = resourceManager->Get<PixelShader>(L"Quad");
 
 	m_Deferred = resourceManager->Get<PixelShader>(L"MeshDeferredLight");
 
@@ -45,15 +40,13 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_NormalSRV = resourceManager->Get<ShaderResourceView>(L"Normal").lock();
 	m_PositionSRV = resourceManager->Get<ShaderResourceView>(L"Position").lock();
 	m_DepthSRV = resourceManager->Get<ShaderResourceView>(L"Depth").lock();
-	m_MetalicSRV = resourceManager->Get<ShaderResourceView>(L"Metalic_Roughness").lock();
+	m_MetalicSRV = resourceManager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
 	m_GBufferSRV = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
 	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 
-	m_SkeletalMeshVS = resourceManager->Get<VertexShader>(L"Skinning");
-	m_StaticMeshVS = resourceManager->Get<VertexShader>(L"Base");
 	m_MeshPS = resourceManager->Get<PixelShader>(L"MeshDeferredGeometry");
 }
 
@@ -117,7 +110,7 @@ void DeferredLightPass::Render()
 
 		Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
 
-		Device->Context()->OMSetRenderTargets(m_PBRs.size(), m_PBRs.data(), nullptr);
+		Device->Context()->OMSetRenderTargets(1, m_GbufferRTV.lock()->GetAddress(), nullptr);
 
 		Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
 	}

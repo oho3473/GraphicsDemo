@@ -18,12 +18,10 @@ struct Quad
 
 VS_OUTPUT main(Quad input)
 {
-    VS_OUTPUT test;
+    VS_OUTPUT output;
 
-    test.pos = input.pos;
-    //test.pos = input.pos;
-    //test.posWorld = input.pos;
-    test.tex = input.tex;
+    output.pos = input.pos;
+    output.tex = input.tex;
 
-    return test;
+    return output;
 }

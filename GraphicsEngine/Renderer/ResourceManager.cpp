@@ -150,6 +150,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<PixelShader>(L"DebugQuad", L"DebugQuadPS", "main");
 	Create<PixelShader>(L"InstancingPS", L"InstancingPS", "main");
 	Create<PixelShader>(L"CubeMapPS", L"CubeMapPS", "main");
+	Create<PixelShader>(L"DebugPBR", L"DebugPBR", "main");
 
 	// ----------------------------------------------------------------------------------------
 	// Vertex Buffer
@@ -301,6 +302,7 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		//Create<DepthStencilView>(L"DSV_Main", texDesc);
 		Create<DepthStencilView>(L"DSV_Main", DepthStencilViewType::Default);
 		Create<DepthStencilView>(L"DSV_Deferred", texDesc);
+		Create<DepthStencilView>(L"DSV_DebugPBR", texDesc);
 	}
 }
 

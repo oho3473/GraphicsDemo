@@ -1,5 +1,8 @@
 #include "Common.hlsli"
 
+Texture2D gAlbedo : register(t0);
+SamplerState samLinear : register(s0);
+
 
 cbuffer Color : register(b2)
 {

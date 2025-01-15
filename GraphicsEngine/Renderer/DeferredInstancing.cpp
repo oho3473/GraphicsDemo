@@ -58,7 +58,6 @@ void DeferredInstancing::Initialize(const std::shared_ptr<Device>& device, const
 	m_QuadVB = resourceManager->Get<VertexBuffer>(L"Quad_VB");
 	m_QuadIB = resourceManager->Get<IndexBuffer>(L"Quad_IB");
 	m_QuadVS = resourceManager->Get<VertexShader>(L"Quad");
-	m_QuadPS = resourceManager->Get<PixelShader>(L"Quad");
 
 	m_SkinnePS = resourceManager->Get<PixelShader>(L"InstancingSkinnedPS").lock();
 	m_Deferred = resourceManager->Get<PixelShader>(L"MeshDeferredLight");

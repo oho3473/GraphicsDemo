@@ -1,26 +1,35 @@
 
 #include"Common.hlsli"
 
+//TEXTURE
+Texture2D gAlbedo : register(t0);
+Texture2D gNormal : register(t1);
+Texture2D gPosition : register(t2);
+Texture2D gDepth : register(t3);
+Texture2D gMetalic : register(t4);
+Texture2D gRoughness : register(t5);
+Texture2D gAO : register(t6);
+Texture2D gEmissive : register(t7);
+
+Texture2D gOpacity : register(t8);
+Texture2D gLightMap : register(t9);
+Texture2D gGBuffer : register(t10);
+TextureCube gIrradiance : register(t11); //
+TextureCube gRadiance : register(t12); //
+Texture2D gLUT : register(t13); //
+
+SamplerState samLinear : register(s0);
+
+
 cbuffer useIBL : register(b5)
 {
     float4 isIBL;
 }
 
 
-struct PS_OUTPUT
-{
-    float4 Gbuffer : SV_Target0; //최종 연산 결과
-    float4 Fresnel : SV_Target1;
-    float4 Distribute : SV_Target2;
-    float4 GeometryAttenuation : SV_Target3;
-    float4 Specular : SV_Target4;
-    float4 Diffuse : SV_Target5;
-};
 
-PS_OUTPUT main(VS_OUTPUT input)
+float4 main(VS_OUTPUT input) : SV_Target
 {
-    PS_OUTPUT output;
-	
     float3 Fresnel = float3(0, 0, 0);
     float3 Distribute = float3(0, 0, 0);
     float3 GeometryAttenuation = float3(0, 0, 0);
@@ -89,12 +98,7 @@ PS_OUTPUT main(VS_OUTPUT input)
     result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
 
 
-    output.Gbuffer = float4(result, 1);
-    output.Fresnel = float4(Fresnel.rgb, 1);
-    output.Distribute = float4(Distribute.rgb, 1);
-    output.GeometryAttenuation = float4(GeometryAttenuation, 1);
-    output.Specular = float4(Specular, 1);
-    output.Diffuse = float4(Diffuse, 1);
+   
 	
-    return output;
+    return float4(result,1);
 }

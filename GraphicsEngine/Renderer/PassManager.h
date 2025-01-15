@@ -22,6 +22,7 @@ class DebugOffScreen;
 class DebugPass;
 class DeferredPass;
 class CubeMapPass;
+class DebugPBRPass;
 #pragma region Pass
 
 #pragma region Manager
@@ -47,7 +48,6 @@ public:
 	void SetCubeCamera(const CameraData* datas);
 
 private:
-	void DrawIMGUI();
 
 private:
 	std::vector<std::shared_ptr<RenderPass>> m_OffScreenPasses;	//±âº» depth, normal... offscreen
@@ -63,6 +63,7 @@ private:
 	std::shared_ptr<DeferredLightPass> m_DeferredLight;
 	std::shared_ptr<OutputMain> m_MainOutput;
 	std::shared_ptr<DebugOffScreen> m_DebugOffScreen;
+	std::shared_ptr<DebugPBRPass> m_DebugPBR;
 	std::shared_ptr<CubeMapPass> m_CubeMap;
 
 private:

@@ -1,5 +1,25 @@
 #include "Common.hlsli"
 
+//TEXTURE
+Texture2D gAlbedo : register(t0);
+Texture2D gNormal : register(t1);
+Texture2D gPosition : register(t2);
+Texture2D gDepth : register(t3);
+Texture2D gMetalic : register(t4);
+Texture2D gRoughness : register(t5);
+Texture2D gAO : register(t6);
+Texture2D gEmissive : register(t7);
+
+Texture2D gOpacity : register(t8);
+Texture2D gLightMap : register(t9);
+Texture2D gGBuffer : register(t10);
+TextureCube gIrradiance : register(t11); //
+TextureCube gRadiance : register(t12); //
+Texture2D gLUT : register(t13); //
+
+SamplerState samLinear : register(s0);
+
+
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
     float3 albedoColor;

@@ -72,7 +72,7 @@ void DebugOffScreen::Render()
 
 				Device->Context()->VSSetConstantBuffers(0, 1, m_QuadPos.lock()->GetAddress());
 
-				Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_SRVs[i].lock()->GetAddress());
+				Device->Context()->PSSetShaderResources(0, 1, m_SRVs[i].lock()->GetAddress());
 
 				Device->Context()->DrawIndexed(DebugQuad::Index::count, 0, 0);
 			}
@@ -89,7 +89,7 @@ void DebugOffScreen::Render()
 
 				Device->Context()->VSSetConstantBuffers(0, 1, m_QuadPos.lock()->GetAddress());
 
-				Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::GBuffer), 1, m_PBRs[i].lock()->GetAddress());
+				Device->Context()->PSSetShaderResources(0, 1, m_PBRs[i].lock()->GetAddress());
 
 				Device->Context()->DrawIndexed(DebugQuad::Index::count, 0, 0);
 			}

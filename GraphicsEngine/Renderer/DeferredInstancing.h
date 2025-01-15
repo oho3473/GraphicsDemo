@@ -65,7 +65,6 @@ private:
 	std::weak_ptr<VertexBuffer> m_QuadVB;
 	std::weak_ptr<IndexBuffer> m_QuadIB;
 	std::weak_ptr<VertexShader> m_QuadVS;
-	std::weak_ptr<PixelShader> m_QuadPS;
 	std::weak_ptr<PixelShader> m_Deferred;
 
 	//GBuffer Result

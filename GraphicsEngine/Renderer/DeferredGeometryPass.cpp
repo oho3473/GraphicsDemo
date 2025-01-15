@@ -38,24 +38,6 @@ void DeferredGeometryPass::Initialize(const std::shared_ptr<Device>& device,
 	m_TransformCB = m_ResourceManager.lock()->Get<ConstantBuffer<TransformData>>(L"Transform").lock();
 	m_SkeletalCB = m_ResourceManager.lock()->Get<ConstantBuffer<MatrixPallete>>(L"MatrixPallete").lock();
 	m_CameraCB = m_ResourceManager.lock()->Get<ConstantBuffer<CameraData>>(L"Camera");
-
-#pragma region TEST
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = TRUE;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-	depthStencilDesc.StencilEnable = FALSE;
-
-	m_Device.lock()->Get()->CreateDepthStencilState(&depthStencilDesc, &m_DSS_Null);
-
-	D3D11_BLEND_DESC blendDesc = {};
-	blendDesc.RenderTarget[0].BlendEnable = FALSE;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	m_Device.lock()->Get()->CreateBlendState(&blendDesc, &m_BS_Null);
-
-#pragma endregion TEST
-
 }
 
 void DeferredGeometryPass::Render(const std::shared_ptr<RenderData>& model)
