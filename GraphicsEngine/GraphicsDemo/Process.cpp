@@ -160,7 +160,7 @@ void Process::Update()
 
 	if (InputManager::GetInstance()->IsKeyPress(VK_END))
 	{
-		if (m_models[0]->useEditMetalic)
+		if (m_models[0]->useEditRoughness)
 		{
 			std::shared_ptr<RenderData> testmodel = m_models[0];
 			testmodel->metalicRoughness.w -= m_timeManager->DeltaTime();
@@ -306,7 +306,8 @@ void Process::SetScene()
 	testmodel->EntityID = 1;
 	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
-	testmodel->world._42 = 1;
+	testmodel->world._42 = 0;
+	testmodel->world._43 = -1;
 	testmodel->offset = { 0,0 };
 	testmodel->lightmapindex = 0;
 	testmodel->scale = 1;

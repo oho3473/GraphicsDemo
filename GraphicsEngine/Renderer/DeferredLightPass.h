@@ -57,10 +57,6 @@ private:
 	std::weak_ptr<VertexShader> m_QuadVS;
 	std::weak_ptr<PixelShader> m_Deferred;
 
-	//GBuffer Result
-	std::weak_ptr<ShaderResourceView> m_GBufferSRV;
-
-
 	std::vector<ID3D11RenderTargetView*> m_PBRs;
 
 };

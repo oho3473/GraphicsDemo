@@ -5,6 +5,8 @@
 #include "RenderTargetView.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "DepthStencilState.h"
+
 
 #include "ModelData.h"
 #include "Mesh.h"
@@ -59,6 +61,7 @@ void DeferredPass::Render()
 {
 	std::shared_ptr<Device> Device = m_Device.lock();
 	std::shared_ptr<Sampler> linear = m_ResourceManager.lock()->Get<Sampler>(L"LinearWrap").lock();
+	std::shared_ptr<DepthStencilState> depthstencilstate = m_ResourceManager.lock()->Get<DepthStencilState>(L"AbleDepthStencil").lock();
 
 	// Bind Common Resources
 	Device->UnBindSRV();
@@ -75,7 +78,7 @@ void DeferredPass::Render()
 	RTVs.push_back(m_LightMapRTV.lock()->Get());
 	RTVs.push_back(m_EmissiveRTV.lock()->Get());
 
-
+	Device->Context()->OMSetDepthStencilState(depthstencilstate->GetState().Get(),1);
 	Device->Context()->OMSetRenderTargets(GBufferSize, RTVs.data(), m_DepthStencilView.lock()->Get());
 
 	Device->Context()->PSSetShader(m_MeshPS.lock()->GetPS(), nullptr, 0);
@@ -231,6 +234,8 @@ void DeferredPass::Render()
 
 	//·»´õÅ¸°Ù ÇØÁ¦ÇØÁà¾ßÁö
 	Device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
+	Device->Context()->OMSetDepthStencilState(nullptr, 1);
+
 }
 
 void DeferredPass::OnResize()

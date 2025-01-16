@@ -31,12 +31,13 @@ float4 main(VS_OUTPUT input) : SV_TARGET
      float3 V = normalize(float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - input.posWorld.xyz);
 
 
-     float gamma = 2.2f;
 
      float4 result;
      result = float4(0, 0, 0, 1);
      result.xyz = CubeTex.Sample(samLinear, -V);
+    
+    float gamma = 2.2f;
+    result.xyz = pow(result.xyz,float3(1/gamma, 1/gamma, 1/gamma)); // cubemap texture가 sRGB라서 gamma decode만 진행
      
-    //return CubeTex.Sample(samLinear, reflect(-V, input.normal));
     return result;
 }

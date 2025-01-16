@@ -28,7 +28,7 @@ cbuffer useIBL : register(b5)
 
 
 float4 main(VS_OUTPUT input) : SV_Target
-{
+{  
     float3 Fresnel = float3(0, 0, 0);
     float3 Distribute = float3(0, 0, 0);
     float3 GeometryAttenuation = float3(0, 0, 0);
@@ -50,25 +50,26 @@ float4 main(VS_OUTPUT input) : SV_Target
     float opacity = (1 - useNEOL.z) + (useNEOL.z * gOpacity.Sample(samLinear, input.tex).r); //투명도
     float metallicValue = gMetalic.Sample(samLinear, input.tex).b;
     float roughnessValue = gRoughness.Sample(samLinear, input.tex).g;
-	
     float3 EmissiveValue = pow(gEmissive.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma));
-    float4 depthTemp = gDepth.Sample(samLinear, input.tex);
-    float3 Depth = float3(depthTemp.x, depthTemp.y, depthTemp.z);
-
 
     float3 cubemap = gLightMap.Sample(samLinear, input.tex).rgb;
 	
+	//주변 환경이 물체를 얼마큼 비추는지에 대한 계수를 texture에서 가져온다 (조도의 평균값) 
+    float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);   //diffuse에 영향을 준다. 환경맵을 뭉개거나 주변 값을 평균화한 texture
+    
 	//cube texture의 정보를 얻어온다
     uint width, height, levels;
     gRadiance.GetDimensions(0, width, height, levels);
-	
-    float3 irradiance = gIrradiance.Sample(samLinear, N.xyz);
     float3 reflection = reflect(-V, N); //시선이 점에 들어가 반사되는 벡터를 통해 환경맵에서 어떤 값을 가져올지 확인
+    //시선에 따라 주변에서 비춰지는 부분이 내 눈에 들어는지에 대한 정보를 texture로 가져온다
     float3 radiance = gRadiance.SampleLevel(samLinear, reflection, roughnessValue * levels); //거칠기에 따른 밉맵 적용
-    float2 DF = gLUT.Sample(samLinear, float2(max(0,dot(N, normalize(V))), roughness));
+    
+    //Scale : 반사를 얼만큼의 세기로 하는가, Bias : 
+    float2 scaleBias = gLUT.Sample(samLinear, float2(max(0,dot(N, normalize(V))), roughness)); //성능상의 이유로 적분항의 값을 texture로 저장했음 그값을 가져와야함
 	
     if (isIBL.r)
     {
+        indirectlight = CalcIBL(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance, radiance,scaleBias);
 		//indirectlight = CalcIBL(V, N.xyz, F0, albedoColor, roughnessValue, metallicValue, irradiance, radiance);
     }
 	
@@ -92,13 +93,10 @@ float4 main(VS_OUTPUT input) : SV_Target
 
     result = directlight + indirectlight;
 
-    result = result + EmissiveValue + cubemap;
+    //result = result + EmissiveValue + cubemap;
 
    // gamma correct
     result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
-
-
-   
 	
     return float4(result,1);
 }

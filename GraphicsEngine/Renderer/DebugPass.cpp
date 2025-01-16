@@ -20,7 +20,7 @@ DebugPass::DebugPass(const std::shared_ptr<Device>& device, std::shared_ptr<Reso
 	m_ResourceManager = manager;
 	m_DebugDrawManager = debug;
 
-	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"Emissive");
+	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"GBuffer");
 	m_DSV = m_ResourceManager.lock()->Get<DepthStencilView>(L"DSV_Deferred");
 	m_DebugPS = m_ResourceManager.lock()->Get<PixelShader>(L"Base");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base");
@@ -41,7 +41,7 @@ void DebugPass::Initialize(const std::shared_ptr<Device>& device,
 	m_ResourceManager = resourceManager;
 	m_DebugDrawManager = debugDrawManager;
 
-	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"Emissive");
+	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"GBuffer");
 	m_DSV = m_ResourceManager.lock()->Get<DepthStencilView>(L"DSV_Deferred");
 	m_DebugPS = m_ResourceManager.lock()->Get<PixelShader>(L"Base");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base");
@@ -81,11 +81,13 @@ void DebugPass::Render()
 	Device->Context()->OMSetRenderTargets(1, m_RTV.lock()->GetAddress(), DSV->Get());
 
 	debugManager->Execute(Device, m_View, m_Proj);
+
+	Device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
 }
 
 void DebugPass::OnResize()
 {
-	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"Emissive");
+	m_RTV = m_ResourceManager.lock()->Get<RenderTargetView>(L"GBuffer");
 	m_DSV = m_ResourceManager.lock()->Get<DepthStencilView>(L"DSV_Deferred");
 	m_DebugPS = m_ResourceManager.lock()->Get<PixelShader>(L"Base");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base");

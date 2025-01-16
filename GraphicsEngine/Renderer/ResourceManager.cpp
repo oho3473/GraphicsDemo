@@ -96,6 +96,8 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<DepthStencilState>(L"DefaultDSS", DepthStencilStateType::Default);
 	Create<DepthStencilState>(L"DisableDepth", DepthStencilStateType::DisableDepth);
 	Create<DepthStencilState>(L"NoDepthWrites", DepthStencilStateType::NoDepthWrites);
+	Create<DepthStencilState>(L"AbleDepthStencil", DepthStencilStateType::AbleDepthStencil);
+	Create<DepthStencilState>(L"AbleStencil", DepthStencilStateType::AbleStencil);
 
 
 	// ----------------------------------------------------------------------------------------

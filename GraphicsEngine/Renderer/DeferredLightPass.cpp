@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DeferredLightPass.h"
+#include "DepthStencilState.h"
 
 #include "Device.h"
 #include "ResourceManager.h"
@@ -43,7 +44,7 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_MetalicSRV = resourceManager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
-	m_GBufferSRV = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
+
 	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 
@@ -67,6 +68,10 @@ void DeferredLightPass::Render()
 	std::shared_ptr<ConstantBuffer<MaterialData>> MaterialCB = m_ResourceManager.lock()->Get<ConstantBuffer<MaterialData>>(L"MaterialData").lock();
 	std::shared_ptr<ConstantBuffer<LightArray>> light = m_ResourceManager.lock()->Get<ConstantBuffer<LightArray>>(L"LightArray").lock();
 	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useIBL = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL").lock();
+
+	std::shared_ptr<DepthStencilState> depthstencilstate = m_ResourceManager.lock()->Get<DepthStencilState>(L"AbleStencil").lock();
+
+	Device->Context()->OMSetDepthStencilState(depthstencilstate->GetState().Get(), 1);
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
@@ -110,9 +115,11 @@ void DeferredLightPass::Render()
 
 		Device->Context()->PSSetSamplers(static_cast<UINT>(Slot_S::Linear), 1, linear->GetAddress());
 
-		Device->Context()->OMSetRenderTargets(1, m_GbufferRTV.lock()->GetAddress(), nullptr);
+		Device->Context()->OMSetRenderTargets(1, m_GbufferRTV.lock()->GetAddress(), m_DepthStencilView.lock()->Get());
 
 		Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
+		Device->Context()->OMSetDepthStencilState(nullptr, 1);
+
 	}
 }
 
@@ -138,7 +145,7 @@ void DeferredLightPass::OnResize()
 	m_MetalicSRV = manager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_RoughnessSRV = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
-	m_GBufferSRV = manager->Get<ShaderResourceView>(L"GBuffer").lock();
+
 	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
 	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
