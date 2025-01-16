@@ -25,6 +25,7 @@ PixelShader::PixelShader(const std::shared_ptr<Device>& device, const std::wstri
 	shaderFlag |= D3DCOMPILE_DEBUG;
 	shaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
 	basePath = L"..\\Renderer\\";
+	basePath = L"..\\Data\\HLSL\\";
 #else
 	basePath = L"..\\Data\\HLSL\\";
 	//basePath = L"..\\Renderer\\";

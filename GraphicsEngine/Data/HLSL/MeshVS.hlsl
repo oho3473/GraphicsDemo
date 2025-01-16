@@ -1,6 +1,4 @@
-
 #include "Common.hlsli"
-
 
 float3x3 ExtractRotationMatrix(float4x4 worldMatrix)
 {
@@ -111,7 +109,6 @@ VS_OUTPUT main(VS_INPUT input)
 
     //Bone¿« world
     output.posWorld = mul(mul(input.pos, skinning), gWorld);
-
     output.pos = mul(output.posWorld, gWorldViewProj);
 
 
@@ -124,16 +121,10 @@ VS_OUTPUT main(VS_INPUT input)
     rotationMatrix[1] = combinedMatrix[1].xyz;  // 2«‡
     rotationMatrix[2] = combinedMatrix[2].xyz;  // 3«‡
 
-    //float3x3 rot = ExtractRotationMatrix(transpose(inverse(mul(skinning), gWorld))); 
-
     output.normal.xyz = normalize(mul(input.normal.xyz, rotationMatrix));
     output.tangent.xyz = normalize(mul(input.tangent.xyz, rotationMatrix));
     output.bitangent.xyz = normalize(mul(input.bitangent.xyz, rotationMatrix));
 #endif     
-
-
-
-
 
     return output;
 }
