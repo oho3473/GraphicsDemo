@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{58B98027-CB38-462E-9F03-B3A3F9110437}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDemo", "GraphicsDemo\GraphicsDemo.vcxproj", "{7350C622-0A9F-454B-A44C-F4634AE4622F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{58B98027-CB38-462E-9F03-B3A3F9110437} = {58B98027-CB38-462E-9F03-B3A3F9110437}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
