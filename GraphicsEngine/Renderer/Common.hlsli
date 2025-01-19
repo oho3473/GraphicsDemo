@@ -189,7 +189,7 @@ float3 CalcIBL(float3 V, float3 N, float3 albedo, float roughness, float metalic
     //Specular BRDF
     specular = radiance * kS * scalebias.x + scalebias.y;
     
-    result = (diffuse + specular) * 0.3;
+    result = (diffuse + specular) * 0.7;
     return result;
 }
 
@@ -360,3 +360,44 @@ float3 CalcSpot(LightData lightData, float4 pos, float3 V, float3 N, float3 F0, 
     return result;
 }
 
+//Debug용으로 사용하는 IBL 계산함수
+float3 IBLDiffuse(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 irradiance, float3 radiance, float2 scalebias)
+{
+    float3 result = float3(0, 0, 0);
+    float3 diffuse = float3(0, 0, 0);
+    float3 specular = float3(0, 0, 0);
+    
+    //Fresnel - 시선과 노말의 각도에 따른 반사율
+    float NdotV = max(0, dot(N, normalize(V)));
+    float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
+    F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
+    float3 F = FresnelSchlick(F0, max(0, NdotV)); //시선과 노말의 각도에 따른 반사율
+        
+    //Diffuse BRDF
+    float3 kS = F; //fresnel 반사율
+    float3 kD = (1.0 - kS) * (1 - metalic); //diffuse 반사율, 에너지 보존 법칙에 의해 kD + kS <= 1, (1 - metalic)을 하는 이유는 금속성의 값에 따라 diffuse가 줄어듬
+    diffuse = kD * albedo * irradiance / Pi;
+    
+    diffuse = diffuse * 0.7;
+    
+    return diffuse;
+}
+
+float3 IBLSpecular(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 irradiance, float3 radiance, float2 scalebias)
+{
+    float3 result = float3(0, 0, 0);
+    float3 diffuse = float3(0, 0, 0);
+    float3 specular = float3(0, 0, 0);
+    
+    //Fresnel - 시선과 노말의 각도에 따른 반사율
+    float NdotV = max(0, dot(N, normalize(V)));
+    float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
+    F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
+    float3 F = FresnelSchlick(F0, max(0, NdotV)); //시선과 노말의 각도에 따른 반사율
+    float3 kS = F; //fresnel 반사율
+    //Specular BRDF
+    specular = radiance * kS * scalebias.x + scalebias.y;
+    specular = specular * 0.7;
+    
+    return specular;
+}

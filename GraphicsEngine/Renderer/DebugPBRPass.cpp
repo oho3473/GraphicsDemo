@@ -18,6 +18,7 @@ void DebugPBRPass::Initialize(const std::shared_ptr<Device>& device, const std::
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
+	m_LUT = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 
 	m_MeshPS = resourceManager->Get<PixelShader>(L"DebugPBR");
 	m_StaticMeshVS = m_ResourceManager.lock()->Get<VertexShader>(L"Base").lock();
@@ -63,6 +64,8 @@ void DebugPBRPass::Render()
 		std::shared_ptr<ConstantBuffer<MaterialData>> MaterialCB = m_ResourceManager.lock()->Get<ConstantBuffer<MaterialData>>(L"MaterialData").lock();
 		std::shared_ptr<ConstantBuffer<LightArray>> light = m_ResourceManager.lock()->Get<ConstantBuffer<LightArray>>(L"LightArray").lock();
 
+	
+
 		Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 		Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
 
@@ -79,9 +82,14 @@ void DebugPBRPass::Render()
 
 	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> useEditMaterial = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditMaterial").lock();
 	std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> editAlbedo = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"EditAlbedo").lock();
+	auto useIBL = m_ResourceManager.lock()->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL");
 	Device->Context()->PSSetConstantBuffers(5, 1, editAlbedo->GetAddress());
 	Device->Context()->PSSetConstantBuffers(6, 1, useEditMaterial->GetAddress());
+	Device->Context()->PSSetConstantBuffers(7, 1, useIBL.lock()->GetAddress());
 
+	Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Irradiance), 1, m_IrrandianceSRV.lock()->GetAddress());
+	Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Radiance), 1, m_RandianceSRV.lock()->GetAddress());
+	Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LUT), 1, m_LUT.lock()->GetAddress());
 
 	for (const auto& curData : m_RenderList)
 	{
@@ -197,6 +205,7 @@ void DebugPBRPass::OnResize()
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
+	m_LUT = resourceManager->Get<ShaderResourceView>(L"MyCube3Brdf.dds").lock();
 
 	m_FresnelRTV = resourceManager->Get<RenderTargetView>(L"Fresnel").lock();
 	m_DistributeRTV = resourceManager->Get<RenderTargetView>(L"Distribute").lock();

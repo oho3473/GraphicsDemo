@@ -171,7 +171,7 @@ void Process::Update()
 		}
 	}
 
-	
+
 
 	//page up
 	if (InputManager::GetInstance()->IsKeyPress(VK_PRIOR))
@@ -306,7 +306,7 @@ void Process::SetScene()
 	testmodel->EntityID = 1;
 	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
-	testmodel->world._42 = 0;
+	testmodel->world._42 = 9;
 	testmodel->world._43 = -1;
 	testmodel->offset = { 0,0 };
 	testmodel->lightmapindex = 0;
@@ -327,6 +327,40 @@ void Process::SetScene()
 	}
 	m_graphicsEngine->AddRenderModel(testmodel);
 	m_models.push_back(testmodel);
+
+	//IBL 비교용 모델
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
+			testmodel->EntityID = (i * 4) + (j+2);
+			testmodel->FBX = L"pureMetal.fbx";
+			testmodel->world = DirectX::SimpleMath::Matrix::Identity;
+			testmodel->world._41 = 2 * (j + 1);
+			testmodel->world._42 = 2 * i;
+			testmodel->world._43 = 0;
+			testmodel->offset = { 0,0 };
+			testmodel->lightmapindex = 0;
+			testmodel->scale = 1;
+			testmodel->tiling = { 0,0 };
+			testmodel->isSkinned = false;
+			testmodel->isPlay = false;		
+			testmodel->albedo = DirectX::XMFLOAT4{ 0,0,0,0 };
+			testmodel->preAni = 0;
+			testmodel->curAni = 0;
+			testmodel->duration = 0;
+
+			testmodel->useIBL = true;
+			testmodel->useEditMetalic = true;
+			testmodel->useEditRoughness = true;
+			testmodel->metalicRoughness = DirectX::XMFLOAT4( 1,1,i * 0.25,j * 0.25 );
+			//testmodel->useEditAlbedo = true;
+			//testmodel->albedo = DirectX::XMFLOAT4(1, 1, 0,0);
+			m_graphicsEngine->AddRenderModel(testmodel);
+			m_models.push_back(testmodel);
+		}
+	}
 #pragma endregion 
 
 #pragma region Light
@@ -344,7 +378,7 @@ void Process::SetScene()
 	text.PosYPercent = 3;
 	text.Text = L"카메라 이동 : WASD\n카메라 회전 : 마우스 우클릭 이동";
 	text.Scale = 0.3f;
-	m_graphicsEngine->CreateTextObject(text.uid, text);
+	//m_graphicsEngine->CreateTextObject(text.uid, text);
 	m_UIs.push_back(text);
 
 
@@ -365,7 +399,7 @@ void Process::SetScene()
 	fps.PosYPercent = 15;
 	fps.Text = std::format(L"FPS : {}", 0);
 	fps.Scale = 0.3f;
-	m_graphicsEngine->CreateTextObject(fps.uid, fps);
+	//m_graphicsEngine->CreateTextObject(fps.uid, fps);
 	m_UIs.push_back(fps);
 #pragma endregion
 
