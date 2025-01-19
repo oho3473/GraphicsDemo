@@ -119,8 +119,8 @@ PS_OUTPUT main(VS_OUTPUT input)
 	
     if (isIBL.r)
     {
-        Diffuse = Diffuse + IBLDiffuse(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance, radiance, scaleBias);
-        Specular = Specular + IBLSpecular(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance, radiance, scaleBias);
+        Diffuse = Diffuse + IBLDiffuse(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance);
+        Specular = Specular + IBLSpecular(V, N.xyz, albedoColor, roughnessValue, metallicValue, radiance, scaleBias);
     }
     
     output.Fresnel = float4(Fresnel, 1);

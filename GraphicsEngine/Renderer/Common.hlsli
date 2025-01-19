@@ -361,7 +361,7 @@ float3 CalcSpot(LightData lightData, float4 pos, float3 V, float3 N, float3 F0, 
 }
 
 //Debug용으로 사용하는 IBL 계산함수
-float3 IBLDiffuse(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 irradiance, float3 radiance, float2 scalebias)
+float3 IBLDiffuse(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 irradiance)
 {
     float3 result = float3(0, 0, 0);
     float3 diffuse = float3(0, 0, 0);
@@ -383,7 +383,7 @@ float3 IBLDiffuse(float3 V, float3 N, float3 albedo, float roughness, float meta
     return diffuse;
 }
 
-float3 IBLSpecular(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 irradiance, float3 radiance, float2 scalebias)
+float3 IBLSpecular(float3 V, float3 N, float3 albedo, float roughness, float metalic, float3 radiance, float2 scalebias)
 {
     float3 result = float3(0, 0, 0);
     float3 diffuse = float3(0, 0, 0);

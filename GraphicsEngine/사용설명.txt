@@ -8,9 +8,9 @@ l control : 카메라 속도 느림
 f1 : 디버그데이터 ON/OFF
 f2 : deferred geometry info ( Normal/Metalic/Roughness/Depth/Albedo)
 f3 : PBR info (Fresnel/Distribute/Geometry/NdotL)
-1 : pbrtest.fbx로 교체
-2 : monkey.fbx로 교체
-3 : vidiger.fbx로 교체
+1 : pbrtest.fbx로 교체 (+SHIFT : 모든 모델 변경)
+2 : monkey.fbx로 교체(+SHIFT : 모든 모델변경)
+3 : vidiger.fbx로 교체(+SHIFT : 모든 모델변경)
 
 i : IBL On/Off
 o : metalic 값 수정 On/Off

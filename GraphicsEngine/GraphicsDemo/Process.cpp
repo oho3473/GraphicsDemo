@@ -67,24 +67,54 @@ void Process::Update()
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
 		testmodel->FBX = L"pbrtest.fbx";
+
+		if (InputManager::GetInstance()->IsKeyPress(VK_SHIFT))
+		{
+			for (auto model : m_models)
+			{
+				model->FBX = L"pbrtest.fbx";
+			}
+		}
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('2'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
 		testmodel->FBX = L"monkey.fbx";
+
+		if (InputManager::GetInstance()->IsKeyPress(VK_SHIFT))
+		{
+			for (auto model : m_models)
+			{
+				model->FBX = L"monkey.fbx";
+			}
+		}
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('3'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
 		testmodel->FBX = L"vidiger.fbx";
+		if (InputManager::GetInstance()->IsKeyPress(VK_SHIFT))
+		{
+			for (auto model : m_models)
+			{
+				model->FBX = L"vidiger.fbx";
+			}
+		}
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('4'))
 	{
 		std::shared_ptr<RenderData> testmodel = m_models[0];
 		testmodel->FBX = L"pureMetal.fbx";
+		if (InputManager::GetInstance()->IsKeyPress(VK_SHIFT))
+		{
+			for (auto model : m_models)
+			{
+				model->FBX = L"pureMetal.fbx";
+			}
+		}
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('I'))
