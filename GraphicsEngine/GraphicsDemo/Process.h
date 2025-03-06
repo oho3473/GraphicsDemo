@@ -21,6 +21,8 @@ public:
 private:
 	void SetScene();
 
+	void InputProcess();
+
 private:
 	HWND m_hWnd;
 
@@ -34,5 +36,13 @@ private:
 	std::vector<ui::TextInfo> m_UIs;
 	bool DebugOnOff= true;
 	bool IBLOnOff= false;
+	bool QuadOnOff= false;
+	bool PBRQuadOnOff= false;
+	bool LightOnOff= false;
+
+	std::vector<std::wstring> geometryinfo;
+	std::vector<std::wstring> pbrinfo;
+	std::vector<std::wstring> cubeTex;
+
 };
 

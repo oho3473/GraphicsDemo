@@ -39,5 +39,6 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     float gamma = 2.2f;
     result.xyz = pow(result.xyz,float3(1/gamma, 1/gamma, 1/gamma)); // cubemap texture가 sRGB라서 gamma decode만 진행
      
+    
     return result;
 }

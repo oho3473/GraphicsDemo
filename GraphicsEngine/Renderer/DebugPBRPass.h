@@ -17,7 +17,7 @@ public:
     // RenderPass을(를) 통해 상속됨
     void Render() override;
     void OnResize() override;
-
+	void ChangeCubeTex(const std::wstring name);
 
 private:
 	std::weak_ptr<LightManager> m_LightManager;

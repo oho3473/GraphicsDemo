@@ -43,9 +43,13 @@ public:
 
 	void Render(float deltaTime);
 	void OnResize();
-	void ChageDebugQuad(const debug::quadstate state);
+	void ChageDebugQuad(bool OnOff, const debug::quadstate state);
 	void SetDebugDraw(bool on_off);
+	void ChangeCubeTexture(const std::wstring name);
+
+
 	void SetCubeCamera(const CameraData* datas);
+
 
 private:
 
@@ -79,5 +83,7 @@ private:
 private:
 	bool m_IBL = false; 
 	bool m_isDebugDraw = false;
+	bool m_isQuadDraw = false;
+	bool m_isPBRQuadDraw = false;
 };
 

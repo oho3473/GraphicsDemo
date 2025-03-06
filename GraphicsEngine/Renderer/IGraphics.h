@@ -41,7 +41,8 @@ public:
 	virtual void DebugRenderONOFF(bool isRender) abstract;
 	virtual void IBLONOFF(bool isRender) abstract;
 
-	virtual void ChangeDebugQuad(const debug::quadstate state) abstract;
+	virtual void ChangeDebugQuad(bool OnOff,const debug::quadstate state) abstract;
+	virtual void ChangeEnviroment(std::wstring filename)const abstract;
 
 	virtual void EraseObject(uint32_t EntityID) abstract;
 	virtual void UpdateModel(uint32_t EntityID) abstract;
@@ -54,6 +55,7 @@ public:
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) abstract;
 
 	virtual const double GetDuration(std::wstring name, int index) abstract;
+
 
 	virtual void DrawSphere(const debug::SphereInfo& info)abstract;
 	virtual void DrawAABB(const debug::AABBInfo& info)abstract;

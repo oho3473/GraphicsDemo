@@ -97,7 +97,7 @@ PS_OUTPUT main(VS_OUTPUT input)
         N.xyz = normalize(mul(NormalTangentSpace, (WorldTransform)));
     }
     //View
-    float3 V = float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - input.posWorld;
+    float3 V = float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - input.posWorld.xyz;
 
     for (int i = 0; i < DirIndex; i++)
     {
@@ -115,12 +115,12 @@ PS_OUTPUT main(VS_OUTPUT input)
     float3 radiance = gRadiance.SampleLevel(samLinear, reflection, roughnessValue * levels); //거칠기에 따른 밉맵 적용
     
     //Scale : 반사를 얼만큼의 세기로 하는가, Bias : 
-    float2 scaleBias = gLUT.Sample(samLinear, float2(max(0, dot(N, normalize(V))), roughness)); //성능상의 이유로 적분항의 값을 texture로 저장했음 그값을 가져와야함
+    float2 scaleBias = gLUT.Sample(samLinear, float2(max(0, dot(N.xyz, normalize(V))), roughness)); //성능상의 이유로 적분항의 값을 texture로 저장했음 그값을 가져와야함
 	
     if (isIBL.r)
     {
-        Diffuse = Diffuse + IBLDiffuse(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance);
-        Specular = Specular + IBLSpecular(V, N.xyz, albedoColor, roughnessValue, metallicValue, radiance, scaleBias);
+        Diffuse =  Diffuse + IBLDiffuse(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance);
+        Specular = Specular+ IBLSpecular(V, N.xyz, albedoColor, roughnessValue, metallicValue, radiance, scaleBias);
     }
     
     output.Fresnel = float4(Fresnel, 1);

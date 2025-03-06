@@ -25,10 +25,10 @@ public:
 	void UpdateTextObject(uint32_t entityID, const ui::TextInfo& info);
 	void DeleteTextObject(uint32_t entityId);
 
-
 private: 
 
 	void DrawAllTexts();
+	void DrawAllString();
 
 private:
 	std::shared_ptr<Device> m_Device;

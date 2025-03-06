@@ -22,6 +22,7 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetState() { return m_State; }
 
+	ID3D11DepthStencilState* Get() const;
 private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_State;
 };

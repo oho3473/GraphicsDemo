@@ -118,11 +118,12 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 
 
 	// ----------------------------------------------------------------------------------------
-	// Rasterizer State
+	// Render State
 	// ----------------------------------------------------------------------------------------
 	Create<RenderState>(L"Solid", RenderStateDESC::Solid::Desc);
 	Create<RenderState>(L"BackFaceSolid", RenderStateDESC::BackFaceSolid::Desc);
 	Create<RenderState>(L"Wire", RenderStateDESC::Wire::Desc);
+
 
 
 	// ----------------------------------------------------------------------------------------
@@ -140,6 +141,8 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<VertexShader>(L"DebugQuad", L"DebugQuadVS", "main");
 	Create<VertexShader>(L"InstancingVS", L"InstancingVS");	//Instancing VS
 	Create<VertexShader>(L"CubeMapVS", L"CubeMapVS");
+
+
 
 	// ----------------------------------------------------------------------------------------
 	// Pixel Shader
@@ -174,11 +177,15 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	// ----------------------------------------------------------------------------------------
 	// Shader Resource View
 	// ----------------------------------------------------------------------------------------
-	Create<ShaderResourceView>(L"flower_road_8khdri_1kcubemapBC7.dds", L"flower_road_8khdri_1kcubemapBC7.dds");
+	Create<ShaderResourceView>(L"test.dds", L"test.dds");
+
+	Create<ShaderResourceView>(L"flower.dds", L"flower.dds");
 	Create<ShaderResourceView>(L"MyCube3DiffuseHDR.dds", L"MyCube3DiffuseHDR.dds");
 	Create<ShaderResourceView>(L"MyCube3SpecularHDR.dds", L"MyCube3SpecularHDR.dds");
 	Create<ShaderResourceView>(L"MyCube3Brdf.dds", L"MyCube3Brdf.dds");
 	Create<ShaderResourceView>(L"MyCube3EnvHDR.dds", L"MyCube3EnvHDR.dds");
+	Create<ShaderResourceView>(L"sky.dds", L"sky.dds");
+	Create<ShaderResourceView>(L"hill.dds", L"hill.dds");
 
 	// ----------------------------------------------------------------------------------------
 	// Render Target View
@@ -308,6 +315,8 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		Create<DepthStencilView>(L"DSV_Deferred", texDesc);
 		Create<DepthStencilView>(L"DSV_DebugPBR", texDesc);
 	}
+
+	
 }
 
 void ResourceManager::ConvertDDS()

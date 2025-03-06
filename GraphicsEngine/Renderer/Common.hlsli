@@ -122,6 +122,11 @@ float3 FresnelSchlick(float3 F0, float cosTheta)
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+float3 FresnelSchlickRoughness(float3 F0, float cosTheta, float roughnessValue)
+{
+    return F0 + (max(float3(1.0 - roughnessValue, 1.0 - roughnessValue, 1.0 - roughnessValue), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
 // GGX/Towbridge-Reitz normal distribution function.
 // Uses Disney's reparametrization of alpha = roughness^2.
 float Calc_D(float3 N, float3 H, float roughness)
@@ -169,17 +174,17 @@ float Calc_G(float3 N, float3 V, float3 L, float roughness)
 }
 
 //LUT를 사용한 IBL 계산
-float3 CalcIBL(float3 V, float3 N, float3 albedo, float roughness, float metalic,float3 irradiance, float3 radiance,float2 scalebias)
+float3 CalcIBL(float3 V, float3 N, float3 albedo, float roughnessValue, float metalic,float3 irradiance, float3 radiance,float2 scalebias)
 {
     float3 result = float3(0, 0, 0);
     float3 diffuse = float3(0, 0, 0);
     float3 specular = float3(0, 0, 0);
-    
+        
     //Fresnel - 시선과 노말의 각도에 따른 반사율
     float NdotV = max(0, dot(N, normalize(V)));
     float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
     F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
-    float3 F = FresnelSchlick(F0, max(0, NdotV)); //시선과 노말의 각도에 따른 반사율
+    float3 F = FresnelSchlickRoughness(F0, max(0, NdotV), roughnessValue); //시선과 노말의 각도에 따른 반사율
         
     //Diffuse BRDF
     float3 kS = F; //fresnel 반사율
@@ -187,9 +192,10 @@ float3 CalcIBL(float3 V, float3 N, float3 albedo, float roughness, float metalic
     diffuse = kD * albedo * irradiance / Pi;
     
     //Specular BRDF
-    specular = radiance * kS * scalebias.x + scalebias.y;
+    specular = radiance * (F * scalebias.x + scalebias.y);
     
     result = (diffuse + specular) * 0.7;
+ 
     return result;
 }
 
@@ -211,10 +217,10 @@ float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughne
     
     float NdotH = max(0, dot(H, normalize(V)));
     //float3 F = FresnelSchlick(F0, max(0, normalize(dot(N, V)))); //시선과 노말의 각도에 따른 반사율
-    float3 F = FresnelSchlick(F0, max(0, dot(H, normalize(V))));    //하프벡터?
+    float3 F = FresnelSchlick(F0, max(0, dot(H, normalize(V))));    //하프벡터
     
     //Diffuse BRDF
-    float3 kS = F; //fresnel 반사율
+    float3 kS = F0; //fresnel 반사율
     float3 kD = (1.0 - kS) * (1 - metalic); //diffuse 반사율, 에너지 보존 법칙에 의해 kD + kS <= 1, (1 - metalic)을 하는 이유는 금속성의 값에 따라 diffuse가 줄어듬
     diffuse = kD * albedo / Pi;
     
@@ -235,8 +241,8 @@ float3 CalcDir(LightData light, float3 V, float3 N, float3 albedo, float roughne
     Fresnel = F / (4.0 * NdotV + 0.01);
     Distribute.rgb = D / (4.0 * NdotV + 0.01);
     GeometryAttenuation.rgb = G / (4.0 * NdotV + 0.01);
-    Specular = specular;
-    Diffuse = diffuse;
+    Specular = specular * NdotL;
+    Diffuse = diffuse * NdotL;
     
     return result;
 }
@@ -371,7 +377,7 @@ float3 IBLDiffuse(float3 V, float3 N, float3 albedo, float roughness, float meta
     float NdotV = max(0, dot(N, normalize(V)));
     float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
     F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
-    float3 F = FresnelSchlick(F0, max(0, NdotV)); //시선과 노말의 각도에 따른 반사율
+    float3 F = FresnelSchlickRoughness(F0, max(0, NdotV),roughness); //시선과 노말의 각도에 따른 반사율
         
     //Diffuse BRDF
     float3 kS = F; //fresnel 반사율
@@ -393,11 +399,22 @@ float3 IBLSpecular(float3 V, float3 N, float3 albedo, float roughness, float met
     float NdotV = max(0, dot(N, normalize(V)));
     float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
     F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
-    float3 F = FresnelSchlick(F0, max(0, NdotV)); //시선과 노말의 각도에 따른 반사율
+    float3 F = FresnelSchlickRoughness(F0, max(0, NdotV),roughness); //시선과 노말의 각도에 따른 반사율
     float3 kS = F; //fresnel 반사율
+    
     //Specular BRDF
-    specular = radiance * kS * scalebias.x + scalebias.y;
+    specular = radiance * (F * scalebias.x + scalebias.y);
     specular = specular * 0.7;
     
     return specular;
+}
+
+float3 IBLFresnel(float3 V, float3 N, float3 albedo, float metalic,float roughness)
+{
+    float NdotV = max(0, dot(N, normalize(V)));
+    float3 F0 = Fdielectric; //기존 0.04, 완전한 비금속이어도 specular는 존재한다.
+    F0 = lerp(F0, albedo, metalic); //금속성이 1일때 albedo가 금속의 반사 색상
+    float3 F = FresnelSchlickRoughness(F0, max(0, NdotV), roughness);
+    
+    return F / (4.0 * NdotV + 0.01);
 }

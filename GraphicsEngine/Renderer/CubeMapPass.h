@@ -17,6 +17,8 @@ public:
     virtual void OnResize() override;
 
     void SetCamera(const CameraData* cameras);
+	void ChangeCubeTex(const std::wstring name);
+
 private:
 
 

@@ -170,3 +170,12 @@ void DeferredLightPass::OnResize()
 
 }
 
+void DeferredLightPass::ChangeCubeTex(const std::wstring name)
+{
+	std::shared_ptr<ResourceManager> resourceManager = m_ResourceManager.lock();
+
+	//TODO: 바꾼 cubemap에 맞는 diffuse specular로 변경해줘야함
+	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(name).lock();
+	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(name).lock();
+}
+

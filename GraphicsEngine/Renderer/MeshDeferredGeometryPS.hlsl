@@ -106,7 +106,7 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
         output.Roughness.rgb = max(0, useAMRO.z * gRoughness.Sample(samLinear, input.tex).g);
     }
     
-    if(editAlbedo.x)
+    if (editAlbedo.x)
     {
         output.Albedo.xyz = editAlbedo.yzw;
     }

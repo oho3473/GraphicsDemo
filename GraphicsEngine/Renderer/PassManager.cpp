@@ -142,7 +142,7 @@ void PassManager::Render(float deltaTime)
 		pass->Render();
 	}
 
-	if (m_isDebugDraw)
+	if (m_isQuadDraw)
 	{
 		m_DebugOffScreen->Render();
 	}
@@ -177,16 +177,28 @@ void PassManager::OnResize()
 	m_DebugPass->OnResize();
 	m_DebugOffScreen->OnResize();
 	m_MainOutput->OnResize();
+
+
+
 }
 
-void PassManager::ChageDebugQuad(const debug::quadstate state)
+void PassManager::ChageDebugQuad(bool OnOff, const debug::quadstate state)
 {
+	m_isQuadDraw = OnOff;
+
 	m_DebugOffScreen->ChangeQuadState(state);
 }
 
 void PassManager::SetDebugDraw(bool on_off)
 {
 	m_isDebugDraw = on_off;
+}
+
+void PassManager::ChangeCubeTexture(const std::wstring name)
+{
+	m_DebugPBR->ChangeCubeTex(name);
+	m_CubeMap->ChangeCubeTex(name);
+	m_DeferredLight->ChangeCubeTex(name);
 }
 
 void PassManager::SetCubeCamera(const CameraData* datas)

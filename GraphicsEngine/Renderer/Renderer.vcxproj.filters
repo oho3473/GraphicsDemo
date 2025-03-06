@@ -409,6 +409,9 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="DebugPBR.hlsl" />
+    <FxCompile Include="MeshDeferredGeometryPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli">

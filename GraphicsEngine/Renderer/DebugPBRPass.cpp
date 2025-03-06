@@ -41,6 +41,8 @@ void DebugPBRPass::Render()
 	std::shared_ptr<Device> Device = m_Device.lock();
 	std::shared_ptr<Sampler> linear = m_ResourceManager.lock()->Get<Sampler>(L"LinearWrap").lock();
 
+	
+
 	// Bind Common Resources
 	{
 		Device->UnBindSRV();
@@ -212,4 +214,12 @@ void DebugPBRPass::OnResize()
 	m_GeometryRTV = resourceManager->Get<RenderTargetView>(L"Geometry").lock();
 	m_SpecularRTV = resourceManager->Get<RenderTargetView>(L"Specular").lock();
 	m_DiffuseRTV = resourceManager->Get<RenderTargetView>(L"Diffuse").lock();
+}
+
+void DebugPBRPass::ChangeCubeTex(const std::wstring name)
+{
+	std::shared_ptr<ResourceManager> resourceManager = m_ResourceManager.lock();
+
+	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(name).lock();
+	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(name).lock();
 }

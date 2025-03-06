@@ -201,6 +201,18 @@ namespace ui
 		bool isStrikeout = false;
 		bool isUnderlined = false;
 
+
+		bool use = false;
 		int uid = -1;
+	};
+}
+
+namespace Font
+{
+	struct __declspec(dllexport) TextData
+	{
+		float x;
+		float y;
+		std::wstring str;
 	};
 }

@@ -13,6 +13,10 @@
 #include "Mesh.h"
 #include "Animation.h"
 #include "ConstantBuffer.h"
+#include "DepthStencilState.h"
+
+
+
 
 Graphics::Graphics(HWND hWnd) : m_hWnd(hWnd)
 , m_wndSize()
@@ -51,6 +55,9 @@ bool Graphics::Initialize()
 	m_PassManager->Initialize(m_Device, m_ResourceManager,m_DebugDrawManager, m_LightManager,m_UIManager);
 
 	m_CurViewPort = m_ResourceManager->Create<ViewPort>(L"Main", m_wndSize).lock();
+
+
+	
 
 	OnResize(m_hWnd, false);
 
@@ -201,6 +208,7 @@ void Graphics::OnResize(HWND hwnd, bool isFullScreen)
 
 	m_Device->Context()->OMSetRenderTargets(1, m_RTVs[0].lock()->GetAddress(), m_DSVs[0].lock()->Get());
 	m_Device->Context()->RSSetViewports(1, m_CurViewPort->Get());
+
 }
 
 void Graphics::DebugRenderONOFF(bool isRender)
@@ -341,9 +349,14 @@ const double Graphics::GetDuration(std::wstring name, int index)
 	return 0;
 }
 
-void Graphics::ChangeDebugQuad(const debug::quadstate state)
+void Graphics::ChangeDebugQuad(bool OnOff, const debug::quadstate state)
 {
-	m_PassManager->ChageDebugQuad(state);
+	m_PassManager->ChageDebugQuad(OnOff,state);
+}
+
+void Graphics::ChangeEnviroment(std::wstring filename) const
+{
+	m_PassManager->ChangeCubeTexture(filename);
 }
 
 void Graphics::IBLONOFF(bool isRender)

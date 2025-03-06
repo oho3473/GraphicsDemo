@@ -83,8 +83,6 @@ namespace RenderStateDESC
 			false
 		};
 	}
-
-
 }
 
 namespace TextureDESC

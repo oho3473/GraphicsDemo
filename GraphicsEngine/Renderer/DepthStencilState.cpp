@@ -79,3 +79,8 @@ void DepthStencilState::Release()
 	const ULONG refCount = m_State.Reset();
 	//assert(refCount == 0);
 }
+
+ID3D11DepthStencilState* DepthStencilState::Get() const
+{
+	return m_State.Get();
+}

@@ -14,16 +14,13 @@
 
 CubeMapPass::CubeMapPass(const std::shared_ptr<Device>& device, const std::shared_ptr<ResourceManager>& resourcemanager) : RenderPass(device,resourcemanager)
 {
-	m_CubeViewPort = resourcemanager->Get<ViewPort>(L"CubeMapViewPort");
-	m_CubeSRV = resourcemanager->Get<ShaderResourceView>(L"CubeMapSRV");
-	
-	m_CubeDSV = resourcemanager->Get<DepthStencilView>(L"CubeMapDSV");
-
 	m_CubeVB = resourcemanager->Get<VertexBuffer>(L"CubeMap_VB");
 	m_CubeIB = resourcemanager->Get<IndexBuffer>(L"CubeMap_IB");
 
 	m_CubeVS = resourcemanager->Get<VertexShader>(L"CubeMapVS");
 	m_CubePS = resourcemanager->Get<PixelShader > (L"CubeMapPS");
+	m_CubeSRV = resourcemanager->Get<ShaderResourceView>(L"MyCube3EnvHDR.dds");
+	//m_CubeSRV = resourcemanager->Get<ShaderResourceView>(L"test.dds");
 
 }
 
@@ -66,8 +63,7 @@ void CubeMapPass::Render()
 	device->Context()->PSSetShader(m_CubePS.lock()->GetPS(), nullptr, 0);
 	device->Context()->PSSetSamplers(0, 1, linear->GetAddress());
 
-	auto image = m_ResourceManager.lock()->Get<ShaderResourceView>(L"MyCube3EnvHDR.dds");
-	device->Context()->PSSetShaderResources(0, 1, image.lock()->GetAddress());
+	device->Context()->PSSetShaderResources(0, 1, m_CubeSRV.lock()->GetAddress());
 
 	device->Context()->DrawIndexed(m_CubeIB.lock()->Count(), 0, 0);
 
@@ -82,13 +78,6 @@ void CubeMapPass::Render()
 void CubeMapPass::OnResize()
 {
 	m_CubeDSV = m_ResourceManager.lock()->Get<DepthStencilView>(L"CubeMapDSV");
-
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV1"));						   
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV2"));						   
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV3"));						   
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV4"));						   
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV5"));						   
-	m_CubeRTVs.push_back(m_ResourceManager.lock()->Get<RenderTargetView>(L"CubeMapRTV6"));
 }
 
 void CubeMapPass::SetCamera(const CameraData* cameras)
@@ -97,4 +86,11 @@ void CubeMapPass::SetCamera(const CameraData* cameras)
 	{
 		m_CubeMapCameras[i] = cameras[i];
 	}
+}
+
+void CubeMapPass::ChangeCubeTex(const std::wstring name)
+{
+	std::shared_ptr<ResourceManager> resourceManager = m_ResourceManager.lock();
+
+	m_CubeSRV = resourceManager->Get<ShaderResourceView>(name).lock();
 }

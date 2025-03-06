@@ -55,7 +55,9 @@ public:
 	virtual void EraseLight(uint32_t EntityID, LightType kind) override;
 	virtual void UpdateLightData(uint32_t EntityID, LightType kind, LightData data) override;
 	virtual const double GetDuration(std::wstring name, int index) override;
-	virtual void ChangeDebugQuad(const debug::quadstate state)override;
+	virtual void ChangeDebugQuad(bool OnOff, const debug::quadstate state)override;
+	virtual void ChangeEnviroment(std::wstring filename)const override;
+
 	virtual void IBLONOFF(bool isRender) override;
 
 
@@ -114,5 +116,8 @@ private:
 private:
 	void Culling();
 	std::vector<std::shared_ptr<RenderData>>::iterator FindEntity(uint32_t id);
+
+	
+
 };
 

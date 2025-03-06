@@ -13,6 +13,7 @@ public:
 
 	void Render()override;
 	void OnResize() override;
+	void ChangeCubeTex(const std::wstring name);
 
 private:
 	std::weak_ptr<LightManager> m_LightManager;
