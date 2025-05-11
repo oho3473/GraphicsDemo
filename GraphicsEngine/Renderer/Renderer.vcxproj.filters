@@ -218,6 +218,9 @@
     <ClInclude Include="DebugPBRPass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SSAOPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -364,6 +367,9 @@
     <ClCompile Include="DebugPBRPass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="SSAOPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DebugQuadVS.hlsl">
@@ -412,6 +418,7 @@
     <FxCompile Include="MeshDeferredGeometryPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="SSAO.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli">

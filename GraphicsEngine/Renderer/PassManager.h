@@ -23,6 +23,7 @@ class DebugPass;
 class DeferredPass;
 class CubeMapPass;
 class DebugPBRPass;
+class SSAOPass;
 #pragma region Pass
 
 #pragma region Manager
@@ -69,6 +70,7 @@ private:
 	std::shared_ptr<DebugOffScreen> m_DebugOffScreen;
 	std::shared_ptr<DebugPBRPass> m_DebugPBR;
 	std::shared_ptr<CubeMapPass> m_CubeMap;
+	std::shared_ptr<SSAOPass> m_SSAO;
 
 private:
 	std::weak_ptr<Device> m_Device;

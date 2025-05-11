@@ -156,6 +156,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<PixelShader>(L"InstancingPS", L"InstancingPS", "main");
 	Create<PixelShader>(L"CubeMapPS", L"CubeMapPS", "main");
 	Create<PixelShader>(L"DebugPBR", L"DebugPBR", "main");
+	Create<PixelShader>(L"SSAO", L"SSAO", "main");
 
 	// ----------------------------------------------------------------------------------------
 	// Vertex Buffer
@@ -316,7 +317,7 @@ void ResourceManager::OnResize(RECT& wndsize, bool isFullScreen)
 		Create<DepthStencilView>(L"DSV_DebugPBR", texDesc);
 	}
 
-	
+
 }
 
 void ResourceManager::ConvertDDS()
@@ -331,41 +332,47 @@ void ResourceManager::ConvertDDS()
 
 	std::vector<std::string> filelist;
 
-	for (const auto& entry : std::filesystem::directory_iterator(path))
+	if (std::filesystem::exists(path))
 	{
-		std::string filename = std::filesystem::path(entry).filename().string();
-		std::string extend = std::filesystem::path(entry).filename().extension().string();
-		if (extend != ".dds")
+		for (const auto& entry : std::filesystem::directory_iterator(path))
 		{
-			filelist.push_back(filename);
+			std::string filename = std::filesystem::path(entry).filename().string();
+			std::string extend = std::filesystem::path(entry).filename().extension().string();
+			if (extend != ".dds")
+			{
+				filelist.push_back(filename);
+			}
+		}
+
+		for (auto& file : filelist)
+		{
+			wfilename.assign(file.begin(), file.end());
+			wfilename = wfilepath + wfilename;
+
+
+			DirectX::TexMetadata metadata;
+			DirectX::ScratchImage scratchImage;
+			(DirectX::LoadFromWICFile(wfilename.c_str(), DirectX::WIC_FLAGS_NONE, &metadata, scratchImage));
+
+
+			std::wstring newPath = wfilename.substr(0, wfilename.find_last_of(L"."));
+			newPath += L".dds";
+			HRESULT hr;
+			hr = DirectX::SaveToDDSFile(scratchImage.GetImages(), scratchImage.GetImageCount(), metadata, DirectX::DDS_FLAGS_NONE, newPath.c_str());
+			if (FAILED(hr))
+			{
+				int a = -0;
+			}
+		}
+
+		for (auto& file : filelist)
+		{
+			std::string newstr = path + file;
+			std::filesystem::remove(newstr);
 		}
 	}
-
-	for (auto& file : filelist)
+	else
 	{
-		wfilename.assign(file.begin(), file.end());
-		wfilename = wfilepath + wfilename;
-
-
-		DirectX::TexMetadata metadata;
-		DirectX::ScratchImage scratchImage;
-		(DirectX::LoadFromWICFile(wfilename.c_str(), DirectX::WIC_FLAGS_NONE, &metadata, scratchImage));
-
-
-		std::wstring newPath = wfilename.substr(0, wfilename.find_last_of(L"."));
-		newPath += L".dds";
-		HRESULT hr;
-		hr = DirectX::SaveToDDSFile(scratchImage.GetImages(), scratchImage.GetImageCount(), metadata, DirectX::DDS_FLAGS_NONE, newPath.c_str());
-		if (FAILED(hr))
-		{
-			int a = -0;
-		}
+		MessageBox(nullptr, L"Not Exist Texture Folder", L"Error", MB_OK);
 	}
-
-	for (auto& file : filelist)
-	{
-		std::string newstr = path + file;
-		std::filesystem::remove(newstr);
-	}
-
 }

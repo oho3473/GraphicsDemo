@@ -2,8 +2,7 @@
 #include "UIManager.h"
 
 #include <memory>
-#include <memory>
-#include <memory>
+#include <filesystem>
 
 #include "Device.h"
 #include "ResourceManager.h"
@@ -21,17 +20,28 @@ void UIManager::Initialize(const std::shared_ptr<Device>& device,
 
 	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(m_Device->Context());
 
-	m_DefaultFont = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\gulim9k.spritefont");
-	m_KIMM32 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\KIMM_B32_HY.spritefont");
-	m_KIMM48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\KIMM_B48_HY.spritefont");
-	m_SpaceShards48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\SpaceShards_48.spritefont");
-	m_SpaceShardsItalic48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\SpaceShardsItalic_48.spritefont");
+	if (std::filesystem::exists("..\\Data\\Font\\"))
+	{
+		m_DefaultFont = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\gulim9k.spritefont");
+		m_KIMM32 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\KIMM_B32_HY.spritefont");
+		m_KIMM48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\KIMM_B48_HY.spritefont");
+		m_SpaceShards48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\SpaceShards_48.spritefont");
+		m_SpaceShardsItalic48 = std::make_shared<DirectX::SpriteFont>(m_Device->Get(), L"..\\Data\\Font\\SpaceShardsItalic_48.spritefont");
+	}
+	else
+	{
+		MessageBox(nullptr, L"Not Exist Font Folder", L"Error", MB_OK);
+		isValid = false;
+	}
 }
 
 void UIManager::Render()
 {
-	//DrawAllTexts();
-	DrawAllString();
+	if (isValid)
+	{
+		//DrawAllTexts();
+		DrawAllString();
+	}
 }
 
 void UIManager::CreateTextObject(uint32_t entityID, const ui::TextInfo& info)
@@ -133,7 +143,7 @@ void UIManager::DrawAllString()
 	double WidthScale = static_cast<float>(curWidth) / static_cast<float>(baseWidth);
 	double HeightScale = static_cast<float>(curHeight) / static_cast<float>(baseHeight);
 
-	
+
 	// 기준 위치를 비율로 변환
 	float relativeX = 100.0f / baseWidth;
 	float relativeY = 50.0f / baseHeight;
@@ -142,12 +152,12 @@ void UIManager::DrawAllString()
 	float adjustedX = relativeX * curWidth;
 	float adjustedY = relativeY * curHeight;
 
-	
+
 
 	for (const auto& text : m_Texts)
 	{
 		const ui::TextInfo& info = text->GetInfo();
-		if(!info.use)
+		if (!info.use)
 		{
 			continue;
 		}
@@ -169,7 +179,7 @@ void UIManager::DrawAllString()
 			info.Color,
 			0.f,
 			origin,
-			min(WidthScale,HeightScale) * 2,
+			min(WidthScale, HeightScale) * 2,
 			DirectX::SpriteEffects_None,
 			info.Layer);
 	}

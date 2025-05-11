@@ -24,6 +24,7 @@
 #include "DebugOffScreen.h"
 #include "DebugPBRPass.h"
 #include "CubeMapPass.h"
+#include "SSAOPass.h"
 #pragma endregion Pass
 
 #include "StaticData.h"
@@ -102,6 +103,9 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 	m_DebugPBR = std::make_shared<DebugPBRPass>();
 	m_DebugPBR->Initialize(m_Device.lock(), m_ResourceManager.lock(), m_LightManager);
 	m_OffScreenPasses.push_back(m_DebugPBR);
+
+	//SSAO
+	m_SSAO = std::make_shared<SSAOPass>(m_Device.lock(), m_ResourceManager.lock());
 }
 
 void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling)
@@ -148,6 +152,8 @@ void PassManager::Render(float deltaTime)
 	}
 	m_UIPass->Render();
 	m_MainOutput->Render();
+
+	m_SSAO->Render();
 }
 
 void PassManager::OnResize()
