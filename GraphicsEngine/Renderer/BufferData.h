@@ -87,3 +87,14 @@ struct __declspec(dllexport) MaterialData
 	DirectX::XMFLOAT2  lightmaptiling; //index, offset(x,y),scale
 	DirectX::XMFLOAT2  pad2;
 };
+
+//SSAO
+struct SSAOKernel
+{
+	DirectX::XMFLOAT4 sampling[32];
+};
+
+struct SSAONoise
+{
+	DirectX::XMFLOAT4 noize[16];
+};

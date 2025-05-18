@@ -106,6 +106,7 @@ void PassManager::Initialize(const std::shared_ptr<Device>& device, const std::s
 
 	//SSAO
 	m_SSAO = std::make_shared<SSAOPass>(m_Device.lock(), m_ResourceManager.lock());
+	m_SSAO->Initialize();
 }
 
 void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCulling)
@@ -129,7 +130,7 @@ void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCu
 
 void PassManager::Render(float deltaTime)
 {
-	m_CubeMap->Render();
+	//m_CubeMap->Render();
 	if (m_isDebugDraw)
 	{
 		m_DebugPass->Render();

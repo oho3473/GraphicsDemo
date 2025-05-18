@@ -14,8 +14,6 @@ namespace MyColor
 }
 
 
-
-
 namespace Axis
 {
 	namespace Vertex
