@@ -45,7 +45,8 @@ void DebugPBRPass::Render()
 
 	// Bind Common Resources
 	{
-		Device->UnBindSRV();
+		UnBindResource();
+
 		std::vector<ID3D11RenderTargetView*> RTVs;
 
 		int GBufferSize = 5;
@@ -192,6 +193,9 @@ void DebugPBRPass::Render()
 			}
 		}
 	}
+
+	UnBindResource();
+
 }
 
 void DebugPBRPass::OnResize()

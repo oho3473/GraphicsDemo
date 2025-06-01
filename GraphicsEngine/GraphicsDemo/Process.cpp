@@ -170,9 +170,10 @@ void Process::SetScene()
 	m_models.push_back(testmodel);
 
 	//IBL ºñ±³¿ë ¸ðµ¨
-	for (int i = 0; i < 5; i++)
+	const int Addmodel = 5;
+	for (int i = 0; i < Addmodel; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < Addmodel; j++)
 		{
 			std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
 			testmodel->EntityID = (i * 5) + (j + 2);

@@ -83,7 +83,7 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
 
     float d = input.pos.z / input.pos.w;
     d *= 10;
-    output.Depth = float4(1 - d, 1 - d, 1 - d, 1.0f);
+    output.Depth = float4(input.pos.z, input.pos.w, 1 - d, 1.0f);
     output.Albedo = input.color;
 
     

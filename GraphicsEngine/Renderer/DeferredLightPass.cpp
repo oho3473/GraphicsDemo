@@ -71,6 +71,8 @@ void DeferredLightPass::Render()
 
 	std::shared_ptr<DepthStencilState> depthstencilstate = m_ResourceManager.lock()->Get<DepthStencilState>(L"AbleStencil").lock();
 
+	UnBindResource();
+
 	Device->Context()->OMSetDepthStencilState(depthstencilstate->GetState().Get(), 1);
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
@@ -89,6 +91,7 @@ void DeferredLightPass::Render()
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::IBL), 1, useIBL->GetAddress());
+
 
 	//Save GBuffer texture
 	{
@@ -121,6 +124,8 @@ void DeferredLightPass::Render()
 		Device->Context()->OMSetDepthStencilState(nullptr, 1);
 
 	}
+
+	UnBindResource();
 }
 
 void DeferredLightPass::OnResize()

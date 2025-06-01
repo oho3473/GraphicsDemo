@@ -31,6 +31,7 @@ void SSAOPass::Render()
 	auto depthBuffer = resourceManager->Get<ShaderResourceView>(L"Depth").lock();
 	auto NormalBuffer = resourceManager->Get<ShaderResourceView>(L"Normal").lock();
 	auto PositionBuffer = resourceManager->Get<ShaderResourceView>(L"Position").lock();
+	auto GBuffer = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
 
 	auto linear = resourceManager->Get<Sampler>(L"LinearWrap").lock();
 
@@ -40,6 +41,10 @@ void SSAOPass::Render()
 	auto SSAOPS = resourceManager->Get<PixelShader>(L"SSAO").lock();
 
 	Device->UnBindSRV();
+
+	//set Output Merge
+	Device->Context()->OMSetDepthStencilState(nullptr, 1);
+	Device->Context()->OMSetRenderTargets(1, RTV->GetAddress(), nullptr);
 
 	//bind IA
 	m_Device.lock()->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -54,6 +59,7 @@ void SSAOPass::Render()
 	Device->Context()->PSSetSamplers(0, 1, linear->GetAddress());
 	Device->Context()->PSSetConstantBuffers(0,1,resourceManager->Get<ConstantBuffer<CameraData>>(L"Camera").lock()->GetAddress());
 	Device->Context()->PSSetConstantBuffers(1,1,resourceManager->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->GetAddress());
+
 	Device->Context()->PSSetConstantBuffers(2,1,resourceManager->Get<ConstantBuffer<SSAONoise>>(L"SSAONoise").lock()->GetAddress());
 
 	//set SRV
@@ -61,20 +67,17 @@ void SSAOPass::Render()
 	Device->Context()->PSSetShaderResources(1, 1, NormalBuffer->GetAddress());
 	Device->Context()->PSSetShaderResources(2, 1, PositionBuffer->GetAddress());
 	Device->Context()->PSSetShaderResources(3, 1, m_NoiseSRV.lock()->GetAddress());
+	Device->Context()->PSSetShaderResources(4, 1, GBuffer->GetAddress());
 	
-
-	//set Output Merge
-	Device->Context()->OMSetDepthStencilState(nullptr, 1);
-	Device->Context()->OMSetRenderTargets(1, RTV->GetAddress(),nullptr);
-
-
-
 
 	Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
 
+	//unbind resource
 	//·»´õÅ¸°Ù ÇØÁ¦ÇØÁà¾ßÁö
+	Device->UnBindSRV();
 	Device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
 	Device->Context()->OMSetDepthStencilState(nullptr, 1);
+
 }
 
 void SSAOPass::OnResize()
@@ -93,6 +96,7 @@ void SSAOPass::Initialize()
 	std::uniform_real_distribution<float> XY(-1.0f, 1.0f);
 	std::uniform_real_distribution<float> Z(0.0f, 1.0f);
 
+	DirectX::XMFLOAT4* Kernel = m_ResourceManager.lock()->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->m_struct.sampling;
 	for (int i = 0; i < m_KernelSize; i++)
 	{
 		//³­¼ö »ý¼º
@@ -110,12 +114,13 @@ void SSAOPass::Initialize()
 		float scale = static_cast<float>(i) / m_KernelSize;
 		scale = 0.1f + 0.9f * (scale * scale);
 
-		m_Kernel[i].x = scale * x;
-		m_Kernel[i].y = scale * y;
-		m_Kernel[i].z = scale * z;
-		m_Kernel[i].w = 0;
-
+		Kernel[i].x = scale * x;
+		Kernel[i].y = scale * y;
+		Kernel[i].z = scale * z;
+		Kernel[i].w = 0;
 	}
+	m_ResourceManager.lock()->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->Update();
+
 
 	m_NoiseSize = 16;
 	m_Noise = std::vector<DirectX::XMFLOAT4>(m_NoiseSize * m_NoiseSize);
@@ -134,7 +139,7 @@ void SSAOPass::Initialize()
 	texDesc.Height = m_NoiseSize;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT; // float3
+	texDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // float4
 	texDesc.SampleDesc.Count = 1;
 	texDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;

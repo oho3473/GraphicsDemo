@@ -35,7 +35,8 @@ void CubeMapPass::Render()
 	auto resourcemanager = m_ResourceManager.lock();
 	std::shared_ptr<Sampler> linear = m_ResourceManager.lock()->Get<Sampler>(L"LinearWrap").lock();
 
-	device->UnBindSRV();
+	UnBindResource();
+
 
 	auto deferredDSVdeferredDSV = resourcemanager->Get<DepthStencilView>(L"DSV_Deferred");
 	std::shared_ptr<RenderTargetView> rtv = resourcemanager->Get<RenderTargetView>(L"GBuffer").lock();
@@ -72,7 +73,8 @@ void CubeMapPass::Render()
 	device->Context()->RSSetState(m_ResourceManager.lock()->Get<RenderState>(L"Solid").lock()->Get());
 	device->Context()->OMSetDepthStencilState(m_ResourceManager.lock()->Get<DepthStencilState>(L"DefaultDSS").lock()->GetState().Get(), 0);
 
-	device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
+	UnBindResource();
+
 }
 
 void CubeMapPass::OnResize()

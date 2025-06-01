@@ -39,7 +39,8 @@ void DebugOffScreen::Render()
 	std::shared_ptr<IndexBuffer> ib = m_QuadIB.lock();
 	std::shared_ptr<Sampler> linear = m_ResourceManager.lock()->Get<Sampler>(L"LinearWrap").lock();
 
-	Device->UnBindSRV();
+	UnBindResource();
+
 
 	Device->BindVS(m_QuadVS.lock());
 	Device->Context()->PSSetShader(m_QuadPS.lock()->GetPS(), nullptr, 0);
@@ -98,6 +99,9 @@ void DebugOffScreen::Render()
 		default:
 			break;
 	}
+
+	UnBindResource();
+
 }
 
 void DebugOffScreen::OnResize()

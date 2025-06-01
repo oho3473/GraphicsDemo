@@ -38,6 +38,13 @@ void RenderPass::SetRenderQueue(const std::vector<std::shared_ptr<RenderData>>& 
 	m_RenderList = renderQueue;
 }
 
+void RenderPass::UnBindResource()
+{
+	m_Device.lock()->UnBindSRV();
+	m_Device.lock()->Context()->OMSetDepthStencilState(nullptr, 1);
+	m_Device.lock()->Context()->OMSetRenderTargets(0, nullptr, nullptr);
+}
+
 void RenderPass::BindStatic(std::shared_ptr<RenderData> curModel)
 {
 	std::shared_ptr<Device> Device = m_Device.lock();

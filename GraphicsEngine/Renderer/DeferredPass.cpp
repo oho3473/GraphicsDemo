@@ -64,7 +64,9 @@ void DeferredPass::Render()
 	std::shared_ptr<DepthStencilState> depthstencilstate = m_ResourceManager.lock()->Get<DepthStencilState>(L"AbleDepthStencil").lock();
 
 	// Bind Common Resources
-	Device->UnBindSRV();
+	UnBindResource();
+
+
 	std::vector<ID3D11RenderTargetView*> RTVs;
 	int GBufferSize = 8;//ÃÖ´ë 8°³ ¹Û¿¡ ¾ÈµÊ
 	RTVs.reserve(GBufferSize);
@@ -106,7 +108,6 @@ void DeferredPass::Render()
 
 	Device->Context()->PSSetConstantBuffers(1, 1, useEditMaterial->GetAddress());
 	Device->Context()->PSSetConstantBuffers(0, 1, editAlbedo->GetAddress());
-
 
 
 	for (const auto& curData : m_RenderList)
@@ -232,9 +233,8 @@ void DeferredPass::Render()
 		}
 	}
 
-	//·»´õÅ¸°Ù ÇØÁ¦ÇØÁà¾ßÁö
-	Device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
-	Device->Context()->OMSetDepthStencilState(nullptr, 1);
+	UnBindResource();
+
 
 }
 

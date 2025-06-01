@@ -130,7 +130,7 @@ void PassManager::Update(const std::vector<std::shared_ptr<RenderData>>& afterCu
 
 void PassManager::Render(float deltaTime)
 {
-	//m_CubeMap->Render();
+	m_CubeMap->Render();
 	if (m_isDebugDraw)
 	{
 		m_DebugPass->Render();
@@ -153,8 +153,8 @@ void PassManager::Render(float deltaTime)
 	}
 	m_UIPass->Render();
 	m_MainOutput->Render();
-
 	m_SSAO->Render();
+
 }
 
 void PassManager::OnResize()

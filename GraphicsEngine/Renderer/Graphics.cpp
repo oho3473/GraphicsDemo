@@ -137,12 +137,17 @@ void Graphics::BeginRender()
 	const DirectX::SimpleMath::Color blue = { 0.f, 0.f, 1.f, 1.f };
 	const DirectX::SimpleMath::Color gray = { 0.15f, 0.15f, 0.15f, 1.f };
 	const DirectX::SimpleMath::Color black = { 0.f, 0.f, 0.f, 1.f };
+	const DirectX::SimpleMath::Color zero = { 0.f, 0.f, 0.f, 0.f };
 
 	for (int i = 0; i < m_RTVs.size(); i++)
 	{
 		if (i == 0)
 		{
 			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[0].lock()->Get(), blue);
+		}
+		else if (i == 5)	//depth
+		{
+			m_Device->BeginRender(m_RTVs[i].lock()->Get(), m_DSVs[0].lock()->Get(), zero);
 		}
 		else
 		{

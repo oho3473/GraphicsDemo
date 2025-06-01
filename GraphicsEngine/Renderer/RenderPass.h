@@ -80,6 +80,7 @@ public:
 	virtual void SetRenderQueue(const std::vector<std::shared_ptr<RenderData>>& renderQueue);
 
 protected:
+	void UnBindResource();
 
 	std::weak_ptr<Device> m_Device;
 	std::weak_ptr<ResourceManager> m_ResourceManager;
