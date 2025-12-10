@@ -106,8 +106,9 @@ void DeferredPass::Render()
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 
-	Device->Context()->PSSetConstantBuffers(1, 1, useEditMaterial->GetAddress());
 	Device->Context()->PSSetConstantBuffers(0, 1, editAlbedo->GetAddress());
+	Device->Context()->PSSetConstantBuffers(1, 1, useEditMaterial->GetAddress());
+	Device->Context()->PSSetConstantBuffers(3, 1, CameraCB->GetAddress());
 
 
 	for (const auto& curData : m_RenderList)
@@ -150,6 +151,7 @@ void DeferredPass::Render()
 					TransformData renew;
 					XMStoreFloat4x4(&renew.local, XMMatrixTranspose(curData->world));
 					XMStoreFloat4x4(&renew.world, XMMatrixTranspose(curData->world));
+					renew.world._11 *= curData->scale.x; renew.world._22 *= curData->scale.y; renew.world._33 *= curData->scale.z;
 					XMStoreFloat4x4(&renew.localInverse, (curData->world.Invert()));//전치 해주지말자 회전의 역행렬은 전치행렬임
 					XMStoreFloat4x4(&renew.worldInverse, (curData->world.Invert()));//전치 해주지말자 회전의 역행렬은 전치행렬임
 					position->Update(renew);	// == Bind

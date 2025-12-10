@@ -39,6 +39,7 @@ private:
 	bool QuadOnOff= false;
 	bool PBRQuadOnOff= false;
 	bool LightOnOff= false;
+	bool SSAOOnOff= false;
 
 	std::vector<std::wstring> geometryinfo;
 	std::vector<std::wstring> pbrinfo;

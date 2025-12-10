@@ -40,6 +40,7 @@ void Process::Initialize()
 	geometryinfo.push_back(L"Roughness");
 	geometryinfo.push_back(L"Depth");
 	geometryinfo.push_back(L"Albedo");
+	geometryinfo.push_back(L"SSAO");
 
 	pbrinfo.push_back(L"Fresnel");
 	pbrinfo.push_back(L"Distribute");
@@ -145,13 +146,13 @@ void Process::SetScene()
 #pragma region Model
 	std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
 	testmodel->EntityID = 1;
-	testmodel->FBX = L"pbrtest.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	testmodel->FBX = L"monkey.fbx"; //이름으로 어떤 모델을 불러올지 지정
 	testmodel->world = DirectX::SimpleMath::Matrix::Identity;
 	testmodel->world._42 = 3;
 	testmodel->world._43 = -1;
 	testmodel->offset = { 0,0 };
 	testmodel->lightmapindex = 0;
-	testmodel->scale = 1;
+	testmodel->scale = {1,1,1,1};
 	testmodel->tiling = { 0,0 };
 	testmodel->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
 	testmodel->isPlay = false;		//모델이 애니메이션을 실행하는가?
@@ -175,34 +176,69 @@ void Process::SetScene()
 	{
 		for (int j = 0; j < Addmodel; j++)
 		{
-			std::shared_ptr<RenderData> testmodel = std::make_shared<RenderData>();
-			testmodel->EntityID = (i * 5) + (j + 2);
-			testmodel->FBX = L"pureMetal.fbx";
-			testmodel->world = DirectX::SimpleMath::Matrix::Identity;
-			testmodel->world._41 = 2 * (j + 1);
-			testmodel->world._42 = 2 * i;
-			testmodel->world._43 = 0;
-			testmodel->offset = { 0,0 };
-			testmodel->lightmapindex = 0;
-			testmodel->scale = 1;
-			testmodel->tiling = { 0,0 };
-			testmodel->isSkinned = false;
-			testmodel->isPlay = false;
-			testmodel->albedo = DirectX::XMFLOAT4{ 1,1,1,1};	//use,r,g,b
-			testmodel->preAni = 0;
-			testmodel->curAni = 0;
-			testmodel->duration = 0;
+			std::shared_ptr<RenderData> test = std::make_shared<RenderData>();
+			test->EntityID = (i * 5) + (j + 2);
+			test->FBX = L"monkey.fbx";
+			test->world = DirectX::SimpleMath::Matrix::Identity;
+			test->world._41 = 2 * (j + 1);
+			test->world._42 = 2 * i;
+			test->world._43 = 0;
 
-			testmodel->useIBL = true;
-			testmodel->useEditMetalic = true;
-			testmodel->useEditRoughness = true;
-			testmodel->metalicRoughness = DirectX::XMFLOAT4(1, 1, i * 0.25, j * 0.25);
-			//testmodel->useEditAlbedo = true;
-			//testmodel->albedo = DirectX::XMFLOAT4(1, 1, 0,0);
-			m_graphicsEngine->AddRenderModel(testmodel);
-			m_models.push_back(testmodel);
+			float rotation = 90.f;
+			test->world._11 = cosf(rotation);		test->world._13 = sinf(rotation);
+			test->world._31 = -sinf(rotation);		test->world._33 = cosf(rotation);
+
+			test->offset = { 0,0 };
+			test->lightmapindex = 0;
+			test->scale = { 1,1,1,1 };
+			test->tiling = { 0,0 };
+			test->isSkinned = false;
+			test->isPlay = false;
+			bool useAlbedo = false;
+			test->albedo = DirectX::XMFLOAT4{ float(useAlbedo),1,1,1};	//use,r,g,b
+			test->preAni = 0;
+			test->curAni = 0;
+			test->duration = 0;
+
+			test->useIBL = true;
+			test->useEditMetalic = true;
+			test->useEditRoughness = true;
+			float factor = float(1) / Addmodel;
+			test->metalicRoughness = DirectX::XMFLOAT4(1, 1, i * factor, j * factor);
+			test->useEditAlbedo = false;
+			//test->albedo = DirectX::XMFLOAT4(0, 1, 0,1);
+			m_graphicsEngine->AddRenderModel(test);
+			m_models.push_back(test);
 		}
 	}
+
+
+	//SSAO 확인을 위한 바닥
+	std::shared_ptr<RenderData> floor = std::make_shared<RenderData>();
+	floor->EntityID = 27;
+	floor->FBX = L"floor2_low.fbx"; //이름으로 어떤 모델을 불러올지 지정
+	floor->world = DirectX::SimpleMath::Matrix::Identity;
+	floor->world._42 = 0;
+	floor->world._43 = 0;
+	float rotation = 2.f;
+	floor->world._11 = cosf(rotation);		floor->world._13 = sinf(rotation);
+	floor->world._31 = -sinf(rotation);		floor->world._33 = cosf(rotation);
+
+
+	floor->offset = { 0,0 };
+	floor->lightmapindex = 0;
+	floor->scale = {10,10,1,0};
+	floor->tiling = { 0,0 };
+	floor->isSkinned = false;	//모델이 애니메이션을 가지고 있는가?
+	floor->isPlay = false;		//모델이 애니메이션을 실행하는가?
+	floor->albedo = DirectX::XMFLOAT4{ 0,0,0,0 };
+	floor->preAni = 0;
+	floor->curAni = 0;
+	floor->duration = 0;
+
+	//m_graphicsEngine->AddRenderModel(floor);
+	//m_models.push_back(floor);
+
 #pragma endregion 
 
 
@@ -287,6 +323,7 @@ void Process::InputProcess()
 
 		for (int i = 0; i < geometryinfo.size(); i++)
 		{
+			//1 2번에 기본 ui 들어가서 3부터 시작
 			ui::TextInfo& info = m_UIs[3 + i];
 			info.use = false;
 			m_graphicsEngine->UpdateTextObject(info.uid, info);
@@ -406,6 +443,13 @@ void Process::InputProcess()
 				model->FBX = L"pureMetal.fbx";
 			}
 		}
+	}
+
+	if (InputManager::GetInstance()->IsKeyDown('U'))
+	{
+		SSAOOnOff = !SSAOOnOff;
+		m_graphicsEngine->SSAOONOFF(SSAOOnOff);
+
 	}
 
 	if (InputManager::GetInstance()->IsKeyDown('I'))
