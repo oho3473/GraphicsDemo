@@ -22,7 +22,7 @@ SamplerState samLinear : register(s0);
 
 cbuffer useIBL : register(b5)
 {
-    float4 isIBL;
+    float4 isIBL;   //use ibl, use SSAO
 }
 
 
@@ -46,7 +46,7 @@ float4 main(VS_OUTPUT input) : SV_Target
     float3 V = float3(gViewInverse._41, gViewInverse._42, gViewInverse._43) - position.xyz;
 
 	//texture sampling
-    float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb, float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
+    float3 albedoColor = pow(gAlbedo.Sample(samLinear, input.tex).rgb , float3(gamma, gamma, gamma)); //Gamma Correction 여기서도 해주자
     float opacity = (1 - useNEOL.z) + (useNEOL.z * gOpacity.Sample(samLinear, input.tex).r); //투명도
     float metallicValue = gMetalic.Sample(samLinear, input.tex).b;
     float roughnessValue = gRoughness.Sample(samLinear, input.tex).g;
@@ -65,7 +65,15 @@ float4 main(VS_OUTPUT input) : SV_Target
     //Scale : 반사를 얼만큼의 세기로 하는가, Bias : 
     float2 scaleBias = gLUT.Sample(samLinear, float2(max(0,dot(N.xyz, normalize(V))), roughnessValue)); //성능상의 이유로 적분항의 값을 texture로 저장했음 그값을 가져와야함
 	
-    if (isIBL.r)
+    float SSAO = 1;
+    if (isIBL.y > 0)
+    {
+        SSAO = gAO.Sample(samLinear, input.tex).r;
+        irradiance = irradiance * SSAO;
+    }
+        
+    
+    if (isIBL.x > 0)
     {
         indirectlight = CalcIBL(V, N.xyz, albedoColor, roughnessValue, metallicValue, irradiance, radiance, scaleBias);
     }
@@ -93,6 +101,6 @@ float4 main(VS_OUTPUT input) : SV_Target
 
    // gamma correct
     result = pow(result, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
-	
+    
     return float4(result,1);
 }

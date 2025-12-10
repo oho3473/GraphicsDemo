@@ -59,6 +59,7 @@ public:
 	virtual void ChangeEnviroment(std::wstring filename)const override;
 
 	virtual void IBLONOFF(bool isRender) override;
+	virtual void SSAOONOFF(bool isRender) override;
 
 
 	virtual void DrawSphere(const debug::SphereInfo& info)override;

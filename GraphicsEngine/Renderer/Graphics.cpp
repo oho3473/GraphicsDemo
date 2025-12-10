@@ -240,8 +240,6 @@ bool Graphics::AddRenderModel(std::shared_ptr<RenderData> data)
 	auto find = FindEntity(data->EntityID);
 	if (find != m_RenderVector.end())
 	{
-
-
 		(*find) = data;
 	}
 	else
@@ -367,7 +365,18 @@ void Graphics::ChangeEnviroment(std::wstring filename) const
 void Graphics::IBLONOFF(bool isRender)
 {
 	auto useIBL = m_ResourceManager->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL");
-	useIBL.lock()->Update(DirectX::XMFLOAT4(static_cast<int>(isRender),0,0,0 ));
+	useIBL.lock()->m_struct.x = static_cast<int>(isRender);
+	useIBL.lock()->Update();
+}
+
+void Graphics::SSAOONOFF(bool isRender)
+{
+
+	auto useIBL = m_ResourceManager->Get<ConstantBuffer<DirectX::XMFLOAT4>>(L"useIBL");
+	
+	useIBL.lock()->m_struct.x = useIBL.lock()->m_struct.x;
+	useIBL.lock()->m_struct.y = static_cast<int>(isRender);
+	useIBL.lock()->Update(useIBL.lock()->m_struct);
 }
 
 void Graphics::DrawSphere(const debug::SphereInfo& info)

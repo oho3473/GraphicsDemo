@@ -12,10 +12,12 @@ f3 : PBR info (Fresnel/Distribute/Geometry/NdotL)
 2 : monkey.fbx로 교체(+SHIFT : 모든 모델변경)
 3 : vidiger.fbx로 교체(+SHIFT : 모든 모델변경)
 
+u : SSAO On/Off
 i : IBL On/Off
 o : metalic 값 수정 On/Off
 p : Roughness 값 수정 On/Off
 [ : Albedo 값 수정 On/Off
+
 
 insert : metalic ++
 delete : metalic --

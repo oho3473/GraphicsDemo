@@ -23,7 +23,8 @@ void UIPass::Initialize(const std::shared_ptr<Device>& device, const std::shared
 
 void UIPass::Render()
 {
-	std::shared_ptr<RenderTargetView> rtv = m_ResourceManager->Get<RenderTargetView>(L"GBuffer").lock();
+	std::shared_ptr<RenderTargetView> rtv = m_ResourceManager->Get<RenderTargetView>(L"RTV_Main").lock();
+	//std::shared_ptr<RenderTargetView> rtv = m_ResourceManager->Get<RenderTargetView>(L"GBuffer").lock();
 	std::shared_ptr<DepthStencilView> dsv = m_ResourceManager->Get<DepthStencilView>(L"DSV_Main").lock();
 	m_Device->Context()->OMSetRenderTargets(1, rtv->GetAddress(), dsv->Get());
 

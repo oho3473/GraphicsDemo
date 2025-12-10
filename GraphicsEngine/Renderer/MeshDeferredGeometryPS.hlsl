@@ -29,6 +29,16 @@ cbuffer Material : register(b2)
     float2 lightmaptiling; // x y 라이트맵에서 해당 texture가 어떤 scale로 저장되어있는 정도
 };
 
+//Camera
+cbuffer Camera : register(b3)
+{
+    float4x4 gWorldViewProj;
+    float4x4 gView; //cur camera pos
+    float4x4 gProj;
+    float4x4 gViewInverse; //view matrix
+    float4x4 gProjInverse;
+};
+
 //TEXTURE
 Texture2D gAlbedo : register(t0);
 Texture2D gNormal : register(t1);
@@ -77,13 +87,13 @@ PS_OUTPUT main(VS_OUTPUT input)     // 출력 구조체에서 이미 Semantic 을 사용하고
     output.Roughness = float4(0, 0, 0, 1);
     output.LightMap = float4(0, 0, 0, 1);
     output.Emissive = float4(0, 0, 0, 1);
-
-
-    output.Position = input.posWorld;
-
-    float d = input.pos.z / input.pos.w;
+    
+    float4 curPos = mul(input.posWorld, gWorldViewProj);
+    
+    
+    float d = curPos.z / curPos.w;
     d *= 10;
-    output.Depth = float4(input.pos.z, input.pos.w, 1 - d, 1.0f);
+    output.Depth = float4(curPos.z, curPos.w, 1 - d, 1.0f);
     output.Albedo = input.color;
 
     

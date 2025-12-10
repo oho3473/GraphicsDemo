@@ -40,6 +40,7 @@ public:
 
 	virtual void DebugRenderONOFF(bool isRender) abstract;
 	virtual void IBLONOFF(bool isRender) abstract;
+	virtual void SSAOONOFF(bool isRender) abstract;
 
 	virtual void ChangeDebugQuad(bool OnOff,const debug::quadstate state) abstract;
 	virtual void ChangeEnviroment(std::wstring filename)const abstract;

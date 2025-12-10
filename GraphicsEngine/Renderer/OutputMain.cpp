@@ -64,8 +64,4 @@ void OutputMain::OnResize()
 
 	m_gbuffer = manager->Get<ShaderResourceView>(L"GBuffer").lock();
 
-	m_QuadVB = manager->Get<VertexBuffer>(L"Quad_VB");
-	m_QuadIB = manager->Get<IndexBuffer>(L"Quad_IB");
-	m_QuadVS = manager->Get<VertexShader>(L"Quad");
-	m_ps = manager->Get<PixelShader>(L"Quad");
 }
