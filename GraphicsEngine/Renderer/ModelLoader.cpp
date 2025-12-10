@@ -153,6 +153,7 @@ bool ModelLoader::LoadModel(std::string filename, Filter filter, int UID)
 	ProcessSceneData(filename, scene, filter, UID);
 
 	importer.FreeScene();
+
 	return true;
 
 }
@@ -1093,5 +1094,19 @@ std::shared_ptr<Node> ModelLoader::FindNode(std::wstring nodename, std::shared_p
 		}
 
 		return nullptr;
+	}
+}
+
+
+void ModelLoader::PrintNode(const aiNode* node, int depth)
+{
+	// 들여쓰기
+	for (int i = 0; i < depth; i++) std::cout << "  ";
+	std::cout << node->mName.C_Str() << "\n";
+
+	// 자식 노드 순회
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	{
+		PrintNode(node->mChildren[i], depth + 1);
 	}
 }

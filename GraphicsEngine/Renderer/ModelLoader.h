@@ -37,7 +37,7 @@ public:
 	void ProcessSceneData(std::string name, const aiScene* scene, Filter filter, int UID);
 
 private:
-
+	void PrintNode(const aiNode* node, int depth = 0);
 	void SaveBoneDataTexture(std::shared_ptr<ModelData> newData);
 
 private:
