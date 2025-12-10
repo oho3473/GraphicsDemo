@@ -28,6 +28,7 @@ private:
 	std::weak_ptr<ShaderResourceView> m_Metalic;
 	std::weak_ptr<ShaderResourceView> m_Roughness;
 	std::weak_ptr<ShaderResourceView> m_Albedo;
+	std::weak_ptr<ShaderResourceView> m_SSAO;
 	std::weak_ptr<ShaderResourceView> m_gbuffer;
 
 	std::weak_ptr<ConstantBuffer<DirectX::XMFLOAT4X4>> m_QuadPos;

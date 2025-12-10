@@ -18,7 +18,6 @@ bool CameraManager::Initialize()
 	//main camera
 	AddCamera();
 
-	AddCubeMapCamera();
 
 
 	return true;

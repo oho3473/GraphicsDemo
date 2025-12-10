@@ -6,6 +6,7 @@
 class Device;
 class ResourceManager;
 class ShaderResourceView;
+class RenderTargetView;
 
 class SSAOPass
 {
@@ -29,6 +30,5 @@ private:
 	std::vector<DirectX::XMFLOAT4> m_Noise;	//노말 기준의 반구 샘플링을 회전시키기는 난수값
 
 	std::weak_ptr<ShaderResourceView> m_NoiseSRV;
-
 };
 

@@ -10,29 +10,27 @@
 #include <random>
 
 
-SSAOPass::SSAOPass(const std::shared_ptr<Device> device, const std::shared_ptr<ResourceManager>resourceManager)
+SSAOPass::SSAOPass(const std::shared_ptr<Device> device, const std::shared_ptr<ResourceManager>resourceManager) : m_KernelSize(0)
 {
 	m_Device = device;
 	m_ResourceManager = resourceManager;
 
-
-
+	UINT width = m_Device.lock()->GetWndSize().right - m_Device.lock()->GetWndSize().left;
+	UINT height = m_Device.lock()->GetWndSize().bottom - m_Device.lock()->GetWndSize().top;
 }
 
 void SSAOPass::Render()
 {
 	auto resourceManager = m_ResourceManager.lock();
-	auto Device= m_Device.lock();
+	auto Device = m_Device.lock();
 
-	//일단 메인 출력
-	std::shared_ptr<RenderTargetView> RTV = resourceManager->Get<RenderTargetView>(L"RTV_Main").lock();
+	//일단 SSAO
+	std::shared_ptr<RenderTargetView> RTV = resourceManager->Get<RenderTargetView>(L"SSAO").lock();
 
 	//sampling data texture
 	auto depthBuffer = resourceManager->Get<ShaderResourceView>(L"Depth").lock();
 	auto NormalBuffer = resourceManager->Get<ShaderResourceView>(L"Normal").lock();
 	auto PositionBuffer = resourceManager->Get<ShaderResourceView>(L"Position").lock();
-	auto GBuffer = resourceManager->Get<ShaderResourceView>(L"GBuffer").lock();
-
 	auto linear = resourceManager->Get<Sampler>(L"LinearWrap").lock();
 
 	auto QuadVB = resourceManager->Get<VertexBuffer>(L"Quad_VB").lock();
@@ -55,20 +53,19 @@ void SSAOPass::Render()
 	//set VS
 	Device->BindVS(QuadVS);
 	//set PS
-	Device->Context()->PSSetShader(SSAOPS->GetPS(),nullptr,0);
+	Device->Context()->PSSetShader(SSAOPS->GetPS(), nullptr, 0);
 	Device->Context()->PSSetSamplers(0, 1, linear->GetAddress());
-	Device->Context()->PSSetConstantBuffers(0,1,resourceManager->Get<ConstantBuffer<CameraData>>(L"Camera").lock()->GetAddress());
-	Device->Context()->PSSetConstantBuffers(1,1,resourceManager->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->GetAddress());
+	Device->Context()->PSSetConstantBuffers(0, 1, resourceManager->Get<ConstantBuffer<CameraData>>(L"Camera").lock()->GetAddress());
+	Device->Context()->PSSetConstantBuffers(1, 1, resourceManager->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->GetAddress());
 
-	Device->Context()->PSSetConstantBuffers(2,1,resourceManager->Get<ConstantBuffer<SSAONoise>>(L"SSAONoise").lock()->GetAddress());
+	Device->Context()->PSSetConstantBuffers(2, 1, resourceManager->Get<ConstantBuffer<SSAONoise>>(L"SSAONoise").lock()->GetAddress());
 
 	//set SRV
 	Device->Context()->PSSetShaderResources(0, 1, depthBuffer->GetAddress());
 	Device->Context()->PSSetShaderResources(1, 1, NormalBuffer->GetAddress());
 	Device->Context()->PSSetShaderResources(2, 1, PositionBuffer->GetAddress());
 	Device->Context()->PSSetShaderResources(3, 1, m_NoiseSRV.lock()->GetAddress());
-	Device->Context()->PSSetShaderResources(4, 1, GBuffer->GetAddress());
-	
+
 
 	Device->Context()->DrawIndexed(Quad::Index::count, 0, 0);
 
@@ -77,7 +74,6 @@ void SSAOPass::Render()
 	Device->UnBindSRV();
 	Device->Context()->OMSetRenderTargets(0, nullptr, nullptr);
 	Device->Context()->OMSetDepthStencilState(nullptr, 1);
-
 }
 
 void SSAOPass::OnResize()
@@ -87,6 +83,7 @@ void SSAOPass::OnResize()
 
 void SSAOPass::Initialize()
 {
+	//반구영역의 차폐판단을 위한 점
 	m_KernelSize = 32;
 
 	m_Kernel = std::vector<DirectX::XMFLOAT4>(m_KernelSize);
@@ -121,16 +118,16 @@ void SSAOPass::Initialize()
 	}
 	m_ResourceManager.lock()->Get<ConstantBuffer<SSAOKernel>>(L"SSAOKernel").lock()->Update();
 
-
+	//반구를 회전시키기위한 난수 - 밴딩을 최소화하기위해 사용
 	m_NoiseSize = 16;
 	m_Noise = std::vector<DirectX::XMFLOAT4>(m_NoiseSize * m_NoiseSize);
 
-	for(int i = 0; i < m_NoiseSize* m_NoiseSize; i++)
+	for (int i = 0; i < m_NoiseSize * m_NoiseSize; i++)
 	{
-		m_Noise[i].x= XY(gen);
-		m_Noise[i].y= XY(gen);
-		m_Noise[i].z= 0.f;
-		m_Noise[i].w= 0.f;
+		m_Noise[i].x = XY(gen);
+		m_Noise[i].y = XY(gen);
+		m_Noise[i].z = 0.f;
+		m_Noise[i].w = 0.f;
 	}
 
 
@@ -143,7 +140,7 @@ void SSAOPass::Initialize()
 	texDesc.SampleDesc.Count = 1;
 	texDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	
+
 	m_ResourceManager.lock()->Create<Texture2D>(L"SSAONoise");
 	std::shared_ptr<Texture2D> noiseTex = m_ResourceManager.lock()->Get<Texture2D>(L"SSAONoise").lock();
 
@@ -161,7 +158,7 @@ void SSAOPass::Initialize()
 
 	m_ResourceManager.lock()->Create<ShaderResourceView>(L"SSAONoise");
 	std::shared_ptr<ShaderResourceView> noiseSRV = m_ResourceManager.lock()->Get<ShaderResourceView>(L"SSAONoise").lock();
-	m_Device.lock()->Get()->CreateShaderResourceView(noiseTex->Get(),&srvDesc, noiseSRV->GetAddress());
+	m_Device.lock()->Get()->CreateShaderResourceView(noiseTex->Get(), &srvDesc, noiseSRV->GetAddress());
 
 	m_NoiseSRV = noiseSRV;
 }

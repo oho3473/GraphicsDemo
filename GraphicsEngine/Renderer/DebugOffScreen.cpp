@@ -23,7 +23,7 @@ DebugOffScreen::DebugOffScreen(std::shared_ptr<Device> device, std::shared_ptr<R
 	m_Roughness = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_Albedo = manager->Get<ShaderResourceView>(L"Albedo").lock();
 
-	//m_SRVs.push_back(m_Position);
+	m_SRVs.push_back(m_Position);
 	m_SRVs.push_back(m_Normal);
 	m_SRVs.push_back(m_Metalic);
 	m_SRVs.push_back(m_Roughness);
@@ -118,13 +118,14 @@ void DebugOffScreen::OnResize()
 	m_Metalic = manager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_Roughness = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_Albedo = manager->Get<ShaderResourceView>(L"Albedo").lock();
+	m_SSAO = manager->Get<ShaderResourceView>(L"SSAO").lock();
 
 	m_QuadVB = manager->Get<VertexBuffer>(L"Quad_VB");
 	m_QuadIB = manager->Get<IndexBuffer>(L"Quad_IB");
 	m_QuadVS = manager->Get<VertexShader>(L"DebugQuad");
 	m_QuadPS = manager->Get<PixelShader>(L"DebugQuad");
 	m_QuadPos = manager->Get<ConstantBuffer<DirectX::XMFLOAT4X4>>(L"QuadPos");
-
+	
 
 	m_SRVs.clear();
 
@@ -133,6 +134,7 @@ void DebugOffScreen::OnResize()
 	m_SRVs.push_back(m_Roughness);
 	m_SRVs.push_back(m_Depth);
 	m_SRVs.push_back(m_Albedo);
+	//m_SRVs.push_back(m_SSAO);
 
 
 	m_Fresnel = manager->Get<ShaderResourceView>(L"Fresnel").lock();

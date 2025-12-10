@@ -45,6 +45,7 @@ private:
 	std::weak_ptr<ShaderResourceView> m_DepthSRV;
 	std::weak_ptr<ShaderResourceView> m_MetalicSRV;
 	std::weak_ptr<ShaderResourceView> m_RoughnessSRV;
+	std::weak_ptr<ShaderResourceView> m_SSAOSRV;
 	std::weak_ptr<ShaderResourceView> m_EmissiveSRV;
 	std::weak_ptr<ShaderResourceView> m_LightMapSRV;
 	std::weak_ptr<ShaderResourceView> m_IrrandianceSRV;

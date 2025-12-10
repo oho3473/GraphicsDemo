@@ -59,12 +59,12 @@ private:
 	float m_ratio;
 
 	DirectX::XMMATRIX m_worldMT;
-	DirectX::XMMATRIX m_viewMT;
+	DirectX::XMMATRIX m_viewMT;	//viwe inverse
 	DirectX::XMMATRIX m_projMT;
 	DirectX::XMMATRIX m_worldviewprojMT;
 
 	DirectX::XMFLOAT4X4 m_world;
-	DirectX::XMFLOAT4X4 m_view;
+	DirectX::XMFLOAT4X4 m_view;	//cur camera pos in world
 	DirectX::XMFLOAT4X4 m_proj;
 	DirectX::XMFLOAT4X4 m_worldviewproj;
 	DirectX::XMFLOAT4X4 m_orthoProj;

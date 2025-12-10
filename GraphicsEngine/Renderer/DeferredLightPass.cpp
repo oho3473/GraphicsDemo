@@ -44,7 +44,7 @@ void DeferredLightPass::Initialize(const std::shared_ptr<Device>& device, const 
 	m_MetalicSRV = resourceManager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_RoughnessSRV = resourceManager->Get<ShaderResourceView>(L"AO").lock();
 	m_EmissiveSRV = resourceManager->Get<ShaderResourceView>(L"Emissive").lock();
-
+	m_SSAOSRV = resourceManager->Get<ShaderResourceView>(L"SSAO").lock();
 	m_IrrandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();
 	m_RandianceSRV = resourceManager->Get<ShaderResourceView>(L"MyCube3SpecularHDR.dds").lock();
 
@@ -76,20 +76,16 @@ void DeferredLightPass::Render()
 	Device->Context()->OMSetDepthStencilState(depthstencilstate->GetState().Get(), 1);
 
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
-	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
-
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, TransformCB->GetAddress());
-	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, TransformCB->GetAddress());
-
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::Material), 1, MaterialCB->GetAddress());
-	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Material), 1, MaterialCB->GetAddress());
-
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, light->GetAddress());
-	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, light->GetAddress());
-
 	Device->Context()->VSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
-	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Camera), 1, CameraCB->GetAddress());
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Transform), 1, TransformCB->GetAddress());
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::Material), 1, MaterialCB->GetAddress());
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::LightArray), 1, light->GetAddress());
+	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::MatrixPallete), 1, SkeletalCB->GetAddress());
 	Device->Context()->PSSetConstantBuffers(static_cast<UINT>(Slot_B::IBL), 1, useIBL->GetAddress());
 
 
@@ -110,6 +106,7 @@ void DeferredLightPass::Render()
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Depth), 1, m_DepthSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Metalic), 1, m_MetalicSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Roughness), 1, m_RoughnessSRV.lock()->GetAddress());
+		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::AO), 1, m_SSAOSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Emissive), 1, m_EmissiveSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::LightMap), 1, m_LightMapSRV.lock()->GetAddress());
 		Device->Context()->PSSetShaderResources(static_cast<UINT>(Slot_T::Irradiance), 1, m_IrrandianceSRV.lock()->GetAddress());
@@ -150,6 +147,7 @@ void DeferredLightPass::OnResize()
 	m_MetalicSRV = manager->Get<ShaderResourceView>(L"Metalic").lock();
 	m_RoughnessSRV = manager->Get<ShaderResourceView>(L"Roughness").lock();
 	m_EmissiveSRV = manager->Get<ShaderResourceView>(L"Emissive").lock();
+	m_SSAOSRV = manager->Get<ShaderResourceView>(L"SSAO").lock();
 
 	m_LightMapSRV = manager->Get<ShaderResourceView>(L"LightMap").lock();
 	m_IrrandianceSRV = manager->Get<ShaderResourceView>(L"MyCube3DiffuseHDR.dds").lock();

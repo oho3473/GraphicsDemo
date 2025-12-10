@@ -13,9 +13,9 @@ static const float gamma = 2.2;
 cbuffer Camera : register(b0)
 {
     float4x4 gWorldViewProj;
-    float4x4 gView;
+    float4x4 gView; //cur camera pos
     float4x4 gProj;
-    float4x4 gViewInverse;
+    float4x4 gViewInverse;  //view matrix
     float4x4 gProjInverse;
 };
 
@@ -194,7 +194,7 @@ float3 CalcIBL(float3 V, float3 N, float3 albedo, float roughnessValue, float me
     //Specular BRDF
     specular = radiance * (F * scalebias.x + scalebias.y);
     
-    result = (diffuse + specular) * 0.7;
+    result = (diffuse + specular);
  
     return result;
 }

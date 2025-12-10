@@ -142,6 +142,8 @@ void PassManager::Render(float deltaTime)
 	}
 
 
+	m_SSAO->Render();
+
 	for (auto& pass : m_AfterLightPasses)
 	{
 		pass->Render();
@@ -151,9 +153,8 @@ void PassManager::Render(float deltaTime)
 	{
 		m_DebugOffScreen->Render();
 	}
-	m_UIPass->Render();
 	m_MainOutput->Render();
-	m_SSAO->Render();
+	m_UIPass->Render();
 
 }
 
