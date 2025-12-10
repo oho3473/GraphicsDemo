@@ -50,7 +50,7 @@ public:
 	DirectX::SimpleMath::Vector2 offset;
 	DirectX::SimpleMath::Vector2 tiling;
 	int lightmapindex;
-	float scale;
+	DirectX::XMFLOAT4 scale;
 
 	//useEditMaterial
 	DirectX::XMFLOAT4 albedo;	//x : useEditAlbedo, y : R, z : G, w : B

@@ -31,6 +31,7 @@ ResourceManager::ResourceManager()
 	m_OffScreenName[6] = L"Roughness";
 	m_OffScreenName[7] = L"Emissive";
 	m_OffScreenName[8] = L"GBuffer";
+	m_OffScreenName[9] = L"SSAO";
 
 	m_PBRScreenName[0] = L"Fresnel";
 	m_PBRScreenName[1] = L"Distribute";
@@ -157,6 +158,7 @@ void ResourceManager::Initialize(std::weak_ptr<Device> device)
 	Create<PixelShader>(L"CubeMapPS", L"CubeMapPS", "main");
 	Create<PixelShader>(L"DebugPBR", L"DebugPBR", "main");
 	Create<PixelShader>(L"SSAO", L"SSAO", "main");
+	Create<PixelShader>(L"MergeBuffer", L"MergeBuffer", "main");
 
 	// ----------------------------------------------------------------------------------------
 	// Vertex Buffer
